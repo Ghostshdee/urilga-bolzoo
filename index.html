@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6EFE7">
+<title>Сараад — жижиг асуулт</title>
+<meta name="description" content="Надтай болзоонд явах уу? — жижигхэн асуулт.">
+
+<!-- Мессенжерээр хуваалцахад гарах preview. Зураг ашиглаагүй — гарчиг, тайлбар л гарна. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Сараад — жижиг асуулт">
+<meta property="og:description" content="Ганцхан асуулт байна. Зөв хариулт нь нэг л байгаа.">
+<meta property="og:locale" content="mn_MN">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🌸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Onest:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --paper:   #F7F1EA;   /* дулаан цаас */
+  --card:    #FFFDFB;
+  --ink:     #2C2622;
+  --muted:   #8C7F76;
+  --line:    #EADFD4;
+  --rose:    #D9566F;   /* гол өнгө — «Тийм» */
+  --rose-dk: #B8455B;
+  --leaf:    #7A9A6B;
+  --radius:  22px;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Onest', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background:
+    radial-gradient(70% 55% at 50% 0%, #FDF7F1 0%, transparent 70%),
+    var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; border-radius: 8px; }
+
+/* ── Карт ── */
+.card {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 30px 26px 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: 0 1px 2px rgba(44, 38, 34, .04), 0 18px 50px rgba(44, 38, 34, .09);
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: .22em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.ask {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(30px, 8.5vw, 40px);
+  line-height: 1.15;
+}
+.ask em { font-style: italic; color: var(--rose); }
+
+.hint {
+  margin-top: 10px;
+  min-height: 1.6em;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ── Цэцэг — «Тийм» рүү ойртох тусам дэлгэрнэ ── */
+.bloom { margin: 18px auto 6px; width: 132px; height: 132px; }
+.petal {
+  transform-origin: 60px 60px;
+  transform: rotate(var(--a)) scale(var(--open, .18));
+  opacity: calc(.35 + var(--open, .18) * .65);
+  transition: transform .55s cubic-bezier(.22, 1, .36, 1), opacity .55s ease;
+}
+.core { transform-origin: 60px 60px; transform: scale(calc(.6 + var(--open, .18) * .4)); transition: transform .55s ease; }
+.stem { stroke-dasharray: 60; stroke-dashoffset: calc(60 - var(--open, .18) * 60); transition: stroke-dashoffset .6s ease; }
+
+/* ── Товчнууд ── */
+.actions {
+  position: relative;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 62px;
+}
+
+.yes {
+  min-height: 54px;
+  padding: 0 34px;
+  border-radius: 999px;
+  background: var(--rose);
+  color: #fff;
+  font-weight: 600;
+  font-size: calc(17px + var(--grow, 0) * 2.2px);
+  letter-spacing: .01em;
+  box-shadow: 0 10px 26px rgba(217, 86, 111, .3);
+  transform: scale(calc(1 + var(--grow, 0) * .07));
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1), background .2s ease, font-size .35s ease;
+}
+.yes:hover { background: var(--rose-dk); }
+
+.no {
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  background: var(--card);
+  transition: transform .28s cubic-bezier(.22, 1, .36, 1), opacity .28s ease;
+  will-change: transform;
+}
+.no:hover { border-color: #DFD2C6; }
+.no.gone { display: none; }
+
+.no-note {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 0 6px;
+}
+.no-note[hidden] { display: none; }
+
+.dodges {
+  position: absolute;
+  top: 14px; right: 14px;
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+.dodges[hidden] { display: none; }
+
+/* ── Хариу дэлгэц ── */
+.reply { display: none; }
+.card.answered .ask-screen { display: none; }
+.card.answered .reply { display: block; animation: rise .5s cubic-bezier(.22, 1, .36, 1) both; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.reply-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(28px, 7.5vw, 36px);
+  color: var(--rose);
+}
+.reply-title:focus { outline: none; }
+.reply-photo {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 16px 0 6px;
+  background: var(--paper);
+}
+.reply-photo.missing { display: none; }
+.reply p { margin-top: 12px; }
+.sign {
+  margin-top: 18px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--muted);
+}
+.again {
+  margin-top: 20px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ── Өдөр, цаг сонгох ── */
+.when {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.when .when-q {
+  margin: 0 0 9px;
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+.when .chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.chip {
+  min-height: 46px;
+  padding: 5px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  line-height: 1.25;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.chip:hover { border-color: #DFD2C6; }
+.chip small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.chip[aria-pressed="true"] {
+  border-color: var(--rose);
+  background: #FDF0F2;
+  color: var(--rose-dk);
+  font-weight: 600;
+}
+.chip[aria-pressed="true"] small { color: var(--rose); }
+
+.when .picked {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(20px, 5.5vw, 24px);
+  color: var(--rose-dk);
+}
+.when .picked-note { margin: 5px 0 0; font-size: 13px; color: var(--muted); }
+
+.when-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+.when-actions button {
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+.send {
+  background: var(--rose);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(217, 86, 111, .26);
+}
+.send:hover { background: var(--rose-dk); }
+.copy { border: 1px solid var(--line); color: var(--muted); }
+.copy:hover { border-color: #DFD2C6; }
+
+/* ── Дуу ── */
+.song { margin: 16px 0 4px; }
+.song-label { font-size: 13px; letter-spacing: .04em; color: var(--muted); margin-bottom: 8px; }
+.song-frame {
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--paper);
+}
+.song-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+[hidden] { display: none !important; }
+
+/* ── Зүрхнүүд ── */
+.heart {
+  position: fixed;
+  top: 100%;
+  font-size: 22px;
+  pointer-events: none;
+  animation: float 3.2s ease-in forwards;
+}
+@keyframes float {
+  to { transform: translateY(-110svh) rotate(var(--spin, 20deg)); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .no { position: static !important; transform: none !important; }
+}
+</style>
+</head>
+<body>
+
+<main class="card" id="card">
+  <span class="dodges" id="dodges" hidden aria-live="polite"></span>
+
+  <div class="ask-screen" id="askScreen">
+    <p class="eyebrow" id="eyebrow">Жижиг асуулт</p>
+    <h1 class="ask" id="ask"></h1>
+    <p class="hint" id="hint" aria-live="polite"></p>
+
+    <!-- Цэцэг: дэлгэрэлт нь --open хувьсагчаар. Зураг татдаггүй, бүгд SVG. -->
+    <svg class="bloom" id="bloom" viewBox="0 0 120 120" aria-hidden="true">
+      <path class="stem" d="M60 62 C58 84 58 96 60 112" fill="none" stroke="#7A9A6B" stroke-width="3" stroke-linecap="round"/>
+      <path d="M60 86 C50 80 42 82 38 88 C46 94 55 92 60 86Z" fill="#8FAE80"/>
+      <g id="petals"></g>
+      <circle class="core" cx="60" cy="60" r="13" fill="#F0C64E"/>
+    </svg>
+
+    <div class="actions">
+      <button class="yes" id="yes" type="button"></button>
+      <button class="no" id="no" type="button"></button>
+      <span class="no-note" id="noNote" hidden></span>
+    </div>
+  </div>
+
+  <div class="reply" id="reply">
+    <h1 class="reply-title" id="replyTitle" tabindex="-1"></h1>
+    <img class="reply-photo missing" id="replyPhoto" alt="" width="400" height="500">
+    <div id="replyLines"></div>
+
+    <div class="song" id="song" hidden>
+      <p class="song-label" id="songLabel"></p>
+      <div class="song-frame" id="songFrame"></div>
+    </div>
+
+    <!-- Өдөр, цаг сонгох. CONFIG.when.enabled = false бол бүхэлдээ нуугдана. -->
+    <section class="when" id="when" hidden>
+      <p class="when-q" id="dayQ"></p>
+      <div class="chips" id="days" role="group" aria-labelledby="dayQ"></div>
+
+      <p class="when-q" id="timeQ"></p>
+      <div class="chips" id="times" role="group" aria-labelledby="timeQ"></div>
+
+      <p class="when-q" id="placeQ" hidden></p>
+      <div class="chips" id="places" role="group" aria-labelledby="placeQ" hidden></div>
+
+      <p class="picked" id="picked" hidden aria-live="polite"></p>
+      <p class="picked-note" id="pickedNote" hidden></p>
+
+      <div class="when-actions" id="whenActions" hidden>
+        <button class="send" id="send" type="button"></button>
+        <button class="copy" id="copy" type="button"></button>
+      </div>
+    </section>
+
+    <p class="sign" id="sign"></p>
+    <button class="again" id="again" type="button">Дахин асуух</button>
+  </div>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   ЭНД ЛЭЭ ЗАСНА. Доорх мөрүүдийг өөрчлөхөд хуудас шууд өөрчлөгдөнө.
+   ═══════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+
+  /* Жишээ нэр — хүлээн авагчийн нэрээр соль. <title>, og:title-ыг ч гараар соль. */
+  eyebrow: 'Сараад — жижиг асуулт',
+
+  /* <em>…</em> дотор бичсэн үг ягаанаар, налуу гарна */
+  ask: 'Миний гүнжээ, надтай <em>болзоонд</em> явах уу?',
+
+  /* Эхний тайлбар, дараа нь «Үгүй» зугтах бүрд дараагийнх нь гарна */
+  hints: [
+    'Зөв хариулт нь ганцхан байгаа.',
+    'Тэр товч тоглоом хийж байна.',
+    'Цэцэг дэлгэрч эхэллээ…',
+    'Үгүй товч ядраад ирлээ.',
+    'Барьж чадвал баяр хүргэе.',
+    'За, шийдвэрээ гаргах цаг боллоо.'
+  ],
+
+  yes: 'Тийм',
+  no:  'Үгүй',
+
+  /* Хэдэн удаа зугтсаны дараа «Үгүй» товч алга болох вэ */
+  dodgeLimit: 6,
+  noGoneNote: 'Үгүй гэх боломж дууслаа 😘',
+
+  /* «Тийм» дарсны дараа гарах хэсэг */
+  reply: {
+    title: 'Тэгэлгүй яахав!',
+
+    /* Мөр бүр тусдаа догол мөр болно */
+    lines: [
+      'Би чамайг явна гэдгийг мэдсэн юмаа.',
+      'Одоо ганцхан зүйл үлдлээ — хэзээ болзох вэ?'
+    ],
+
+    /* Зураг нэмэх бол энэ хавтсанд файлаа хийгээд нэрийг нь бич.
+       Жишээ: 'zurag.jpg'. Хоосон бол зураг огт харагдахгүй. */
+    photo: '',
+    photoAlt: 'Бидний зураг',
+
+    signature: '— Батаа нь'   /* жишээ — илгээгчийн нэр */
+  },
+
+  /* ── Дуу ──
+     «Тийм» дарахад YouTube тоглогч хуудсан дотор гарч, дуу эхэлнэ.
+     youtube — холбоосны id: youtu.be/<ЭНЭ ХЭСЭГ>. start — хэдэн секундээс.
+     iPhone дээр тоглуулах товчийг нэг дарах шаардлагатай (Apple хаадаг).
+     Хэрэггүй бол youtube: '' болгоно. */
+  song: {
+    youtube: 'rg0KzIXexL8',     /* OPOZIT — HURIM [LYRICS] */
+    start: 0,
+    label: 'Чамд зориулсан дуу 🎵'
+  },
+
+  /* ── Өдөр, цаг сонгох ──
+     «Тийм» дарсны дараа гарна. Хэрэггүй бол enabled: false болгоно. */
+  when: {
+    enabled: true,
+
+    dayQuestion: 'Аль өдөр нь болзох вэ?',
+    timeQuestion: 'Хэдэн цагт?',
+
+    /* Өнөөдрөөс эхлээд хэдэн өдөр санал болгох вэ */
+    days: 7,
+
+    /* Санал болгох цагууд. Хүссэнээрээ нэмж, хасаж болно */
+    times: ['13:00', '15:00', '17:00', '18:00', '19:00', '20:00'],
+
+    /* Хаана? label — товч дээр, say — мессежийн өгүүлбэрт орох хэлбэр.
+       Хоосон жагсаалт [] бол «Хаана?» асуулт гарахгүй. */
+    placeQuestion: 'Хаана?',
+    places: [
+      { label: 'Кино',               say: 'кино үзэхээр' },
+      { label: 'Кофе',               say: 'кофе уухаар' },
+      { label: 'Цэцэрлэгт хүрээлэн', say: 'цэцэрлэгт хүрээлэнд' }
+    ],
+
+    pickedNote: 'Тэмдэглэлээ. Надад мэдэгдэхэд л болно.',
+
+    /* Илгээх дугаар. Хоосон бол зөвхөн «Хуулах» товч гарна. */
+    phone: '',   /* жишээ — илгээгчийн дугаар, жишээ нь '99xxxxxx' */
+
+    sendLabel: 'Мессежээр илгээх',
+    copyLabel: 'Хуулах',
+    copiedLabel: 'Хууллаа ✓',
+
+    /* {when} — «Лхагва гаригийн 19:00 цагт», {where} — «кино үзэхээр»,
+       {date} — «9-р сарын 23» */
+    messageTemplate: 'Тийм ээ! {when} {where} болзъё. ({date})'
+  }
+};
+
+/* ── Цэцгийн дэлбээ үүсгэх ── */
+const petals = document.getElementById('petals');
+for (let i = 0; i < 6; i++) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('class', 'petal');
+  p.setAttribute('d', 'M60 60 C48 40 50 20 60 10 C70 20 72 40 60 60Z');
+  p.setAttribute('fill', i % 2 ? '#F2A6B6' : '#E98DA2');
+  p.style.setProperty('--a', `${i * 60}deg`);
+  petals.appendChild(p);
+}
+
+/* ── Текстийг CONFIG-оос ── */
+const card = document.getElementById('card');
+const askEl = document.getElementById('ask');
+const hintEl = document.getElementById('hint');
+const yesBtn = document.getElementById('yes');
+const noBtn = document.getElementById('no');
+const noNote = document.getElementById('noNote');
+const dodgeChip = document.getElementById('dodges');
+const bloom = document.getElementById('bloom');
+
+document.getElementById('eyebrow').textContent = CONFIG.eyebrow;
+askEl.innerHTML = CONFIG.ask;          /* зөвхөн CONFIG-ийн текст — гаднаас юу ч ирэхгүй */
+hintEl.textContent = CONFIG.hints[0];
+yesBtn.textContent = CONFIG.yes;
+noBtn.textContent = CONFIG.no;
+document.title = askEl.textContent;
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let dodges = 0;
+let home = null;   /* «Үгүй» товчны анхны байрлал */
+
+function bloomTo(value) {
+  bloom.style.setProperty('--open', String(Math.min(1, value)));
+}
+bloomTo(0.18);
+
+/* ── «Үгүй» зугтана ── */
+function dodge() {
+  dodges++;
+  const step = Math.min(dodges, CONFIG.hints.length - 1);
+  hintEl.textContent = CONFIG.hints[step];
+  dodgeChip.hidden = false;
+  dodgeChip.textContent = `${dodges} удаа зугтлаа`;
+
+  /* Тийм товч томорч, цэцэг дэлгэрнэ */
+  card.style.setProperty('--grow', String(Math.min(dodges, 5)));
+  bloomTo(0.18 + dodges * 0.16);
+
+  if (dodges >= CONFIG.dodgeLimit) {
+    noBtn.classList.add('gone');
+    noNote.textContent = CONFIG.noGoneNote;
+    noNote.hidden = false;
+    yesBtn.focus();
+    return;
+  }
+
+  if (reduceMotion) return;   /* хөдөлгөөн багасгасан бол товч байрандаа үлдэнэ */
+
+  /* Анхны байрлалыг нэг удаа хэмжинэ — дараа нь түүнээс тооцно */
+  if (!home) {
+    const r = noBtn.getBoundingClientRect();
+    home = { left: r.left, top: r.top, w: r.width, h: r.height };
+  }
+
+  /* Дэлгэцээс ГАРАХГҮЙ санамсаргүй байрлал. Хязгаарыг анхны байрлалаас тооцно —
+     эс бөгөөс жижиг дэлгэцэнд товч хальж, хүн дарж чадахгүй болно. */
+  const pad = 8;
+  const minX = pad - home.left;
+  const maxX = window.innerWidth - pad - home.w - home.left;
+  const minY = pad - home.top;
+  const maxY = window.innerHeight - pad - home.h - home.top;
+  const pick = (lo, hi) => (hi <= lo ? 0 : lo + Math.random() * (hi - lo));
+
+  noBtn.style.position = 'relative';
+  noBtn.style.transform = `translate(${pick(minX, maxX).toFixed(0)}px, ${pick(minY, maxY).toFixed(0)}px)`;
+}
+
+/* Хулгана ойртоход, хуруу хүрэхэд, дарахад — бүгдэд зугтана */
+noBtn.addEventListener('pointerenter', dodge);
+noBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); dodge(); });
+noBtn.addEventListener('click', (e) => { e.preventDefault(); dodge(); });
+/* Гар ашигладаг хүнд ч шударга — Enter/Space дарвал мөн зугтана */
+noBtn.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dodge(); }
+});
+
+/* ── «Тийм» ── */
+function hearts() {
+  if (reduceMotion) return;
+  for (let i = 0; i < 14; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart';
+    h.textContent = ['🌸', '💗', '🌷', '💐'][i % 4];
+    h.style.left = `${Math.random() * 92 + 2}vw`;
+    h.style.animationDelay = `${Math.random() * 0.9}s`;
+    h.style.setProperty('--spin', `${Math.random() * 90 - 45}deg`);
+    h.addEventListener('animationend', () => h.remove());
+    document.body.appendChild(h);
+  }
+}
+
+function showReply() {
+  const r = CONFIG.reply;
+  document.getElementById('replyTitle').textContent = r.title;
+
+  const lines = document.getElementById('replyLines');
+  lines.textContent = '';
+  for (const line of r.lines) {
+    const p = document.createElement('p');
+    p.textContent = line;
+    lines.appendChild(p);
+  }
+
+  const img = document.getElementById('replyPhoto');
+  if (r.photo) {
+    img.src = r.photo;
+    img.alt = r.photoAlt || '';
+    img.classList.remove('missing');
+    img.onerror = () => img.classList.add('missing');   /* файл олдохгүй бол хоосон талбай үлдэхгүй */
+  }
+
+  /* Тоглогчийг «Тийм» дарах үед л үүсгэнэ — эхний ачаалалт хөнгөн хэвээр,
+     товч дарсан нь хөтчийн хувьд зөвшөөрөл тул дуу шууд эхлэх боломжтой. */
+  const s = CONFIG.song;
+  if (s && s.youtube) {
+    const params = new URLSearchParams({ autoplay: '1', playsinline: '1', rel: '0', start: String(s.start || 0) });
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(s.youtube)}?${params}`;
+    f.title = s.label;
+    f.allow = 'autoplay; encrypted-media; picture-in-picture';
+    f.allowFullscreen = true;
+    document.getElementById('songLabel').textContent = s.label;
+    document.getElementById('songFrame').replaceChildren(f);
+    document.getElementById('song').hidden = false;
+  }
+
+  document.getElementById('sign').textContent = r.signature;
+  card.classList.add('answered');
+  dodgeChip.hidden = true;
+  /* Анхаарлыг дээд гарчиг руу — «Дахин асуух» руу шилжүүлбэл хуудас доош үсэрч,
+     гарчиг ба дууны тоглогч дэлгэцээс гарчихна */
+  const title = document.getElementById('replyTitle');
+  title.focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+  hearts();
+}
+
+yesBtn.addEventListener('click', showReply);
+
+/* ═══════════ Өдөр, цаг сонгох ═══════════
+   Backend байхгүй. Сонгосныг нь текст болгож, хуулж эсвэл мессежээр илгээнэ. */
+const WEEKDAYS = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
+
+const whenBox = document.getElementById('when');
+const dayRow = document.getElementById('days');
+const timeRow = document.getElementById('times');
+const placeRow = document.getElementById('places');
+const pickedEl = document.getElementById('picked');
+const pickedNote = document.getElementById('pickedNote');
+const whenActions = document.getElementById('whenActions');
+const sendBtn = document.getElementById('send');
+const copyBtn = document.getElementById('copy');
+
+let pickedDay = null;
+let pickedTime = null;
+let pickedPlace = null;
+
+/* Газрын сонголт байгаа эсэх. Хоосон бол өдөр, цаг хоёр л хангалттай. */
+const hasPlaces = () => Array.isArray(CONFIG.when.places) && CONFIG.when.places.length > 0;
+
+const dayLabel = (d, i) => (i === 0 ? 'Өнөөдөр' : i === 1 ? 'Маргааш' : WEEKDAYS[d.getDay()]);
+const dayText = (d) => `${d.getMonth() + 1}-р сарын ${d.getDate()}`;
+
+/* Өнгөрсөн цаг сонгогдохоос сэргийлнэ. Оройхон нээвэл «Өнөөдөр 13:00»
+   гэж сонгочих боломжгүй байх ёстой. 30 минутын бэлтгэлийн зай үлдээв. */
+const CUSHION = 30;
+const minutesOf = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+function cutoff() {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes() + CUSHION;
+}
+const todayHasRoom = () => CONFIG.when.times.some((t) => minutesOf(t) >= cutoff());
+
+/** Мөрийн ганц товчийг сонгосон болгоно. btn = null бол бүгдийг тайлна. */
+function mark(row, btn) {
+  for (const b of row.children) b.setAttribute('aria-pressed', String(b === btn));
+}
+
+function chip(text, sub) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'chip';
+  b.setAttribute('aria-pressed', 'false');
+  b.textContent = text;
+  if (sub) {
+    const s = document.createElement('small');
+    s.textContent = sub;
+    b.appendChild(s);
+  }
+  return b;
+}
+
+function whenText() {
+  if (!pickedDay || !pickedTime) return '';
+  if (hasPlaces() && !pickedPlace) return '';
+  const base = `${pickedDay.label}, ${pickedDay.text}, ${pickedTime}`;
+  return pickedPlace ? `${base} · ${pickedPlace.label}` : base;
+}
+
+function refreshPicked() {
+  const text = whenText();
+  pickedEl.hidden = !text;
+  pickedNote.hidden = !text;
+  whenActions.hidden = !text;
+  if (!text) return;
+  pickedEl.textContent = text;
+  pickedNote.textContent = CONFIG.when.pickedNote;
+  copyBtn.textContent = CONFIG.when.copyLabel;   /* «Хууллаа ✓»-г буцаана */
+}
+
+/* Мессежинд илгээх байгалийн өгүүлбэр. Дэлгэц дээрх товч мөрөөс өөр —
+   «Лхагва, 9-р сарын 23, 19:00 цагт болзъё» гэвэл жагсаалт шиг сонсогдоно. */
+function whenPhrase() {
+  if (!pickedDay || !pickedTime) return '';
+  const day = pickedDay.plain ? pickedDay.label : `${pickedDay.label} гаригийн`;
+  return `${day} ${pickedTime} цагт`;
+}
+
+const message = () => CONFIG.when.messageTemplate
+  .replace('{when}', whenPhrase())
+  .replace('{where}', pickedPlace ? pickedPlace.say : '')
+  .replace('{date}', pickedDay ? pickedDay.text : '')
+  .replace(/ {2,}/g, ' ');   /* газаргүй бол үлдсэн давхар зайг арилгана */
+
+function buildWhen() {
+  const w = CONFIG.when;
+  if (!w || !w.enabled) return;
+  whenBox.hidden = false;
+
+  document.getElementById('dayQ').textContent = w.dayQuestion;
+  document.getElementById('timeQ').textContent = w.timeQuestion;
+  copyBtn.textContent = w.copyLabel;
+  sendBtn.textContent = w.sendLabel;
+  sendBtn.hidden = !w.phone;     /* дугаар байхгүй бол зөвхөн хуулна */
+
+  /* Өнөөдөр сонгох цаг үлдээгүй бол маргаашаас эхэлнэ */
+  const today = new Date();
+  const start = todayHasRoom() ? 0 : 1;
+  for (let i = start; i < start + w.days; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    const label = dayLabel(d, i);
+    const text = dayText(d);
+    const b = chip(label, text);
+    b.setAttribute('aria-label', `${label}, ${text}`);
+    b.addEventListener('click', () => {
+      pickedDay = { label, text, today: i === 0, plain: i <= 1 };
+      mark(dayRow, b);
+      renderTimes();          /* өнөөдөр бол өнгөрсөн цагийг хасна */
+    });
+    dayRow.appendChild(b);
+  }
+
+  /* Хаана? — өдөр, цаг солиход цэвэрлэгдэхгүй, тусдаа сонголт */
+  placeRow.textContent = '';   /* дахин дуудахад давхардахгүй */
+  if (hasPlaces()) {
+    const placeQ = document.getElementById('placeQ');
+    placeQ.textContent = w.placeQuestion;
+    placeQ.hidden = false;
+    placeRow.hidden = false;
+    for (const place of w.places) {
+      const b = chip(place.label, '');
+      b.addEventListener('click', () => {
+        pickedPlace = place;
+        mark(placeRow, b);
+        refreshPicked();
+      });
+      placeRow.appendChild(b);
+    }
+  }
+
+  renderTimes();
+}
+
+/** Цагийн чипүүдийг зурна. Өнөөдрийг сонгосон бол өнгөрсөн цаг орохгүй. */
+function renderTimes() {
+  timeRow.textContent = '';
+  pickedTime = null;
+  const cut = cutoff();
+  for (const t of CONFIG.when.times) {
+    if (pickedDay && pickedDay.today && minutesOf(t) < cut) continue;
+    const b = chip(t, '');
+    b.addEventListener('click', () => {
+      pickedTime = t;
+      mark(timeRow, b);
+      refreshPicked();
+    });
+    timeRow.appendChild(b);
+  }
+  refreshPicked();
+}
+
+copyBtn.addEventListener('click', async () => {
+  const text = message();
+  let ok = false;
+  try {
+    await navigator.clipboard.writeText(text);
+    ok = true;
+  } catch {
+    /* http, хуучин хөтөч дээр clipboard API ажиллахгүй — нөөц арга */
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { ok = document.execCommand('copy'); } catch { ok = false; }
+    ta.remove();
+  }
+  copyBtn.textContent = ok ? CONFIG.when.copiedLabel : text;
+});
+
+sendBtn.addEventListener('click', () => {
+  const w = CONFIG.when;
+  if (!w.phone) return;
+  /* «?&body=» нь iOS, Android хоёуланд ажилладаг хэлбэр */
+  window.location.href = `sms:${w.phone}?&body=${encodeURIComponent(message())}`;
+});
+
+buildWhen();
+
+document.getElementById('again').addEventListener('click', () => {
+  card.classList.remove('answered');
+  document.getElementById('songFrame').replaceChildren();   /* дууг зогсооно */
+  document.getElementById('song').hidden = true;
+  dodges = 0;
+  card.style.setProperty('--grow', '0');
+  bloomTo(0.18);
+  hintEl.textContent = CONFIG.hints[0];
+  noBtn.classList.remove('gone');
+  noBtn.style.position = '';
+  noBtn.style.transform = '';
+  home = null;
+  noNote.hidden = true;
+  dodgeChip.hidden = true;
+  pickedDay = null;
+  pickedTime = null;
+  pickedPlace = null;
+  mark(dayRow, null);
+  mark(placeRow, null);
+  renderTimes();
+  yesBtn.focus();
+});
+</script>
+</body>
+</html>
