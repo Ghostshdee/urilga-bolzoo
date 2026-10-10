@@ -460,6 +460,17 @@ const CONFIG = {
   }
 };
 
+/* «Өөрийн нэрээр үзэх» (BACKLOG #102 — 2026-10-10).
+   URL: ?n1=Сараа&n2=Батаа — n1 хүлээн авагч, n2 илгээгч. textContent-оор л ордог;
+   < > " ' ` & тэмдэгтийг хасаж, 24 тэмдэгтээр хязгаарлана. */
+(function personalize(C) {
+  const q = new URLSearchParams(location.search);
+  const clean = (v) => (v || '').replace(/[<>"'`&]/g, '').trim().slice(0, 24);
+  const n1 = clean(q.get('n1')), n2 = clean(q.get('n2'));
+  if (n1) C.eyebrow = `${n1} — жижиг асуулт`;
+  if (n2) C.reply.signature = `— ${n2}`;
+})(CONFIG);
+
 /* ── Цэцгийн дэлбээ үүсгэх ── */
 const petals = document.getElementById('petals');
 for (let i = 0; i < 6; i++) {
