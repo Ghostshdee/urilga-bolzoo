@@ -94,7 +94,11 @@ try {
   check('4c zuraggüi bol hooson talbai üldehgüi', reply.photoHidden);
   check('4d0 hariu deed talaasaa haragdana (dood tal ruu üsrehgüi)', await ev(w,'window.scrollY === 0 && document.activeElement.id === "replyTitle"'));
   check('4d tsetseg buudaj garav', reply.hearts >= 10, String(reply.hearts));
-  check('4d2 YouTube toglogch huudas dotor, autoplay', await ev(w,`(() => { const box = document.getElementById("song");
+  check('4d1 YouTube ehendee achaalagdaagüi, "Duug sonsoh" tovch garsan', await ev(w,`(() => { const box = document.getElementById("song");
+    return !box.hidden && !box.querySelector("iframe") && !!box.querySelector(".song-play")
+      && box.querySelector(".song-play").getBoundingClientRect().height >= 44; })()`));
+  await ev(w,'document.querySelector("#song .song-play").click()'); await s(200);
+  check('4d2 tovch darahad YouTube toglogch huudas dotor, autoplay', await ev(w,`(() => { const box = document.getElementById("song");
     const f = box.querySelector("iframe");
     return !box.hidden && !!f && f.src.startsWith("https://www.youtube-nocookie.com/embed/" + CONFIG.song.youtube + "?")
       && f.src.includes("autoplay=1") && f.src.includes("playsinline=1") && f.allow.includes("autoplay")
