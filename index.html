@@ -7,11 +7,16 @@
 <title>Сараад — жижиг асуулт</title>
 <meta name="description" content="Надтай болзоонд явах уу? — жижигхэн асуулт.">
 
-<!-- Мессенжерээр хуваалцахад гарах preview. Зураг ашиглаагүй — гарчиг, тайлбар л гарна. -->
+<!-- Мессенжерээр хуваалцахад гарах preview. og зураг: assets/og.jpg (1200×630, дотор нь нэр байхгүй). -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Сараад — жижиг асуулт">
 <meta property="og:description" content="Ганцхан асуулт байна. Зөв хариулт нь нэг л байгаа.">
 <meta property="og:locale" content="mn_MN">
+<meta property="og:image" content="https://ghostshdee.github.io/urilga-bolzoo/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Надтай болзоонд явах уу? — дэлгэрсэн цэцэг, «Тийм» товч (жишээ урилга)">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🌸</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,8 +42,10 @@
 
 body {
   min-height: 100svh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
   background:
     radial-gradient(70% 55% at 50% 0%, #FDF7F1 0%, transparent 70%),
@@ -66,7 +73,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: .22em;
   color: var(--muted);
   text-transform: uppercase;
@@ -148,7 +155,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .dodges {
   position: absolute;
   top: 14px; right: 14px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: .06em;
   color: var(--muted);
   background: var(--paper);
@@ -218,7 +225,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   margin-bottom: 16px;
 }
 .chip {
-  min-height: 46px;
+  min-height: 48px;
+  min-width: 56px;
   padding: 5px 14px;
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -229,17 +237,17 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .chip:hover { border-color: #DFD2C6; }
 .chip small {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--muted);
 }
 .chip[aria-pressed="true"] {
-  border-color: var(--rose);
-  background: #FDF0F2;
-  color: var(--rose-dk);
+  border-color: var(--rose-dk);
+  background: var(--rose-dk);
+  color: #fff;
   font-weight: 600;
 }
-.chip[aria-pressed="true"] small { color: var(--rose); }
+.chip[aria-pressed="true"] small { color: rgba(255, 255, 255, .88); }
 
 .when .picked {
   margin: 2px 0 0;
@@ -276,13 +284,36 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* ── Дуу ── */
 .song { margin: 16px 0 4px; }
 .song-label { font-size: 13px; letter-spacing: .04em; color: var(--muted); margin-bottom: 8px; }
-.song-frame {
+.song-frame iframe {
+  display: block;
+  width: 100%;
   aspect-ratio: 16 / 9;
+  border: 0;
   border-radius: 14px;
-  overflow: hidden;
-  background: var(--paper);
 }
-.song-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+/* iframe-ийг эхэнд ачаалахгүй — энэ товчийг дарахад л үүснэ */
+.song-play {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 999px;
+  background: var(--rose-dk);
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background .2s ease;
+}
+.song-play:hover { background: #A33A4E; }
+
+/* Кредит */
+.credit {
+  margin-top: 14px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: var(--muted);
+  opacity: .8;
+}
+.credit a { display: inline-block; padding: 10px 12px; text-decoration: none; }
+.credit a:hover, .credit a:focus-visible { color: var(--rose-dk); }
 
 [hidden] { display: none !important; }
 
@@ -364,6 +395,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   </div>
 </main>
 
+<footer class="credit">
+  <a href="https://ghostshdee.github.io/" target="_blank" rel="noopener">Бүтээсэн: DOKAY.</a>
+</footer>
+
 <script>
 /* ═══════════════════════════════════════════════════════════════════
    ЭНД ЛЭЭ ЗАСНА. Доорх мөрүүдийг өөрчлөхөд хуудас шууд өөрчлөгдөнө.
@@ -412,14 +447,16 @@ const CONFIG = {
   },
 
   /* ── Дуу ──
-     «Тийм» дарахад YouTube тоглогч хуудсан дотор гарч, дуу эхэлнэ.
+     «Тийм» дарсны дараа «Дууг сонсох ▶» товч гарна. Түүнийг дарахад YouTube
+     тоглогч хуудсан дотор гарч, дуу эхэлнэ (эхэнд юу ч ачаалахгүй).
      youtube — холбоосны id: youtu.be/<ЭНЭ ХЭСЭГ>. start — хэдэн секундээс.
      iPhone дээр тоглуулах товчийг нэг дарах шаардлагатай (Apple хаадаг).
      Хэрэггүй бол youtube: '' болгоно. */
   song: {
     youtube: 'rg0KzIXexL8',     /* OPOZIT — HURIM [LYRICS] */
     start: 0,
-    label: 'Чамд зориулсан дуу 🎵'
+    label: 'Чамд зориулсан дуу 🎵',
+    playLabel: 'Дууг сонсох ▶'
   },
 
   /* ── Өдөр, цаг сонгох ──
@@ -573,6 +610,19 @@ function hearts() {
   }
 }
 
+/* «Дууг сонсох ▶» дарахад л YouTube тоглогчийг үүсгэнэ. Дарсан нь хөтчийн
+   хувьд хэрэглэгчийн үйлдэл тул дуу шууд эхлэх боломжтой. */
+function playSong() {
+  const s = CONFIG.song;
+  const params = new URLSearchParams({ autoplay: '1', playsinline: '1', rel: '0', start: String(s.start || 0) });
+  const f = document.createElement('iframe');
+  f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(s.youtube)}?${params}`;
+  f.title = s.label;
+  f.allow = 'autoplay; encrypted-media; picture-in-picture';
+  f.allowFullscreen = true;
+  document.getElementById('songFrame').replaceChildren(f);
+}
+
 function showReply() {
   const r = CONFIG.reply;
   document.getElementById('replyTitle').textContent = r.title;
@@ -593,18 +643,17 @@ function showReply() {
     img.onerror = () => img.classList.add('missing');   /* файл олдохгүй бол хоосон талбай үлдэхгүй */
   }
 
-  /* Тоглогчийг «Тийм» дарах үед л үүсгэнэ — эхний ачаалалт хөнгөн хэвээр,
-     товч дарсан нь хөтчийн хувьд зөвшөөрөл тул дуу шууд эхлэх боломжтой. */
+  /* Тоглогч энд үүсэхгүй — зөвхөн «Дууг сонсох ▶» товч гарна. iframe-ийг
+     товч дарсны дараа playSong() үүсгэнэ. */
   const s = CONFIG.song;
   if (s && s.youtube) {
-    const params = new URLSearchParams({ autoplay: '1', playsinline: '1', rel: '0', start: String(s.start || 0) });
-    const f = document.createElement('iframe');
-    f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(s.youtube)}?${params}`;
-    f.title = s.label;
-    f.allow = 'autoplay; encrypted-media; picture-in-picture';
-    f.allowFullscreen = true;
+    const play = document.createElement('button');
+    play.type = 'button';
+    play.className = 'song-play';
+    play.textContent = s.playLabel;
+    play.addEventListener('click', playSong, { once: true });
     document.getElementById('songLabel').textContent = s.label;
-    document.getElementById('songFrame').replaceChildren(f);
+    document.getElementById('songFrame').replaceChildren(play);
     document.getElementById('song').hidden = false;
   }
 
