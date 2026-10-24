@@ -653,6 +653,7 @@ function readGift() {
       t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
       ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
       ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      vid: o.vid !== 0,
       when: o.when !== 0
     };
   } catch (e) { return null; }
@@ -668,6 +669,7 @@ function readGift() {
   C.song.start = G.t;
   C.when.phone = G.ph;
   C.when.messenger = G.ms;
+  C.song.video = G.vid;
   C.when.enabled = G.when;
 })(CONFIG, readGift());
 
@@ -1084,12 +1086,14 @@ function setSongSmall(small) {
   songMin.textContent = small ? '♪ дэлгэх' : '— жижигрүүлэх';
 }
 songMin.addEventListener('click', () => setSongSmall(!songBox.classList.contains('min')));
+/* Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ */
+if (CONFIG.song.video === false) { setSongSmall(true); songMin.textContent = '▶ Дүрс харах'; }
 
 document.getElementById('again').addEventListener('click', () => {
   card.classList.remove('answered');
   document.getElementById('songFrame').replaceChildren();   /* дууг зогсооно */
   songBox.hidden = true;
-  setSongSmall(false);
+  setSongSmall(CONFIG.song.video === false);
   document.body.classList.remove('has-song');
   dodges = 0;
   card.style.setProperty('--grow', '0');

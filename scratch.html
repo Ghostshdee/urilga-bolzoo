@@ -191,6 +191,7 @@ function readGift() {
       t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
       ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
       ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      vid: o.vid !== 0,
       when: o.when !== 0
     };
   } catch (e) { return null; }
@@ -199,8 +200,8 @@ function readGift() {
 // Анхдагч жишээ — линкгүй эсвэл буруу өгөгдөлтэй үед
 const DEF = { to: 'Сараа', from: 'Батаа', ask: 'Надтай *болзоонд* явах уу?', yt: '', t: 0, ph: '', ms: '', when: true };
 const g = readGift() || DEF;
-const G = { to: g.to || DEF.to, from: g.from || DEF.from, ask: g.ask || DEF.ask,
-  yt: g.yt, t: g.t, ph: g.ph, ms: g.ms, when: g.when };
+const G = { to: g.to || DEF.to, from: g === DEF ? DEF.from : g.from,  /* линктэй бол жишээ нэр гаргахгүй */ ask: g.ask || DEF.ask,
+  yt: g.yt, t: g.t, ph: g.ph, ms: g.ms, when: g.when, vid: g.vid };
 
 const $ = id => document.getElementById(id);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -208,7 +209,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Нэр, асуулт — зөвхөн textContent; *үг* → <em> DOM-оор
 $('coverTitle').textContent = G.to + ', чамд зориулсан урилга';
 $('eyebrow').textContent = G.to + ', чамд';
-$('sig').textContent = '— ' + G.from;
+$('sig').textContent = G.from ? '— ' + G.from : '';
 document.title = G.to + ', чамд зориулсан урилга';
 G.ask.split('*').forEach((part, i) => {
   if (!part) return;
@@ -232,6 +233,8 @@ function startMusic() {
 }
 $('minBtn').addEventListener('click', () => { const m = $('music').classList.toggle('min');
   $('minBtn').textContent = m ? '♪ томруулах' : '— жижигрүүлэх'; $('minBtn').setAttribute('aria-expanded', String(!m)); });
+// Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ — дуу тоглосоор
+if (G.vid === false) { $('music').classList.add('min'); $('minBtn').textContent = '▶ Дүрс харах'; $('minBtn').setAttribute('aria-expanded','false'); }
 $('openBtn').addEventListener('click', () => {
   startMusic();
   $('cover').classList.add('hidden');

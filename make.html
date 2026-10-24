@@ -89,18 +89,20 @@ footer a{color:inherit}
       <label for="yt">Дуу — YouTube линк (заавал биш)</label>
       <input type="url" id="yt" inputmode="url" placeholder="https://youtu.be/…  эсвэл  …watch?v=…&t=1m30s" autocomplete="off">
       <p class="note" id="ytNote" aria-live="polite">Хэдэн секундээс эхлэхийг линкийн <b>t=</b> хэсгээс уншина.</p>
+      <label class="check"><input type="checkbox" id="vid" checked> Дууны бичлэгийг (дүрсийг) харуулах</label>
 
       <div class="row">
-        <div><label for="ph">Хариу авах утас</label><input type="tel" id="ph" inputmode="tel" placeholder="99112233" autocomplete="off"></div>
-        <div><label for="ms">Messenger нэр</label><input type="text" id="ms" placeholder="bataa.mn" autocomplete="off"></div>
+        <div><label for="ph">Хариу авах утас (заавал биш)</label><input type="tel" id="ph" inputmode="tel" placeholder="99112233" autocomplete="off"></div>
+        <div><label for="ms">Messenger нэр (заавал биш)</label><input type="text" id="ms" placeholder="bataa.mn" autocomplete="off"></div>
       </div>
-      <p class="note">Messenger нэр — m.me/<b>энэ хэсэг</b>. Аль нэгийг нь ч бөглөж болно.</p>
+      <p class="note">Messenger нэр — m.me/<b>энэ хэсэг</b>. Хоёулаа хоосон байж болно.</p>
 
       <label class="check"><input type="checkbox" id="when" checked> Өдөр, цаг, газар сонгуулах</label>
     </div>
 
     <button class="btn" type="submit">Линк гаргах</button>
     <p class="err" id="err" role="alert"></p>
+    <p class="note" id="msNote" aria-live="polite"></p>
   </form>
 
   <section class="box" id="result" hidden aria-live="polite">
@@ -172,7 +174,7 @@ function linkFor(file, hash) {
 const fields = ['to', 'from', 'ask', 'yt', 'ph', 'ms'];
 function save() {
   try {
-    const o = { style: document.querySelector('[name=style]:checked').value, when: $('when').checked };
+    const o = { style: document.querySelector('[name=style]:checked').value, when: $('when').checked, vid: $('vid').checked };
     fields.forEach((f) => { o[f] = $(f).value; });
     localStorage.setItem(SAVE_KEY, JSON.stringify(o));
   } catch (e) { /* хувийн горимд хадгалахгүй — асуудалгүй */ }
@@ -183,6 +185,7 @@ function restore() {
     if (!o) return;
     fields.forEach((f) => { if (typeof o[f] === 'string') $(f).value = o[f]; });
     $('when').checked = o.when !== false;
+    $('vid').checked = o.vid !== false;
     const r = document.querySelector(`[name=style][value="${CSS.escape(o.style || '')}"]`);
     if (r) r.checked = true;
   } catch (e) { /* хуучин өгөгдөл эвдэрсэн бол үл тооно */ }
@@ -197,20 +200,21 @@ $('yt').addEventListener('input', () => {
 
 $('form').addEventListener('submit', (e) => {
   e.preventDefault();
-  $('err').textContent = '';
+  $('err').textContent = ''; $('msNote').textContent = '';
   const to = clean($('to').value, 24);
   if (!to) { $('err').textContent = 'Хэнд илгээхээ бичнэ үү.'; $('to').focus(); return; }
   const y = parseYouTube($('yt').value);
   if (!y) { $('err').textContent = 'YouTube линк буруу байна — засна уу, эсвэл хоосон орхино уу.'; $('yt').focus(); return; }
   const ph = $('ph').value.replace(/[\s-]/g, '');
   if (ph && !/^\+?[0-9]{6,15}$/.test(ph)) { $('err').textContent = 'Утасны дугаар 6–15 оронтой тоо байна.'; $('ph').focus(); return; }
-  const ms = $('ms').value.trim().replace(/^(https?:\/\/)?(www\.)?m\.me\//i, '');
-  if (ms && !/^[A-Za-z0-9.]{1,50}$/.test(ms)) { $('err').textContent = 'Messenger нэр зөвхөн латин үсэг, тоо, цэгтэй байна.'; $('ms').focus(); return; }
+  let ms = $('ms').value.trim().replace(/^(https?:\/\/)?(www\.)?m\.me\//i, '');
+  if (ms && !/^[A-Za-z0-9.]{1,50}$/.test(ms)) { ms = ''; $('msNote').textContent = 'Messenger нэрийг алгаслаа — «Чатанд хуулах» товч хангалттай.'; }
 
   const o = { v: 1, to };
   const from = clean($('from').value, 24); if (from) o.from = from;
   const ask = clean($('ask').value, 120); if (ask) o.ask = ask;
   if (y.id) { o.yt = y.id; if (y.t) o.t = y.t; }
+  if (!$('vid').checked) o.vid = 0;
   if (ph) o.ph = ph;
   if (ms) o.ms = ms;
   o.when = $('when').checked ? 1 : 0;

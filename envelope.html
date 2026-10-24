@@ -350,6 +350,7 @@ function readGift() {
       t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
       ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
       ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      vid: o.vid !== 0,
       when: o.when !== 0
     };
   } catch (e) { return null; }
@@ -358,7 +359,7 @@ function readGift() {
 /* Линкгүй эсвэл эвдэрсэн бол анхдагч жишээ гарна */
 const DEF = { to: 'Сараа', from: 'Батаа', ask: 'Надтай *болзоонд* явах уу?', yt: '', t: 0, ph: '', ms: '', when: true };
 const raw = readGift();
-const G = raw ? { ...raw, to: raw.to || DEF.to, from: raw.from || DEF.from, ask: raw.ask || DEF.ask } : DEF;
+const G = raw ? { ...raw, to: raw.to || DEF.to, from: raw.from || '',  /* линктэй бол жишээ нэр гаргахгүй */ ask: raw.ask || DEF.ask } : DEF;
 
 const $ = (id) => document.getElementById(id);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -395,6 +396,8 @@ $('musicMin').addEventListener('click', () => {
   $('musicMin').setAttribute('aria-expanded', String(!mini));
   $('musicMin').textContent = mini ? '＋ дэлгэх' : '— жижигрүүлэх';
 });
+/* Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ — дуу тоглосоор */
+if (G.vid === false) { $('music').classList.add('mini'); $('musicMin').setAttribute('aria-expanded','false'); $('musicMin').textContent = '▶ Дүрс харах'; }
 
 /* ---------- Дугтуй нээх ---------- */
 let opened = false;

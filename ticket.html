@@ -165,7 +165,7 @@ legend{font-weight:600;margin-bottom:8px}
 .m-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
 .m-bar button{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #6B4A4F;background:transparent;color:var(--paper);font-size:13px}
 .music iframe{width:280px;height:158px;border:0;border-radius:8px;display:block;transition:height .3s,opacity .3s}
-.music.mini iframe{height:1px;opacity:0}   /* display:none БИШ — дуу зогсохгүй */
+.music.mini iframe{position:absolute;left:10px;bottom:8px;opacity:0;pointer-events:none}   /* хэмжээ хэвээр (YouTube ≥200px), display:none БИШ — дуу зогсохгүй */
 .music.mini .m-hint{display:none}
 .m-hint{margin:6px 0 0;font-size:12px;text-align:center}
 body.has-music{padding-bottom:calc(90px + 250px)}   /* хураагаагүй үед товч халхлахгүй */
@@ -272,6 +272,7 @@ function readGift() {
       t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
       ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
       ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      vid: o.vid !== 0,
       when: o.when !== 0
     };
   } catch (e) { return null; }
@@ -280,7 +281,7 @@ function readGift() {
 // Анхдагч жишээ — линк буруу эсвэл хоосон үед
 const DEF = { to: 'Сараа', from: 'Батаа', ask: 'Надтай *болзоонд* явах уу?', yt: '', t: 0, ph: '', ms: '', when: true };
 const raw = readGift();
-const G = raw ? Object.assign({}, raw, { to: raw.to || DEF.to, from: raw.from || DEF.from, ask: raw.ask || DEF.ask }) : DEF;
+const G = raw ? Object.assign({}, raw, { to: raw.to || DEF.to, from: raw.from || '',  /* линктэй бол жишээ нэр гаргахгүй */ ask: raw.ask || DEF.ask }) : DEF;
 
 const $ = id => document.getElementById(id);
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -301,7 +302,7 @@ function renderAsk(el, text) {
 
 $('coverTitle').textContent = G.to + ', чамд зориулсан урилга';
 $('toName').textContent = G.to;
-$('fromName').textContent = G.from;
+$('fromName').textContent = G.from || 'Нууц хүн 🤫';
 renderAsk($('ask'), G.ask);
 document.title = G.to + ', чамд нэг тасалбар';
 
@@ -329,6 +330,8 @@ $('mini').addEventListener('click', () => {
   document.body.classList.toggle('mini-on', on);
   $('mini').textContent = on ? '＋ томруулах' : '— жижигрүүлэх';
 });
+// Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ — дуу тоглосоор
+if (G.vid === false) { $('music').classList.add('mini'); document.body.classList.add('mini-on'); $('mini').textContent = '▶ Дүрс харах'; }
 
 $('open').addEventListener('click', async () => {
   $('open').disabled = true;

@@ -259,6 +259,7 @@
         t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
         ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
         ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+        vid: o.vid !== 0,
         when: o.when !== 0
       };
     } catch (e) { return null; }
@@ -272,9 +273,10 @@
   const g = readGift();
   const G = {
     to: (g && g.to) || 'Сараа',
-    from: (g && g.from) || 'Батаа',
+    from: g ? g.from : 'Батаа',  /* линктэй бол жишээ нэр гаргахгүй */
     ask: (g && g.ask) || 'Надтай *болзоонд* явах уу?',
     yt: g ? g.yt : '', t: g ? g.t : 0, ph: g ? g.ph : '', ms: g ? g.ms : '',
+    vid: g ? g.vid : true,
     when: g ? g.when : true
   };
 
@@ -483,7 +485,7 @@
   $('#toLine').textContent = G.to + ', чамд зориулсан урилга';
   $('#hint').textContent = G.yt ? 'Одыг товшоорой — дуу эхэлнэ' : 'Одыг товшоорой';
   $('#toName').textContent = G.to + ',';
-  $('#sign').textContent = '— ' + G.from;
+  $('#sign').textContent = G.from ? '— ' + G.from : '';
 
   $('#minBtn').onclick = () => {
     const m = $('#music'), min = m.classList.toggle('min');
@@ -491,6 +493,8 @@
     $('#minBtn').textContent = min ? '+ томруулах' : '— жижигрүүлэх';
     $('#minBtn').setAttribute('aria-expanded', String(!min));
   };
+  // Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ — дуу тоглосоор
+  if (G.vid === false) { $('#music').classList.add('min'); document.body.classList.add('min-music'); $('#minBtn').textContent = '▶ Дүрс харах'; $('#minBtn').setAttribute('aria-expanded','false'); }
 
   $('#open').onclick = async () => {
     startMusic();
