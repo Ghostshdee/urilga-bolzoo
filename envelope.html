@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Чамд захидал ирлээ 💌</title>
+<meta name="description" content="Лацтай дугтуй чамайг хүлээж байна. Нээгээд хариугаа өгөөрэй.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Чамд захидал ирлээ 💌">
+<meta property="og:description" content="Лацтай дугтуй чамайг хүлээж байна. Нээгээд хариугаа өгөөрэй.">
+<meta property="og:url" content="https://ghostshdee.github.io/urilga-bolzoo/envelope.html">
+<meta property="og:locale" content="mn_MN">
+<meta property="og:image" content="https://ghostshdee.github.io/urilga-bolzoo/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Болзооны урилга — жишээ зураг">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#efe6d8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Onest:wght@400;500;600&display=swap">
+<style>
+:root {
+  --table: #efe6d8;
+  --kraft: #bf9363;
+  --kraft-d: #a87b4c;
+  --kraft-l: #cfa676;
+  --paper: #fbf7ef;
+  --ink: #3a2a1e;
+  --muted: #7a6450;
+  --wax: #a3201f;
+  --wax-l: #d6443b;
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --sans: "Onest", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100svh;
+  background:
+    radial-gradient(120% 80% at 50% 0%, #f7f1e7 0%, var(--table) 60%, #e4d7c3 100%);
+  color: var(--ink);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+main {
+  width: min(440px, 100%);
+  margin: 0 auto;
+  padding: 40px 20px 120px;
+  display: flex; flex-direction: column; align-items: center;
+}
+[hidden] { display: none !important; }
+
+/* ---------- Нүүр: дугтуй ---------- */
+.to-label {
+  font-family: var(--serif); font-style: italic;
+  font-size: 1.6rem; text-align: center; margin: 12px 0 28px;
+}
+.env {
+  position: relative;
+  width: min(340px, 88vw);
+  aspect-ratio: 3 / 2;
+  perspective: 900px;
+  margin-top: 60px;
+}
+.env > div { position: absolute; inset: 0; border-radius: 6px; }
+.kraft {
+  background-color: var(--kraft);
+  background-image:
+    repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(25deg, rgba(0,0,0,.04) 0 1px, transparent 1px 9px);
+}
+.env-back { z-index: 0; box-shadow: 0 18px 40px rgba(70,45,20,.28); }
+.peek {
+  z-index: 2;
+  inset: 8px 14px auto !important;
+  height: 88%;
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  transition: transform .7s cubic-bezier(.2,.8,.2,1) .55s;
+}
+.peek::before {
+  content: ""; position: absolute; inset: 22px 20px auto; height: 50%;
+  background: repeating-linear-gradient(transparent 0 15px, rgba(120,90,60,.15) 15px 16px);
+}
+.env-front {
+  z-index: 3;
+  clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%);
+  background-color: var(--kraft-l) !important;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.06);
+}
+.flap {
+  z-index: 4;
+  bottom: auto !important; height: 60%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background-color: var(--kraft-d) !important;
+  transform-origin: top center;
+  transition: transform .6s ease-in, z-index 0s linear .3s;
+}
+.seal {
+  position: absolute; z-index: 5;
+  left: 50%; top: 60%;
+  width: 84px; height: 84px; margin: -42px 0 0 -42px;
+  border: 0; border-radius: 50%; padding: 0; cursor: pointer;
+  background: radial-gradient(circle at 35% 30%, var(--wax-l), var(--wax) 55%, #6c0f12 100%);
+  box-shadow:
+    -4px 3px 0 -1px var(--wax), 5px -3px 0 -2px var(--wax), 3px 5px 0 -2px #8e1a1a,
+    0 6px 14px rgba(90,10,10,.45);
+  color: rgba(255,225,215,.85);
+  font-family: var(--serif); font-size: 2.3rem; font-weight: 500;
+  display: grid; place-items: center;
+  transition: transform .35s ease, opacity .35s ease;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.seal::after {
+  content: ""; position: absolute; inset: 10px; border-radius: 50%;
+  border: 2px solid rgba(60,0,0,.28);
+  box-shadow: inset 0 0 0 1px rgba(255,190,180,.18);
+}
+.seal:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #3a2a1e; outline-offset: 3px; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+.open-btn {
+  margin-top: 34px;
+  font: 600 1.05rem var(--sans);
+  color: #fff; background: var(--wax);
+  border: 0; border-radius: 999px; padding: 14px 28px; cursor: pointer;
+  box-shadow: 0 6px 16px rgba(163,32,31,.3);
+}
+.hint { color: var(--muted); font-size: .9rem; margin-top: 12px; }
+
+.env.open .seal { transform: scale(.4) rotate(-25deg); opacity: 0; animation: none; }
+.env.open .flap { transform: rotateX(180deg); z-index: 1; }
+.env.open .peek { transform: translateY(-48%); }
+
+/* ---------- Захидал ---------- */
+.letter {
+  width: 100%;
+  background: var(--paper);
+  background-image: repeating-linear-gradient(transparent 0 31px, rgba(120,90,60,.10) 31px 32px);
+  border-radius: 6px;
+  padding: 34px 24px 28px;
+  box-shadow: 0 20px 44px rgba(70,45,20,.22);
+  position: relative;
+}
+.letter.in { animation: rise .6s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+.dear { font-family: var(--serif); font-style: italic; font-size: 1.5rem; margin: 0 0 14px; }
+.ask {
+  font-family: var(--serif); font-size: 2.1rem; line-height: 1.15;
+  margin: 0 0 26px; font-weight: 500;
+}
+.ask em { color: var(--wax); font-style: italic; }
+.sign { font-family: var(--serif); font-style: italic; font-size: 1.3rem; text-align: right; margin: 8px 0 0; }
+.answers { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; min-height: 64px; }
+.btn {
+  font: 600 1rem var(--sans); border-radius: 999px; padding: 13px 26px; cursor: pointer;
+  border: 2px solid var(--wax); transition: transform .25s ease;
+}
+.btn-yes { background: var(--wax); color: #fff; }
+.btn-no { background: transparent; color: var(--wax); }
+.no-note { text-align: center; color: var(--muted); font-size: .9rem; margin: 10px 0 0; min-height: 1.2em; }
+
+.stamp {
+  position: absolute; right: 16px; top: 18px;
+  border: 3px solid var(--wax); color: var(--wax);
+  font: 600 .85rem var(--sans); letter-spacing: .12em;
+  padding: 6px 10px; border-radius: 6px;
+  transform: rotate(-12deg); opacity: .85;
+  animation: stamp .45s cubic-bezier(.3,1.6,.5,1) both;
+}
+@keyframes stamp { from { transform: rotate(-12deg) scale(2.2); opacity: 0; } }
+.yay { font-family: var(--serif); font-size: 1.8rem; text-align: center; margin: 4px 0 18px; }
+
+/* ---------- Сонголт ---------- */
+.group { margin: 0 0 18px; }
+.group h3 { font: 600 .8rem var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: 500 .95rem var(--sans); color: var(--ink);
+  background: #fff; border: 1.5px solid #d9c9b3; border-radius: 12px;
+  padding: 9px 13px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start;
+}
+.chip small { font-size: .72rem; color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--wax); border-color: var(--wax); color: #fff; }
+.chip[aria-pressed="true"] small { color: rgba(255,255,255,.8); }
+.chip:disabled { opacity: .35; cursor: not-allowed; }
+
+.reply { margin-top: 8px; border-top: 1px dashed #d4c2a8; padding-top: 18px; }
+.msg {
+  background: #fff; border-radius: 12px; padding: 14px 16px; margin: 0 0 14px;
+  font-size: 1.05rem; border: 1.5px solid #ead9c2;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions .btn { padding: 11px 18px; font-size: .95rem; text-decoration: none; display: inline-block; }
+.status { color: var(--muted); font-size: .9rem; min-height: 1.3em; margin: 10px 0 0; }
+
+footer { margin-top: 36px; font-size: .85rem; color: var(--muted); text-align: center; }
+footer a { color: var(--wax); font-weight: 600; text-decoration: none; }
+
+/* ---------- Дуу ---------- */
+.music {
+  position: fixed; right: 12px; bottom: 12px; z-index: 20;
+  background: rgba(251,247,239,.96); border-radius: 12px; padding: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.15);
+  display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--muted);
+  max-width: calc(100vw - 24px);
+}
+.music iframe { width: 112px; height: 63px; border: 0; border-radius: 6px; }
+.music button { font: 600 .8rem var(--sans); border: 0; background: var(--wax); color: #fff; border-radius: 999px; padding: 7px 11px; cursor: pointer; }
+
+.hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 30; }
+.hearts span { position: absolute; bottom: -40px; font-size: 1.6rem; animation: float 2.8s ease-out forwards; }
+@keyframes float { to { transform: translateY(-110vh) rotate(25deg); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<main>
+  <section id="stage" aria-label="Дугтуй">
+    <p class="to-label" id="toLabel">Сараа, чамд зориулсан урилга</p>
+    <div class="env" id="env">
+      <div class="env-back kraft"></div>
+      <div class="peek"></div>
+      <div class="env-front kraft"></div>
+      <div class="flap kraft"></div>
+      <button class="seal" id="seal" type="button" aria-label="Лацыг дарж дугтуйг нээх">Б</button>
+    </div>
+    <div style="text-align:center">
+      <button class="open-btn" id="openBtn" type="button">💌 Нээх</button>
+      <p class="hint">Лацыг дарж нээгээрэй</p>
+    </div>
+  </section>
+
+  <article class="letter" id="letter" hidden aria-live="polite">
+    <p class="dear" id="dear">Хайрт Сараа,</p>
+    <div id="askBlock">
+      <h1 class="ask" id="ask">Надтай болзоонд явах уу?</h1>
+      <div class="answers">
+        <button class="btn btn-yes" id="yes" type="button">Тийм 💕</button>
+        <button class="btn btn-no" id="no" type="button">Үгүй</button>
+      </div>
+      <p class="no-note" id="noNote"></p>
+    </div>
+
+    <div id="after" hidden>
+      <div class="stamp" aria-hidden="true">ЗӨВШӨӨРӨВ</div>
+      <p class="yay">Тийм гэлээ! 💕</p>
+      <div id="when" hidden>
+        <div class="group"><h3>Өдөр</h3><div class="row" id="days"></div></div>
+        <div class="group"><h3>Цаг</h3><div class="row" id="times"></div></div>
+        <div class="group"><h3>Газар</h3><div class="row" id="places"></div></div>
+      </div>
+      <div class="reply" id="reply" hidden>
+        <h3 style="font:600 .8rem var(--sans);letter-spacing:.1em;color:var(--muted);margin:0 0 8px">ХАРИУГАА ИЛГЭЭ</h3>
+        <p class="msg" id="msg"></p>
+        <div class="actions">
+          <button class="btn btn-yes" id="copy" type="button">Хуулах</button>
+          <a class="btn btn-no" id="sms" href="#" hidden>SMS илгээх</a>
+          <button class="btn btn-no" id="messenger" type="button" hidden>Messenger</button>
+        </div>
+        <p class="status" id="status" role="status"></p>
+      </div>
+    </div>
+    <p class="sign" id="sign">Батаа</p>
+  </article>
+
+  <footer>Dokay-оор хийсэн · <a href="make.html">Өөрийнхөөрөө хийх →</a></footer>
+</main>
+
+<div class="music" id="music" hidden>
+  <span>♪ дуу</span>
+  <button type="button" id="playBtn">▶ Дууг асаах</button>
+</div>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+
+<script>
+function readGift() {
+  const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
+  if (!m) return null;
+  try {
+    const b = atob(m[1].replace(/-/g, '+').replace(/_/g, '/'));
+    const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))));
+    const s = (v, n) => typeof v === 'string' ? v.replace(/[<>"'`&]/g, '').trim().slice(0, n) : '';
+    return {
+      to: s(o.to, 24), from: s(o.from, 24), ask: s(o.ask, 120),
+      yt: /^[A-Za-z0-9_-]{11}$/.test(o.yt) ? o.yt : '',
+      t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
+      ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
+      ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      when: o.when !== 0
+    };
+  } catch (e) { return null; }
+}
+
+/* Линкгүй эсвэл эвдэрсэн бол анхдагч жишээ гарна */
+const DEF = { to: 'Сараа', from: 'Батаа', ask: 'Надтай *болзоонд* явах уу?', yt: '', t: 0, ph: '', ms: '', when: true };
+const raw = readGift();
+const G = raw ? { ...raw, to: raw.to || DEF.to, from: raw.from || DEF.from, ask: raw.ask || DEF.ask } : DEF;
+
+const $ = (id) => document.getElementById(id);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Агуулга (бүгд textContent) ---------- */
+$('toLabel').textContent = `${G.to}, чамд зориулсан урилга`;
+$('dear').textContent = `Хайрт ${G.to},`;
+$('sign').textContent = G.from;
+$('seal').textContent = [...G.from][0] || '♥';
+
+/* «*үг*» → <em>, зөвхөн DOM-оор */
+const askEl = $('ask');
+askEl.textContent = '';
+G.ask.split(/\*([^*]+)\*/).forEach((part, i) => {
+  if (!part) return;
+  if (i % 2) { const em = document.createElement('em'); em.textContent = part; askEl.appendChild(em); }
+  else askEl.appendChild(document.createTextNode(part));
+});
+
+/* ---------- Дуу: товшилтын дараа л iframe үүсгэнэ ---------- */
+function playSong() {
+  if (!G.yt) return;
+  const box = $('music');
+  box.hidden = false;
+  const old = box.querySelector('iframe');
+  if (old) old.remove();
+  const f = document.createElement('iframe');
+  f.src = `https://www.youtube-nocookie.com/embed/${G.yt}?autoplay=1&start=${G.t}&playsinline=1`;
+  f.allow = 'autoplay; encrypted-media';
+  f.title = 'Дуу';
+  box.prepend(f);
+}
+$('playBtn').addEventListener('click', playSong);
+
+/* ---------- Дугтуй нээх ---------- */
+let opened = false;
+function openEnvelope() {
+  if (opened) return;
+  opened = true;
+  playSong();
+  $('env').classList.add('open');
+  setTimeout(() => {
+    $('stage').hidden = true;
+    const l = $('letter');
+    l.hidden = false;
+    l.classList.add('in');
+    window.scrollTo(0, 0);
+    $('yes').focus({ preventScroll: true });
+  }, reduceMotion ? 0 : 1300);
+}
+$('seal').addEventListener('click', openEnvelope);
+$('openBtn').addEventListener('click', openEnvelope);
+
+/* ---------- «Үгүй» — жижгэрсээр алга болно ---------- */
+const NO_TEXTS = ['Итгэлтэй юу?', 'Дахиад нэг бодоорой 🥺', 'Захидлаа буцааж битүүмжлэх үү?', 'Сүүлчийн боломж…'];
+let noCount = 0;
+$('no').addEventListener('click', () => {
+  if (noCount < NO_TEXTS.length) {
+    $('no').textContent = NO_TEXTS[noCount];
+    noCount++;
+    $('no').style.transform = `scale(${1 - noCount * 0.15})`;
+    $('yes').style.transform = `scale(${1 + noCount * 0.12})`;
+  } else {
+    $('no').hidden = true;
+    $('noNote').textContent = '«Тийм» л үлдлээ 😊';
+    $('yes').focus();
+  }
+});
+
+/* ---------- «Тийм» ---------- */
+function hearts() {
+  if (reduceMotion) return;
+  const layer = $('hearts');
+  const marks = ['💕', '❤️', '💌'];
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement('span');
+    s.textContent = marks[i % marks.length];
+    s.style.left = `${Math.random() * 92}%`;
+    s.style.animationDelay = `${Math.random() * 0.8}s`;
+    layer.appendChild(s);
+    setTimeout(() => s.remove(), 3800);
+  }
+}
+
+$('yes').addEventListener('click', () => {
+  $('askBlock').hidden = true;
+  $('after').hidden = false;
+  hearts();
+  if (G.when) { $('when').hidden = false; buildDays(); buildPlaces(); }
+  else showReply('Тийм ээ! Болзъё 💕');
+});
+
+/* ---------- Өдөр / цаг / газар (index.html-ийн логик) ---------- */
+const TIMES = ['12:00', '14:00', '17:00', '19:00', '20:00'];
+const PLACES = ['Кино', 'Кофе', 'Оройн хоол', 'Алхах'];
+const SAY = { 'Кино': 'кино үзэхээр', 'Кофе': 'кофе уухаар', 'Оройн хоол': 'оройн хоол идэхээр', 'Алхах': 'алхахаар' };  /* мессежид орох хэлбэр */
+const WEEKDAYS = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
+const CUSHION = 30;
+const minutesOf = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const cutoff = () => { const n = new Date(); return n.getHours() * 60 + n.getMinutes() + CUSHION; };
+
+let pDay = null, pTime = null, pPlace = null;
+
+function chip(text, sub) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'chip';
+  b.setAttribute('aria-pressed', 'false');
+  b.textContent = text;
+  if (sub) { const s = document.createElement('small'); s.textContent = sub; b.appendChild(s); }
+  return b;
+}
+function mark(row, btn) { for (const b of row.children) b.setAttribute('aria-pressed', String(b === btn)); }
+
+function buildDays() {
+  const row = $('days');
+  row.textContent = '';
+  for (let i = 0; i < 7; i++) {
+    if (i === 0 && !TIMES.some((t) => minutesOf(t) >= cutoff())) continue;
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    const label = i === 0 ? 'Өнөөдөр' : i === 1 ? 'Маргааш' : `${WEEKDAYS[d.getDay()]} гараг`;
+    const b = chip(label, `${d.getMonth() + 1}-р сарын ${d.getDate()}`);
+    b.addEventListener('click', () => { pDay = { i, label }; mark(row, b); buildTimes(); update(); });
+    row.appendChild(b);
+  }
+  buildTimes();
+}
+
+function buildTimes() {
+  const row = $('times');
+  row.textContent = '';
+  const today = pDay && pDay.i === 0;
+  if (today && pTime && minutesOf(pTime) < cutoff()) pTime = null;
+  for (const t of TIMES) {
+    const b = chip(t);
+    if (today && minutesOf(t) < cutoff()) b.disabled = true;
+    if (t === pTime) b.setAttribute('aria-pressed', 'true');
+    b.addEventListener('click', () => { pTime = t; mark(row, b); update(); });
+    row.appendChild(b);
+  }
+}
+
+function buildPlaces() {
+  const row = $('places');
+  row.textContent = '';
+  for (const p of PLACES) {
+    const b = chip(p);
+    b.addEventListener('click', () => { pPlace = p; mark(row, b); update(); });
+    row.appendChild(b);
+  }
+}
+
+function update() {
+  if (!pDay || !pTime || !pPlace) { $('reply').hidden = true; return; }
+  showReply(`Тийм ээ! ${pDay.label} ${pTime} цагт ${SAY[pPlace] || pPlace.toLowerCase()} болзъё 💕`);
+}
+
+/* ---------- Хариу ---------- */
+let message = '';
+function showReply(text) {
+  message = text;
+  $('msg').textContent = text;
+  $('reply').hidden = false;
+  $('status').textContent = '';
+  if (G.ph) {
+    $('sms').hidden = false;
+    $('sms').href = `sms:${G.ph}?&body=${encodeURIComponent(text)}`;
+  }
+  if (G.ms) $('messenger').hidden = false;
+}
+
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; } catch (e) { /* доорх нөөц арга */ }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  } catch (e) { return false; }
+}
+
+$('copy').addEventListener('click', async () => {
+  $('status').textContent = (await copyText(message)) ? 'Хуулагдлаа ✓' : 'Хуулж чадсангүй — гараар сонгоод хуулаарай';
+});
+$('messenger').addEventListener('click', async () => {
+  const ok = await copyText(message);
+  $('status').textContent = ok ? 'Хуулагдлаа — Messenger-т буулгаарай' : 'Мессежээ гараар хуулаад Messenger-т буулгаарай';
+  window.open(`https://m.me/${G.ms}`, '_blank', 'noopener');
+});
+</script>
+</body>
+</html>

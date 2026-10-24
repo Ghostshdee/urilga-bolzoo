@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#F6EFE7">
-<title>Сараад — жижиг асуулт</title>
+<title>Чамд нэг жижиг асуулт байна</title>
 <meta name="description" content="Надтай болзоонд явах уу? — жижигхэн асуулт.">
 
 <!-- Мессенжерээр хуваалцахад гарах preview. og зураг: assets/og.jpg (1200×630, дотор нь нэр байхгүй). -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Сараад — жижиг асуулт">
+<meta property="og:title" content="Чамд нэг жижиг асуулт байна">
 <meta property="og:description" content="Ганцхан асуулт байна. Зөв хариулт нь нэг л байгаа.">
 <meta property="og:locale" content="mn_MN">
 <meta property="og:image" content="https://ghostshdee.github.io/urilga-bolzoo/assets/og.jpg">
@@ -387,6 +387,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
       <div class="when-actions" id="whenActions" hidden>
         <button class="send" id="send" type="button"></button>
         <button class="copy" id="copy" type="button"></button>
+        <button class="copy" id="msgr" type="button" hidden></button>
       </div>
     </section>
 
@@ -396,7 +397,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 </main>
 
 <footer class="credit">
-  <a href="https://ghostshdee.github.io/" target="_blank" rel="noopener">Бүтээсэн: DOKAY.</a>
+  <a href="https://ghostshdee.github.io/" target="_blank" rel="noopener">Бүтээсэн: DOKAY.</a> · <a href="make.html">Өөрийнхөөрөө хийх →</a>
 </footer>
 
 <script>
@@ -487,6 +488,10 @@ const CONFIG = {
     /* Илгээх дугаар. Хоосон бол зөвхөн «Хуулах» товч гарна. */
     phone: '',   /* жишээ — илгээгчийн дугаар, жишээ нь '99xxxxxx' */
 
+    /* Messenger нэр (m.me/<энэ>). Хоосон бол Messenger товч гарахгүй. */
+    messenger: '',
+    messengerLabel: 'Messenger',
+
     sendLabel: 'Мессежээр илгээх',
     copyLabel: 'Хуулах',
     copiedLabel: 'Хууллаа ✓',
@@ -507,6 +512,37 @@ const CONFIG = {
   if (n1) C.eyebrow = `${n1} — жижиг асуулт`;
   if (n2) C.reply.signature = `— ${n2}`;
 })(CONFIG);
+
+function readGift() {
+  const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
+  if (!m) return null;
+  try {
+    const b = atob(m[1].replace(/-/g, '+').replace(/_/g, '/'));
+    const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))));
+    const s = (v, n) => typeof v === 'string' ? v.replace(/[<>"'`&]/g, '').trim().slice(0, n) : '';
+    return {
+      to: s(o.to, 24), from: s(o.from, 24), ask: s(o.ask, 120),
+      yt: /^[A-Za-z0-9_-]{11}$/.test(o.yt) ? o.yt : '',
+      t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
+      ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
+      ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      when: o.when !== 0
+    };
+  } catch (e) { return null; }
+}
+
+/* Бүтээгчээс ирсэн линк (#d=…) — ?n1/n2-оос давуу. Бүх утга цэвэрлэгдсэн, textContent-оор л ордог. */
+(function applyGift(C, G) {
+  if (!G) return;
+  if (G.to) C.eyebrow = `${G.to} — жижиг асуулт`;
+  C.reply.signature = G.from ? `— ${G.from}` : '';   /* жишээ нэр харилцагчид гарахгүй */
+  if (G.ask) C.askText = G.ask;
+  C.song.youtube = G.yt;          /* хоосон бол дуугүй */
+  C.song.start = G.t;
+  C.when.phone = G.ph;
+  C.when.messenger = G.ms;
+  C.when.enabled = G.when;
+})(CONFIG, readGift());
 
 /* ── Цэцгийн дэлбээ үүсгэх ── */
 const petals = document.getElementById('petals');
@@ -530,7 +566,14 @@ const dodgeChip = document.getElementById('dodges');
 const bloom = document.getElementById('bloom');
 
 document.getElementById('eyebrow').textContent = CONFIG.eyebrow;
-askEl.innerHTML = CONFIG.ask;          /* зөвхөн CONFIG-ийн текст — гаднаас юу ч ирэхгүй */
+if (CONFIG.askText) {
+  /* Линкийн текст — innerHTML хориотой; *үг*-ийг DOM-оор <em> болгоно */
+  CONFIG.askText.split('*').forEach((part, i) => {
+    if (part) askEl.append(i % 2 ? Object.assign(document.createElement('em'), { textContent: part }) : part);
+  });
+} else {
+  askEl.innerHTML = CONFIG.ask;   /* зөвхөн CONFIG-ийн текст */
+}
 hintEl.textContent = CONFIG.hints[0];
 yesBtn.textContent = CONFIG.yes;
 noBtn.textContent = CONFIG.no;
@@ -683,6 +726,7 @@ const pickedNote = document.getElementById('pickedNote');
 const whenActions = document.getElementById('whenActions');
 const sendBtn = document.getElementById('send');
 const copyBtn = document.getElementById('copy');
+const msgrBtn = document.getElementById('msgr');
 
 let pickedDay = null;
 let pickedTime = null;
@@ -765,6 +809,8 @@ function buildWhen() {
   copyBtn.textContent = w.copyLabel;
   sendBtn.textContent = w.sendLabel;
   sendBtn.hidden = !w.phone;     /* дугаар байхгүй бол зөвхөн хуулна */
+  msgrBtn.textContent = w.messengerLabel;
+  msgrBtn.hidden = !w.messenger;
 
   /* Өнөөдөр сонгох цаг үлдээгүй бол маргаашаас эхэлнэ */
   const today = new Date();
@@ -822,8 +868,8 @@ function renderTimes() {
   refreshPicked();
 }
 
-copyBtn.addEventListener('click', async () => {
-  const text = message();
+/** Текстийг хуулна. Амжилттай бол true буцаана. */
+async function copyText(text) {
   let ok = false;
   try {
     await navigator.clipboard.writeText(text);
@@ -839,7 +885,22 @@ copyBtn.addEventListener('click', async () => {
     try { ok = document.execCommand('copy'); } catch { ok = false; }
     ta.remove();
   }
+  return ok;
+}
+
+copyBtn.addEventListener('click', async () => {
+  const text = message();
+  const ok = await copyText(text);
   copyBtn.textContent = ok ? CONFIG.when.copiedLabel : text;
+});
+
+msgrBtn.addEventListener('click', async () => {
+  const w = CONFIG.when;
+  if (!w.messenger) return;
+  const copying = copyText(message());   /* товшилт дотор шууд эхэлнэ */
+  window.open(`https://m.me/${w.messenger}`, '_blank', 'noopener');   /* await-ээс өмнө — iOS popup хаахгүй */
+  const ok = await copying;
+  msgrBtn.textContent = ok ? 'Хуулагдлаа — Messenger-т буулгаарай' : w.messengerLabel;
 });
 
 sendBtn.addEventListener('click', () => {

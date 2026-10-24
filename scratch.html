@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Хусах карт — жижиг урилга</title>
+<meta name="description" content="Алтлаг бүрхүүлийг хусаад асуултаа уншаарай.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Хусах карт — жижиг урилга">
+<meta property="og:description" content="Алтлаг бүрхүүлийг хусаад асуултаа уншаарай.">
+<meta property="og:locale" content="mn_MN">
+<meta property="og:image" content="https://ghostshdee.github.io/urilga-bolzoo/assets/og.jpg">
+<meta name="theme-color" content="#F7F1EA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Onest:wght@400;500;600&display=swap">
+<style>
+:root {
+  --paper: #F7F1EA;
+  --card:  #FFFDFB;
+  --ink:   #2C2622;
+  --muted: #7A6E66;
+  --line:  #EADFD4;
+  --rose:  #D9566F;
+  --gold:  #C9A24A;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100dvh; background: var(--paper); color: var(--ink);
+  font: 16px/1.5 Onest, system-ui, sans-serif;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px 16px calc(24px + env(safe-area-inset-bottom)); overflow-x: hidden;
+}
+main { width: 100%; max-width: 380px; text-align: center; }
+.hidden { display: none !important; }
+.eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+h1, .ask { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 500; }
+h1 { font-size: 34px; line-height: 1.15; margin: 0 0 24px; }
+.btn {
+  appearance: none; border: 0; border-radius: 999px; cursor: pointer;
+  font: 600 16px/1 Onest, sans-serif; padding: 15px 26px; min-height: 48px;
+  background: var(--rose); color: #fff; transition: transform .2s, font-size .2s, padding .2s;
+}
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.btn:focus-visible, .chip:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.card {
+  position: relative; background: var(--card); border-radius: 22px;
+  border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(44,38,34,.08);
+  padding: 30px 22px; overflow: hidden;
+}
+.card::before {
+  content: ""; position: absolute; inset: 8px; border: 1px dashed var(--line);
+  border-radius: 16px; pointer-events: none;
+}
+.ask { font-size: 32px; line-height: 1.2; margin: 6px 0 4px; min-height: 120px;
+  text-align: center; text-wrap: balance; padding-top: 18px; }  /* flex биш — текст ба <em> нэг мөрөнд урсана */
+.card { -webkit-user-select: none; user-select: none; }
+.ask em { color: var(--rose); font-style: italic; }
+.sig { color: var(--muted); font-size: 14px; margin: 0; }
+.scratch-wrap { position: relative; border-radius: 14px; }
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 14px;
+  touch-action: none; cursor: grab; transition: opacity .6s; }
+canvas.gone { opacity: 0; pointer-events: none; }
+.hint { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
+.linkish { background: none; border: 0; color: var(--muted); text-decoration: underline; font: inherit; font-size: 13px; cursor: pointer; padding: 8px; }
+.answers { display: flex; gap: 12px; justify-content: center; align-items: center; margin-top: 22px; min-height: 52px; flex-wrap: wrap; }
+.step h2 { font: 600 15px/1.3 Onest, sans-serif; margin: 20px 0 10px; text-align: left; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1.5px solid var(--line); background: #fff; color: var(--ink); border-radius: 999px;
+  padding: 10px 14px; font: 500 15px Onest, sans-serif; cursor: pointer; min-height: 44px; }
+.chip[aria-pressed="true"] { background: var(--rose); border-color: var(--rose); color: #fff; }
+.msg { background: var(--paper); border-radius: 14px; padding: 14px; margin: 20px 0 12px; font-size: 17px; }
+.row { display: flex; flex-direction: column; gap: 10px; }
+.toast { min-height: 22px; font-size: 14px; color: var(--rose); margin-top: 8px; }
+.music { position: fixed; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px;
+  display: flex; align-items: center; gap: 6px; font-size: 13px; z-index: 5; }
+.music iframe { width: 1px; height: 1px; border: 0; opacity: 0; }
+.music button { border: 0; background: none; font: 500 13px Onest, sans-serif; color: var(--ink); cursor: pointer; padding: 6px 8px; }
+footer { margin-top: 28px; font-size: 13px; color: var(--muted); }
+footer a { color: var(--ink); font-weight: 600; }
+.coin { position: fixed; top: -30px; width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFF2C2, var(--gold) 60%, #8E6B22);
+  pointer-events: none; animation: fall linear forwards; z-index: 10; }
+@keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .coin { display: none; }
+}
+</style>
+</head>
+<body>
+<main>
+  <section id="cover">
+    <p class="eyebrow">Хусах карт</p>
+    <h1 id="coverTitle">Сараад зориулсан урилга</h1>
+    <button class="btn" id="openBtn" type="button">💌 Нээх</button>
+  </section>
+
+  <section id="game" class="hidden">
+    <p class="eyebrow" id="eyebrow">Сараад</p>
+    <div class="card">
+      <div class="scratch-wrap" id="wrap">
+        <p class="ask" id="ask"></p>
+        <p class="sig" id="sig"></p>
+        <canvas id="foil" aria-hidden="true"></canvas>
+      </div>
+      <p class="hint" id="hint">Алтан бүрхүүлийг хуруугаараа хусаарай ✦</p>
+      <button class="linkish" id="skipBtn" type="button">Хусахгүйгээр нээх</button>
+      <div class="answers hidden" id="answers">
+        <button class="btn" id="yesBtn" type="button">Тийм</button>
+        <button class="btn ghost" id="noBtn" type="button">Үгүй</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan" class="hidden">
+    <h1>Йэй! 💛</h1>
+    <div class="card">
+      <div id="whenBox">
+        <div class="step"><h2>Аль өдөр?</h2><div class="chips" id="days"></div></div>
+        <div class="step"><h2>Хэдэн цагт?</h2><div class="chips" id="hours"></div></div>
+        <div class="step"><h2>Хаана?</h2><div class="chips" id="places"></div></div>
+      </div>
+      <p class="msg" id="msg" aria-live="polite"></p>
+      <div class="row">
+        <button class="btn" id="copyBtn" type="button">Хуулах</button>
+        <a class="btn ghost hidden" id="smsBtn" href="#">SMS илгээх</a>
+        <button class="btn ghost hidden" id="msBtn" type="button">Messenger</button>
+      </div>
+      <p class="toast" id="toast" role="status"></p>
+    </div>
+  </section>
+
+  <footer>Dokay-оор хийсэн · <a href="make.html">Өөрийнхөөрөө хийх →</a></footer>
+</main>
+
+<div class="music hidden" id="music">
+  <span>♪ дуу</span>
+  <button type="button" id="playBtn">▶ Дууг асаах</button>
+</div>
+
+<script>
+function readGift() {
+  const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
+  if (!m) return null;
+  try {
+    const b = atob(m[1].replace(/-/g, '+').replace(/_/g, '/'));
+    const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))));
+    const s = (v, n) => typeof v === 'string' ? v.replace(/[<>"'`&]/g, '').trim().slice(0, n) : '';
+    return {
+      to: s(o.to, 24), from: s(o.from, 24), ask: s(o.ask, 120),
+      yt: /^[A-Za-z0-9_-]{11}$/.test(o.yt) ? o.yt : '',
+      t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
+      ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
+      ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      when: o.when !== 0
+    };
+  } catch (e) { return null; }
+}
+
+// Анхдагч жишээ — линкгүй эсвэл буруу өгөгдөлтэй үед
+const DEF = { to: 'Сараа', from: 'Батаа', ask: 'Надтай *болзоонд* явах уу?', yt: '', t: 0, ph: '', ms: '', when: true };
+const g = readGift() || DEF;
+const G = { to: g.to || DEF.to, from: g.from || DEF.from, ask: g.ask || DEF.ask,
+  yt: g.yt, t: g.t, ph: g.ph, ms: g.ms, when: g.when };
+
+const $ = id => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Нэр, асуулт — зөвхөн textContent; *үг* → <em> DOM-оор
+$('coverTitle').textContent = G.to + ', чамд зориулсан урилга';
+$('eyebrow').textContent = G.to + ', чамд';
+$('sig').textContent = '— ' + G.from;
+document.title = G.to + ', чамд зориулсан урилга';
+G.ask.split('*').forEach((part, i) => {
+  if (!part) return;
+  if (i % 2) { const em = document.createElement('em'); em.textContent = part; $('ask').appendChild(em); }
+  else $('ask').appendChild(document.createTextNode(part));
+});
+
+// 1. Нээх — товшилт дууг эхлүүлнэ
+function startMusic() {
+  if (!G.yt) return;
+  const box = $('music');
+  box.classList.remove('hidden');
+  const old = box.querySelector('iframe');
+  if (old) old.remove();
+  const f = document.createElement('iframe');
+  f.allow = 'autoplay; encrypted-media';
+  f.title = 'Дуу';
+  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1';
+  box.insertBefore(f, box.firstChild);
+}
+$('playBtn').addEventListener('click', startMusic);
+$('openBtn').addEventListener('click', () => {
+  startMusic();
+  $('cover').classList.add('hidden');
+  $('game').classList.remove('hidden');
+  setupFoil();
+});
+
+// Хусах бүрхүүл (canvas)
+const cv = $('foil'); const ctx = cv.getContext('2d');
+let revealed = false, drawing = false, last = null, moves = 0;
+function setupFoil() {
+  const r = $('wrap').getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const w = r.width, h = r.height;
+  const gr = ctx.createLinearGradient(0, 0, w, h);
+  gr.addColorStop(0, '#E9CD7E'); gr.addColorStop(.45, '#C9A24A');
+  gr.addColorStop(.55, '#F3E2A8'); gr.addColorStop(1, '#B08A35');
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = gr; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = 'rgba(255,255,255,.35)';
+  for (let i = 0; i < 70; i++) ctx.fillRect(Math.random() * w, Math.random() * h, 1.5, 1.5);
+  ctx.fillStyle = 'rgba(80,58,15,.75)';
+  ctx.font = '600 18px Onest, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('✦ Энд хус ✦', w / 2, h / 2);
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 38;
+}
+function pos(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+function scratch(p) {
+  ctx.beginPath();
+  if (last) { ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+  else { ctx.arc(p.x, p.y, 19, 0, Math.PI * 2); ctx.fill(); }
+  last = p;
+  if (++moves % 8 === 0) checkCleared();
+}
+function checkCleared() {
+  const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+  let clear = 0, total = 0;
+  for (let i = 3; i < d.length; i += 4 * 24) { total++; if (d[i] < 128) clear++; }
+  if (clear / total >= 0.55) reveal();
+}
+cv.addEventListener('pointerdown', e => { if (revealed) return; drawing = true; last = null; cv.setPointerCapture(e.pointerId); scratch(pos(e)); });
+cv.addEventListener('pointermove', e => { if (drawing) scratch(pos(e)); });
+['pointerup', 'pointercancel', 'pointerleave'].forEach(t => cv.addEventListener(t, () => { if (drawing) { drawing = false; last = null; checkCleared(); } }));
+window.addEventListener('resize', () => { if (!revealed && !$('game').classList.contains('hidden')) setupFoil(); });
+
+function reveal() {
+  if (revealed) return;
+  revealed = true;
+  cv.classList.add('gone');
+  $('hint').classList.add('hidden'); $('skipBtn').classList.add('hidden');
+  $('answers').classList.remove('hidden');
+  $('yesBtn').focus();
+}
+$('skipBtn').addEventListener('click', reveal);
+
+// 2. «Үгүй» — товшилт бүрд жижгэрч, эцэст нь «Тийм» болно
+const noLines = ['Итгэлтэй юу?', 'Дахиад бод', 'Сайн бодоорой'];
+let noCount = 0;
+$('noBtn').addEventListener('click', () => {
+  const b = $('noBtn');
+  if (noCount >= noLines.length) { yes(); return; }
+  b.textContent = noLines[noCount++];
+  b.style.fontSize = (16 - noCount * 2) + 'px';
+  b.style.padding = (15 - noCount * 3) + 'px ' + (26 - noCount * 5) + 'px';
+  $('yesBtn').style.transform = 'scale(' + (1 + noCount * 0.12) + ')';
+  if (noCount === noLines.length) { b.textContent = 'Тийм'; b.classList.remove('ghost'); b.style.cssText = ''; }
+});
+$('yesBtn').addEventListener('click', yes);
+
+// 3. Баяр + өдөр/цаг/газар
+const pick = { day: '', hour: '', place: '' };
+function coins() {
+  if (reduce) return;
+  for (let i = 0; i < 36; i++) {
+    const c = document.createElement('span');
+    c.className = 'coin';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.animationDuration = (1.6 + Math.random() * 1.6) + 's';
+    c.style.animationDelay = Math.random() * .6 + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+function chips(box, items, key) {
+  box.textContent = '';
+  items.forEach(label => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = label;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => {
+      box.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', 'false'));
+      b.setAttribute('aria-pressed', 'true');
+      pick[key] = label;
+      if (key === 'day') buildHours();
+      updateMsg();
+    });
+    box.appendChild(b);
+  });
+}
+const WD = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
+const HOURS = ['12:00', '14:00', '17:00', '19:00', '20:00'];
+function buildHours() {
+  const now = new Date().getHours();
+  let list = pick.day === 'Өнөөдөр' ? HOURS.filter(h => parseInt(h, 10) > now) : HOURS;
+  if (!list.length) list = ['Оройтуулаад'];
+  if (!list.includes(pick.hour)) pick.hour = '';
+  chips($('hours'), list, 'hour');
+  if (pick.hour) [...$('hours').children].forEach(b => { if (b.textContent === pick.hour) b.setAttribute('aria-pressed', 'true'); });
+}
+function yes() {
+  coins();
+  $('game').classList.add('hidden');
+  $('plan').classList.remove('hidden');
+  if (G.when) {
+    const days = ['Өнөөдөр', 'Маргааш'];
+    for (let i = 2; i < 7; i++) days.push(WD[(new Date().getDay() + i) % 7] + ' гараг');
+    chips($('days'), days, 'day');
+    buildHours();
+    chips($('places'), ['Кино', 'Кофе', 'Оройн хоол', 'Алхах'], 'place');
+  } else {
+    $('whenBox').classList.add('hidden');
+  }
+  if (G.ph) $('smsBtn').classList.remove('hidden');
+  if (G.ms) $('msBtn').classList.remove('hidden');
+  updateMsg();
+  window.scrollTo(0, 0);
+}
+
+// 4. Хариу
+function message() {
+  const SAY = { 'Кино': 'кино үзэхээр', 'Кофе': 'кофе уухаар', 'Оройн хоол': 'оройн хоол идэхээр', 'Алхах': 'алхахаар' };  /* мессежид орох хэлбэр */
+  const parts = [pick.day, pick.hour && (/^\d/.test(pick.hour) ? pick.hour + ' цагт' : pick.hour), pick.place && (SAY[pick.place] || pick.place)].filter(Boolean).join(' ');
+  return parts ? 'Тийм ээ! ' + parts + ' болзъё 💕' : 'Тийм ээ! Болзъё 💕';
+}
+function updateMsg() {
+  const m = message();
+  $('msg').textContent = m;
+  if (G.ph) $('smsBtn').href = 'sms:' + G.ph + '?&body=' + encodeURIComponent(m);
+}
+function copyText(t) {
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t).catch(() => fallback(t));
+  fallback(t); return Promise.resolve();
+}
+function fallback(t) {
+  const a = document.createElement('textarea');
+  a.value = t; a.setAttribute('readonly', ''); a.style.position = 'fixed'; a.style.opacity = '0';
+  document.body.appendChild(a); a.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  a.remove();
+}
+function toast(t) { $('toast').textContent = t; setTimeout(() => { $('toast').textContent = ''; }, 3500); }
+$('copyBtn').addEventListener('click', () => copyText(message()).then(() => toast('Хуулагдлаа ✓')));
+$('msBtn').addEventListener('click', () => {
+  copyText(message()).then(() => toast('Хуулагдлаа, Messenger-т буулгаарай'));
+  window.open('https://m.me/' + G.ms, '_blank', 'noopener');
+});
+</script>
+</body>
+</html>

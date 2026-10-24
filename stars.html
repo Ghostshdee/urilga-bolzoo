@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070B1A">
+<title>Шөнийн од — жижиг асуулт</title>
+<meta name="description" content="Тэнгэрт нэг асуулт оддоос угсрагдаж байна. Нээгээд хариулаарай.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Шөнийн од — жижиг асуулт">
+<meta property="og:description" content="Тэнгэрт нэг асуулт оддоос угсрагдаж байна. Нээгээд хариулаарай.">
+<meta property="og:locale" content="mn_MN">
+<meta property="og:url" content="https://ghostshdee.github.io/urilga-bolzoo/stars.html">
+<meta property="og:image" content="https://ghostshdee.github.io/urilga-bolzoo/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Болзооны урилга — жишээ зураг">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Onest:wght@400;500;600&display=swap">
+<style>
+  :root { --bg:#070B1A; --ink:#EDEBFF; --dim:#9BA3C7; --gold:#FFD98A; --glow:255,217,138; }
+  * { box-sizing:border-box; margin:0; }
+  [hidden] { display:none !important; }
+  html, body { min-height:100%; }
+  body {
+    display:flex; flex-direction:column; min-height:100svh; overflow-x:hidden;
+    background:radial-gradient(120% 80% at 50% 0%, #18204A 0%, #0B1030 45%, var(--bg) 100%) fixed var(--bg);
+    color:var(--ink); font:400 16px/1.5 Onest, system-ui, sans-serif; -webkit-tap-highlight-color:transparent;
+  }
+  button { font:inherit; cursor:pointer; }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+
+  /* Тэнгэр — 3 давхарга box-shadow од, зөвхөн opacity хөдөлнө */
+  .sky { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+  .layer { position:absolute; top:0; left:0; width:1px; height:1px; border-radius:50%; }
+  .l1 { animation:tw 4s ease-in-out infinite alternate; }
+  .l2 { animation:tw 6s ease-in-out -2s infinite alternate; }
+  .l3 { animation:tw 7s ease-in-out -4s infinite alternate; }
+  @keyframes tw { from { opacity:.35; } to { opacity:1; } }
+  .moon {
+    position:absolute; top:7svh; right:9vw; width:44px; height:44px; border-radius:50%;
+    box-shadow:10px 6px 0 0 #F4E7C1; transform:rotate(-20deg); opacity:.9;
+  }
+  .shoot {
+    position:absolute; width:90px; height:2px; border-radius:2px;
+    background:linear-gradient(90deg, #fff, rgba(255,255,255,0));
+    animation:shoot .9s ease-out forwards;
+  }
+  @keyframes shoot {
+    from { transform:rotate(-30deg) translateX(0); opacity:1; }
+    to { transform:rotate(-30deg) translateX(-260px); opacity:0; }
+  }
+
+  /* Дуу */
+  .music {
+    position:fixed; top:12px; left:12px; z-index:5; width:176px; padding:8px;
+    background:rgba(10,14,36,.85); border:1px solid rgba(255,255,255,.12); border-radius:14px; font-size:12px;
+  }
+  .music-h { display:block; color:var(--dim); margin:0 0 6px 2px; }
+  .music iframe { display:block; width:160px; height:90px; border:0; border-radius:8px; }
+  .music button {
+    width:100%; min-height:36px; margin-top:6px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.25); background:transparent; color:var(--ink);
+  }
+
+  main {
+    flex:1; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:28px 22px 24px; text-align:center;
+  }
+  .screen { width:100%; max-width:420px; }
+  .eyebrow { font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+  h1, h2 { font-family:'Cormorant Garamond', Georgia, serif; font-weight:500; }
+  h1 { font-size:clamp(30px, 8.5vw, 40px); line-height:1.15; margin-top:10px; }
+  h2:focus, h1:focus { outline:none; }
+
+  .orb {
+    display:grid; place-items:center; width:136px; height:136px; margin:34px auto 20px;
+    border:0; border-radius:50%; color:#2A1E05; font-weight:600; font-size:17px;
+    background:radial-gradient(circle, #FFF6DC 0%, #FFD98A 34%, rgba(255,217,138,.22) 62%, rgba(255,217,138,0) 72%);
+    animation:pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { transform:scale(1.06); } }
+  .hint { color:var(--dim); font-size:14px; }
+
+  /* Асуулт — үсэг бүр эхлээд од, дараа нь байрандаа очиж үсэг болно */
+  .to { color:var(--dim); font-size:15px; }
+  .ask { font-size:clamp(34px, 10vw, 46px); line-height:1.15; margin:14px 0 12px; min-height:2.3em; }
+  .ask em { font-style:italic; color:var(--gold); }
+  .w { display:inline-block; white-space:nowrap; }
+  .c {
+    display:inline-block; position:relative; color:transparent;
+    transform:translate(var(--x), var(--y)) scale(.6);
+    transition:transform 1.2s cubic-bezier(.2,.8,.2,1) var(--d), color .6s calc(var(--d) + .9s), text-shadow .6s calc(var(--d) + .9s);
+  }
+  .c::after {
+    content:''; position:absolute; left:50%; top:55%; width:6px; height:6px; margin:-3px; border-radius:50%;
+    background:#fff; box-shadow:0 0 8px 3px rgba(var(--glow),.8);
+    transition:opacity .5s calc(var(--d) + .9s);
+  }
+  .on .c { transform:none; color:inherit; }
+  .on .c::after { opacity:0; }
+  .on em .c { text-shadow:0 0 16px rgba(var(--glow),.55); }
+  .sign { color:var(--dim); font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:20px; }
+
+  .choices {
+    display:flex; gap:14px; justify-content:center; align-items:center; flex-wrap:wrap; margin-top:26px;
+    opacity:0; visibility:hidden; transition:opacity .6s;
+  }
+  .choices.ready, .sign.ready { opacity:1; visibility:visible; }
+  .sign { opacity:0; transition:opacity .6s; }
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 28px;
+    border-radius:999px; font-weight:600; font-size:17px; text-decoration:none; transition:transform .25s, opacity .25s;
+  }
+  .yes { border:0; color:#241803; background:linear-gradient(#FFE3A3, #FFC76A); box-shadow:0 0 24px rgba(var(--glow),.45); }
+  .no, .ghost { background:transparent; color:var(--ink); border:1px solid rgba(237,235,255,.35); }
+  .fall { animation:fall .9s ease-in forwards; }
+  @keyframes fall { to { transform:translate(120px, 60vh) rotate(40deg) scale(.3); opacity:0; } }
+
+  /* Баяр — оддоос зүрх */
+  #heart { width:min(70vw, 240px); height:auto; filter:drop-shadow(0 0 6px rgba(255,217,138,.7)); }
+  #heart path { fill:none; stroke:rgba(255,217,138,.6); stroke-width:1.2; transition:stroke-dashoffset 1.6s ease; }
+  #heart circle { fill:#FFF3D1; transform-box:fill-box; transform-origin:center; animation:pop .5s backwards; }
+  @keyframes pop { from { transform:scale(0); } }
+  .yay-t { font-size:clamp(36px, 10vw, 48px); margin-top:8px; }
+  .sub { color:var(--dim); }
+
+  /* Өдөр, цаг, газар */
+  #planT { font-size:clamp(32px, 9vw, 42px); margin-bottom:6px; }
+  .grp-h { font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); margin:18px 0 8px; font-weight:500; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .chip {
+    min-height:46px; padding:0 16px; border-radius:999px; color:var(--ink);
+    border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.04);
+  }
+  .chip[aria-pressed="true"] { background:var(--gold); color:#241803; border-color:var(--gold); box-shadow:0 0 14px rgba(var(--glow),.5); }
+  #reply { margin-top:24px; }
+  .msg {
+    font-family:'Cormorant Garamond', Georgia, serif; font-style:italic; font-size:24px; line-height:1.3;
+    padding:16px 18px; border:1px dashed rgba(255,217,138,.5); border-radius:16px;
+  }
+  .acts { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+
+  footer { text-align:center; padding:14px 16px calc(14px + env(safe-area-inset-bottom)); font-size:13px; color:var(--dim); position:relative; }
+  footer a { color:var(--gold); font-weight:600; text-decoration:none; }
+  .toast {
+    position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); z-index:6; transform:translateX(-50%);
+    padding:10px 18px; border-radius:999px; background:#FFF3D1; color:#241803; font-size:15px;
+    opacity:0; pointer-events:none; transition:opacity .3s; white-space:nowrap;
+  }
+  .toast.show { opacity:1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true">
+  <i class="layer l1"></i><i class="layer l2"></i><i class="layer l3"></i><span class="moon"></span>
+</div>
+
+<aside id="music" class="music" hidden aria-label="Дуу">
+  <span class="music-h">♪ дуу</span>
+  <div id="frame"></div>
+  <button id="replay" type="button">▶ Дууг асаах</button>
+</aside>
+
+<main>
+  <section id="cover" class="screen">
+    <p class="eyebrow">Шөнийн тэнгэрээс</p>
+    <h1 id="toLine" tabindex="-1"></h1>
+    <button id="open" class="orb" type="button"><span><span aria-hidden="true">💌</span> Нээх</span></button>
+    <p class="hint" id="hint">Одыг товшоорой</p>
+  </section>
+
+  <section id="ask" class="screen" hidden>
+    <p class="to" id="toName"></p>
+    <h2 id="askText" class="ask" tabindex="-1"></h2>
+    <p class="sign" id="sign"></p>
+    <div id="choices" class="choices">
+      <button id="yes" class="btn yes" type="button">Тийм</button>
+      <button id="no" class="btn no" type="button">Үгүй</button>
+    </div>
+  </section>
+
+  <section id="yay" class="screen" hidden>
+    <svg id="heart" viewBox="0 0 200 190" aria-hidden="true"></svg>
+    <h2 class="yay-t" tabindex="-1">Тийм гэлээ!</h2>
+    <p class="sub">Одод ч баярлаж байна <span aria-hidden="true">✨</span></p>
+  </section>
+
+  <section id="plan" class="screen" hidden>
+    <h2 id="planT" tabindex="-1">Хэзээ, хаана?</h2>
+    <div id="when" hidden>
+      <h3 class="grp-h" id="hDay">Өдөр</h3><div id="days" class="chips" role="group" aria-labelledby="hDay"></div>
+      <h3 class="grp-h" id="hTime">Цаг</h3><div id="times" class="chips" role="group" aria-labelledby="hTime"></div>
+      <h3 class="grp-h" id="hPlace">Газар</h3><div id="places" class="chips" role="group" aria-labelledby="hPlace"></div>
+    </div>
+    <div id="reply" hidden>
+      <p class="msg" id="msg"></p>
+      <div class="acts">
+        <button id="copy" class="btn yes" type="button">Хуулах</button>
+        <a id="sms" class="btn ghost" hidden>SMS илгээх</a>
+        <a id="ms" class="btn ghost" hidden target="_blank" rel="noopener">Messenger</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Dokay-оор хийсэн · <a href="make.html">Өөрийнхөөрөө хийх →</a></footer>
+<p id="toast" class="toast" role="status" aria-live="polite"></p>
+
+<script>
+  function readGift() {
+    const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
+    if (!m) return null;
+    try {
+      const b = atob(m[1].replace(/-/g, '+').replace(/_/g, '/'));
+      const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))));
+      const s = (v, n) => typeof v === 'string' ? v.replace(/[<>"'`&]/g, '').trim().slice(0, n) : '';
+      return {
+        to: s(o.to, 24), from: s(o.from, 24), ask: s(o.ask, 120),
+        yt: /^[A-Za-z0-9_-]{11}$/.test(o.yt) ? o.yt : '',
+        t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
+        ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
+        ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+        when: o.when !== 0
+      };
+    } catch (e) { return null; }
+  }
+
+  const $ = s => document.querySelector(s);
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = ms => new Promise(r => setTimeout(r, RM ? 0 : ms));
+
+  // Өгөгдөл — линкгүй эсвэл эвдэрсэн бол жишээ (Сараа/Батаа)
+  const g = readGift();
+  const G = {
+    to: (g && g.to) || 'Сараа',
+    from: (g && g.from) || 'Батаа',
+    ask: (g && g.ask) || 'Надтай *болзоонд* явах уу?',
+    yt: g ? g.yt : '', t: g ? g.t : 0, ph: g ? g.ph : '', ms: g ? g.ms : '',
+    when: g ? g.when : true
+  };
+
+  // Тэнгэрийн од — нэг элемент дээр олон box-shadow
+  function sky() {
+    const w = Math.max(innerWidth, 400), h = Math.max(innerHeight, 700);
+    [['.l1', 40, 0], ['.l2', 28, .5], ['.l3', 12, 1]].forEach(([sel, n, spread]) => {
+      const a = [];
+      for (let i = 0; i < n; i++) {
+        a.push((Math.random() * w | 0) + 'px ' + (Math.random() * h | 0) + 'px 0 ' + spread + 'px rgba(255,255,255,' + (.5 + Math.random() * .5).toFixed(2) + ')');
+      }
+      $(sel).style.boxShadow = a.join(',');
+    });
+  }
+
+  function shoot() {
+    if (RM) return;
+    const s = document.createElement('i');
+    s.className = 'shoot';
+    s.style.top = (Math.random() * 40 | 0) + '%';
+    s.style.left = (40 + Math.random() * 60 | 0) + '%';
+    $('.sky').append(s);
+    s.addEventListener('animationend', () => s.remove());
+  }
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(el => { el.hidden = el.id !== id; });
+    const f = $('#' + id).querySelector('[tabindex="-1"]');
+    if (f) f.focus({ preventScroll: true });
+  }
+
+  function toast(t) {
+    const el = $('#toast');
+    el.textContent = t;
+    el.classList.add('show');
+    clearTimeout(toast.k);
+    toast.k = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  // Дуу — товшилтын дараа л iframe үүсгэнэ
+  function startMusic() {
+    if (!G.yt) return;
+    $('#music').hidden = false;
+    const f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1';
+    f.allow = 'autoplay; encrypted-media';
+    f.title = 'Дуу';
+    $('#frame').replaceChildren(f);
+  }
+
+  // Асуултыг үсэг бүрээр — *үг* нь <em> (зөвхөн DOM, innerHTML үгүй)
+  function buildAsk() {
+    const box = $('#askText');
+    const plain = G.ask.replace(/\*/g, '');
+    box.setAttribute('aria-label', plain);
+    const inner = document.createElement('span');
+    inner.setAttribute('aria-hidden', 'true');
+    const total = Array.from(plain.replace(/\s/g, '')).length || 1;
+    let i = 0;
+    G.ask.split(/\*([^*]+)\*/).forEach((part, k) => {
+      const host = k % 2 ? document.createElement('em') : inner;
+      part.replace(/\*/g, '').split(/(\s+)/).forEach(tok => {
+        if (!tok) return;
+        if (/^\s+$/.test(tok)) { host.append(' '); return; }
+        const w = document.createElement('span');
+        w.className = 'w';
+        for (const ch of tok) {
+          const c = document.createElement('span');
+          c.className = 'c';
+          c.textContent = ch;
+          c.style.setProperty('--x', ((Math.random() - .5) * innerWidth | 0) + 'px');
+          c.style.setProperty('--y', (-(80 + Math.random() * innerHeight * .45) | 0) + 'px');
+          c.style.setProperty('--d', (i++ / total * 1.4).toFixed(2) + 's');
+          w.append(c);
+        }
+        host.append(w);
+      });
+      if (host !== inner) inner.append(host);
+    });
+    box.replaceChildren(inner);
+  }
+
+  // Оддоос зүрх
+  function drawHeart() {
+    const NS = 'http://www.w3.org/2000/svg', svg = $('#heart'), pts = [];
+    for (let k = 0; k < 12; k++) {
+      const t = k / 12 * Math.PI * 2;
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+      pts.push([(100 + x * 5.4).toFixed(1), (84 - y * 5.4).toFixed(1)]);
+    }
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', 'M' + pts.map(q => q.join(' ')).join('L') + 'Z');
+    svg.replaceChildren(p);
+    pts.forEach((q, k) => {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', q[0]); c.setAttribute('cy', q[1]); c.setAttribute('r', k % 3 ? 2.4 : 3.4);
+      c.style.animationDelay = (k * .08) + 's';
+      svg.append(c);
+    });
+    if (!RM && p.getTotalLength) {
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L;
+      p.style.strokeDashoffset = L;
+      requestAnimationFrame(() => requestAnimationFrame(() => { p.style.strokeDashoffset = 0; }));
+    }
+  }
+
+  // Өдөр, цаг, газар
+  const TIMES = ['12:00', '14:00', '17:00', '19:00', '20:00'];
+  const PLACES = ['Кино', 'Кофе', 'Оройн хоол', 'Алхах'];
+  const SAY = { 'Кино': 'кино үзэхээр', 'Кофе': 'кофе уухаар', 'Оройн хоол': 'оройн хоол идэхээр', 'Алхах': 'алхахаар' };  /* мессежид орох хэлбэр */
+  const WD = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
+  const pick = { day: null, time: null, place: null };
+
+  function timesFor(off) {
+    if (off) return TIMES;
+    const n = new Date(), m = n.getHours() * 60 + n.getMinutes() + 30;
+    return TIMES.filter(t => parseInt(t, 10) * 60 > m);
+  }
+  function days() {
+    const out = [], start = timesFor(0).length ? 0 : 1;
+    for (let o = start; o < start + 7; o++) {
+      const d = new Date();
+      d.setDate(d.getDate() + o);
+      out.push({ off: o, label: o === 0 ? 'Өнөөдөр' : o === 1 ? 'Маргааш' : WD[d.getDay()] + ' гараг' });
+    }
+    return out;
+  }
+  function chips(el, items, cur, onPick) {
+    el.replaceChildren.apply(el, items.map(it => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.textContent = it.label;
+      b.setAttribute('aria-pressed', String(it.key === cur));
+      b.onclick = () => {
+        el.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+        onPick(it.key);
+      };
+      return b;
+    }));
+  }
+  function renderTimes() {
+    const ts = pick.day ? timesFor(pick.day.off) : TIMES;
+    if (pick.time && ts.indexOf(pick.time) < 0) pick.time = null;
+    chips($('#times'), ts.map(t => ({ key: t, label: t })), pick.time, k => { pick.time = k; check(); });
+  }
+  function check() { if (pick.day && pick.time && pick.place) showReply(); }
+  function buildPlan() {
+    $('#when').hidden = false;
+    const ds = days();
+    chips($('#days'), ds.map(d => ({ key: d.off, label: d.label })), null, k => {
+      pick.day = ds.filter(d => d.off === k)[0];
+      renderTimes();
+      check();
+    });
+    renderTimes();
+    chips($('#places'), PLACES.map(p => ({ key: p, label: p })), null, k => { pick.place = k; check(); });
+  }
+
+  // Хариу
+  function msg() {
+    return G.when && pick.day ? 'Тийм ээ! ' + pick.day.label + ' ' + pick.time + ' цагт ' + (SAY[pick.place] || pick.place || '') + ' болзъё 💕' : 'Тийм ээ! Болзъё 💕';
+  }
+  function showReply() {
+    const r = $('#reply');
+    const first = r.hidden;
+    r.hidden = false;
+    $('#msg').textContent = msg();
+    if (G.ph) { $('#sms').hidden = false; $('#sms').href = 'sms:' + G.ph + '?&body=' + encodeURIComponent(msg()); }
+    if (G.ms) { $('#ms').hidden = false; $('#ms').href = 'https://m.me/' + G.ms; }
+    if (first) r.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'nearest' });
+  }
+  function copy(t) {
+    const fallback = () => {
+      const a = document.createElement('textarea');
+      a.value = t; a.setAttribute('readonly', ''); a.style.position = 'fixed'; a.style.opacity = '0';
+      document.body.append(a); a.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      a.remove();
+      return ok;
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(t).then(() => true, fallback);
+    }
+    return Promise.resolve(fallback());
+  }
+
+  // Эхлэл
+  sky();
+  document.title = G.to + ', чамд зориулсан урилга';
+  $('#toLine').textContent = G.to + ', чамд зориулсан урилга';
+  $('#hint').textContent = G.yt ? 'Одыг товшоорой — дуу эхэлнэ' : 'Одыг товшоорой';
+  $('#toName').textContent = G.to + ',';
+  $('#sign').textContent = '— ' + G.from;
+
+  $('#replay').onclick = startMusic;
+
+  $('#open').onclick = async () => {
+    startMusic();
+    buildAsk();
+    show('ask');
+    requestAnimationFrame(() => requestAnimationFrame(() => $('#askText').classList.add('on')));
+    await wait(2700);
+    $('#sign').classList.add('ready');
+    $('#choices').classList.add('ready');
+  };
+
+  const NO = ['Итгэлтэй юу?', 'Одод гуниглаж байна…', 'Дахиад нэг бодоод үз', 'Сүүлчийн од…'];
+  let nk = 0;
+  $('#no').onclick = () => {
+    const no = $('#no'), yes = $('#yes');
+    shoot();
+    if (nk >= NO.length) {
+      no.classList.add('fall');
+      setTimeout(() => { no.hidden = true; }, RM ? 0 : 900);
+      yes.focus();
+      return;
+    }
+    no.textContent = NO[nk++];
+    no.style.transform = 'scale(' + (1 - nk * .12) + ')';
+    no.style.opacity = String(1 - nk * .15);
+    yes.style.transform = 'scale(' + (1 + nk * .1) + ')';
+  };
+
+  $('#yes').onclick = async () => {
+    show('yay');
+    drawHeart();
+    for (let i = 0; i < 6; i++) setTimeout(shoot, i * 180);
+    await wait(2200);
+    show('plan');
+    if (G.when) buildPlan();
+    else { $('#planT').textContent = 'Хариугаа илгээгээрэй'; showReply(); }
+  };
+
+  $('#copy').onclick = () => copy(msg()).then(ok => toast(ok ? 'Хуулагдлаа' : 'Хуулж чадсангүй — гараар сонгоорой'));
+  // Messenger бичвэр урьдчилан бөглөдөггүй — хуулаад, линк өөрөө нээгдэнэ
+  $('#ms').onclick = () => { copy(msg()); toast('Хуулагдлаа, буулгаарай'); };
+</script>
+</body>
+</html>

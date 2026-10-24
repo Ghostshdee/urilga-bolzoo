@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Танд нэг тасалбар байна — урилга</title>
+<meta name="description" content="Хоёр хүний үзвэрт урьж байна. Тасалбараа нээгээрэй.">
+<meta name="theme-color" content="#1B0F12">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Танд нэг тасалбар байна">
+<meta property="og:description" content="Хоёр хүний үзвэрт урьж байна. Тасалбараа нээгээрэй.">
+<meta property="og:locale" content="mn_MN">
+<meta property="og:image" content="https://ghostshdee.github.io/urilga-bolzoo/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Болзооны урилга (жишээ)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Onest:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#1B0F12; --paper:#F6EBD9; --ink:#2A1A1A; --muted:#7D6656;
+  --line:#CDB794; --red:#C8323C; --gold:#D9A441;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh; min-height:100dvh;
+  background:radial-gradient(120% 60% at 50% 0%,#3A1A20 0%,var(--bg) 62%) fixed var(--bg);
+  color:var(--paper); font:400 16px/1.5 Onest,system-ui,sans-serif;
+  display:flex; flex-direction:column; align-items:center;
+  padding:24px 16px calc(24px + env(safe-area-inset-bottom)); overflow-x:hidden;
+}
+button{font:inherit;cursor:pointer}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+.screen{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.marquee{margin:0;font:600 13px/1 Oswald,sans-serif;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;text-align:center}
+
+/* товч */
+.btn{min-height:52px;border:0;border-radius:999px;padding:0 26px;font-weight:600;font-size:17px;transition:transform .25s}
+.btn:focus-visible,.chip:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 8px 24px rgba(200,50,60,.35)}
+.btn-red:disabled{background:#5A3A3E;color:#C9B3B5;box-shadow:none;cursor:not-allowed}
+.btn-line{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn-dark{background:transparent;color:var(--paper);border:2px solid #6B4A4F;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+
+/* нүүр */
+.cover{margin-top:10vh;text-align:center}
+.cover h1{margin:0;font:600 34px/1.15 Oswald,sans-serif}
+.cover p{margin:0;color:#CDB9A8}
+.bulbs{display:flex;gap:12px;justify-content:center}
+.bulbs i{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:blink 1.6s infinite}
+.bulbs i:nth-child(2n){animation-delay:.8s}
+@keyframes blink{50%{opacity:.3}}
+
+/* тасалбар */
+.ticket{width:100%;color:var(--ink);filter:drop-shadow(0 18px 30px rgba(0,0,0,.45));position:relative}
+.t-main,.t-stub{background:var(--paper);position:relative}
+.t-main{
+  border-radius:14px 14px 0 0; padding:18px 20px 22px;
+  -webkit-mask:radial-gradient(circle 12px at 0 100%,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 12px at 100% 100%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 12px at 0 100%,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 12px at 100% 100%,#0000 98%,#000) right/51% 100% no-repeat;
+}
+.t-stub{
+  border-radius:0 0 14px 14px; padding:16px 20px 16px; border-top:2px dashed var(--line);
+  -webkit-mask:radial-gradient(circle 12px at 0 0,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 12px at 100% 0,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 12px at 0 0,#0000 98%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 12px at 100% 0,#0000 98%,#000) right/51% 100% no-repeat;
+  transition:transform 1s cubic-bezier(.3,.7,.2,1);
+  transform-origin:12% 0;
+}
+.t-stub.torn{transform:translateY(34px) rotate(-5deg)}
+.t-head{display:flex;justify-content:space-between;font:600 12px/1 Oswald,sans-serif;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+.kicker{margin:16px 0 4px;font-size:13px;color:var(--muted)}
+.ask{margin:0;font:600 30px/1.15 Oswald,sans-serif;text-transform:uppercase;overflow-wrap:anywhere}
+.ask em{font-style:normal;color:var(--red)}
+.credits{display:flex;gap:18px;margin:14px 0 0}
+.credits div{min-width:0}
+.credits dt{font-size:12px;color:var(--muted)}
+.credits dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.answer{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;margin-top:20px;min-height:64px}
+#yes{--s:1;transform:scale(var(--s))}
+#no{--s:1;transform:scale(var(--s));font-size:15px}
+.stamp{
+  position:absolute;top:44px;right:14px;padding:4px 10px;border:3px solid var(--red);border-radius:6px;
+  color:var(--red);font:600 20px/1 Oswald,sans-serif;letter-spacing:.12em;
+  transform:rotate(-12deg);opacity:0;pointer-events:none;
+}
+.stamp.on{opacity:.9;animation:stamp .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes stamp{from{opacity:0;transform:rotate(-12deg) scale(2.2)}}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.f span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.f b{display:block;font:600 19px/1.25 Oswald,sans-serif;min-height:24px}
+.f b.ink{animation:ink .5s ease-out}
+@keyframes ink{from{opacity:0;transform:translateY(-6px) scale(1.15);filter:blur(2px)}}
+.barcode{height:30px;margin-top:14px;opacity:.75;
+  background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 9px,var(--ink) 9px 12px,transparent 12px 14px)}
+.scissor{position:absolute;left:-6px;font-size:20px;line-height:1;transform:translateY(-50%);opacity:0;z-index:2;pointer-events:none}
+.scissor.go{animation:cut .8s linear forwards}
+@keyframes cut{0%{opacity:1;left:-6px}100%{opacity:1;left:calc(100% - 14px)}}
+
+/* сонголт */
+.picker,.reply{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:8px}
+fieldset{border:0;margin:0;padding:0}
+legend{font-weight:600;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid #6B4A4F;background:transparent;color:var(--paper);font-size:15px}
+.chip small{color:#BFA9A0;margin-left:4px}
+.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.chip[aria-pressed="true"] small{color:#FFD9DC}
+.chip:disabled{opacity:.35;cursor:not-allowed}
+.msg{margin:0;padding:14px 16px;border-radius:12px;background:#2E181C;border:1px solid #5A3A3E;font-size:17px}
+.actions{display:flex;flex-direction:column;gap:10px}
+.toast{min-height:22px;margin:0;text-align:center;color:var(--gold);font-size:14px}
+
+/* дуу */
+.music{display:flex;align-items:center;gap:10px;font-size:13px;color:#CDB9A8}
+.music iframe{width:96px;height:54px;border:0;border-radius:6px}
+.music button{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #6B4A4F;background:transparent;color:var(--paper);font-size:13px}
+
+footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:center}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- 1. Нүүр -->
+<section class="screen cover" id="cover">
+  <div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <p class="marquee">Өнөө орой · 1 үзвэр</p>
+  <h1 id="coverTitle">Сараа, чамд зориулсан урилга</h1>
+  <p>Танд нэг тасалбар байна.</p>
+  <button class="btn btn-red" id="open" type="button"><span aria-hidden="true">💌 </span>Нээх</button>
+</section>
+
+<!-- 2. Тасалбар -->
+<main class="screen" id="stage" hidden>
+  <div class="ticket" id="ticket">
+    <div class="t-main">
+      <div class="t-head"><span>Dokay кино</span><span>Танхим ♥</span></div>
+      <p class="kicker">Өнөөдрийн үзвэр</p>
+      <h2 class="ask" id="ask"></h2>
+      <dl class="credits">
+        <div><dt>Гол дүрд</dt><dd id="toName"></dd></div>
+        <div><dt>Урьсан</dt><dd id="fromName"></dd></div>
+      </dl>
+      <div class="answer" id="answer">
+        <button class="btn btn-red" id="yes" type="button">Тийм</button>
+        <button class="btn btn-line" id="no" type="button">Үгүй</button>
+      </div>
+      <div class="stamp" id="stamp" aria-hidden="true">Зөвшөөрөв</div>
+    </div>
+    <span class="scissor" id="scissor" aria-hidden="true">✂</span>
+    <div class="t-stub" id="stub" aria-live="polite">
+      <div class="fields">
+        <div class="f"><span>Өдөр</span><b id="fDay">— —</b></div>
+        <div class="f"><span>Цаг</span><b id="fTime">—:—</b></div>
+        <div class="f"><span>Газар</span><b id="fPlace">— —</b></div>
+        <div class="f"><span>Суудал</span><b>2 хүн</b></div>
+      </div>
+      <div class="barcode" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- 3. Өдөр, цаг, газар -->
+  <section class="picker" id="picker" hidden>
+    <p class="marquee">Тасалбараа бөглөөрэй</p>
+    <fieldset><legend>Өдөр</legend><div class="chips" id="cDay"></div></fieldset>
+    <fieldset><legend>Цаг</legend><div class="chips" id="cTime"></div></fieldset>
+    <fieldset><legend>Газар</legend><div class="chips" id="cPlace"></div></fieldset>
+    <button class="btn btn-red" id="tear" type="button" disabled><span aria-hidden="true">✂ </span>Тасалбараа таслах</button>
+  </section>
+
+  <!-- 4. Хариу -->
+  <section class="reply" id="reply" hidden>
+    <p class="marquee">Хариугаа илгээгээрэй</p>
+    <p class="msg" id="msg"></p>
+    <div class="actions">
+      <button class="btn btn-red" id="copy" type="button">Хуулах</button>
+      <a class="btn btn-dark" id="sms" hidden>SMS илгээх</a>
+      <button class="btn btn-dark" id="msgr" type="button" hidden>Messenger</button>
+    </div>
+    <p class="toast" id="toast" role="status" aria-live="polite"></p>
+  </section>
+
+  <div class="music" id="music" hidden>
+    <span>♪ дуу</span><div id="ytBox"></div>
+    <button type="button" id="play">▶ Дууг асаах</button>
+  </div>
+</main>
+
+<footer>Dokay-оор хийсэн · <a href="make.html">Өөрийнхөөрөө хийх →</a></footer>
+
+<script>
+function readGift() {
+  const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
+  if (!m) return null;
+  try {
+    const b = atob(m[1].replace(/-/g, '+').replace(/_/g, '/'));
+    const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))));
+    const s = (v, n) => typeof v === 'string' ? v.replace(/[<>"'`&]/g, '').trim().slice(0, n) : '';
+    return {
+      to: s(o.to, 24), from: s(o.from, 24), ask: s(o.ask, 120),
+      yt: /^[A-Za-z0-9_-]{11}$/.test(o.yt) ? o.yt : '',
+      t: Number.isInteger(o.t) && o.t >= 0 && o.t <= 36000 ? o.t : 0,
+      ph: /^\+?[0-9]{6,15}$/.test(o.ph) ? o.ph : '',
+      ms: /^[A-Za-z0-9.]{1,50}$/.test(o.ms) ? o.ms : '',
+      when: o.when !== 0
+    };
+  } catch (e) { return null; }
+}
+
+// Анхдагч жишээ — линк буруу эсвэл хоосон үед
+const DEF = { to: 'Сараа', from: 'Батаа', ask: 'Надтай *болзоонд* явах уу?', yt: '', t: 0, ph: '', ms: '', when: true };
+const raw = readGift();
+const G = raw ? Object.assign({}, raw, { to: raw.to || DEF.to, from: raw.from || DEF.from, ask: raw.ask || DEF.ask }) : DEF;
+
+const $ = id => document.getElementById(id);
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait = ms => new Promise(r => setTimeout(r, calm ? 0 : ms));
+
+// Асуулт: *үг* → <em>, зөвхөн DOM-оор
+function renderAsk(el, text) {
+  el.textContent = '';
+  text.split(/(\*[^*]+\*)/).forEach(p => {
+    if (!p) return;
+    if (/^\*[^*]+\*$/.test(p)) {
+      const em = document.createElement('em');
+      em.textContent = p.slice(1, -1);
+      el.appendChild(em);
+    } else el.appendChild(document.createTextNode(p.replace(/\*/g, '')));
+  });
+}
+
+$('coverTitle').textContent = G.to + ', чамд зориулсан урилга';
+$('toName').textContent = G.to;
+$('fromName').textContent = G.from;
+renderAsk($('ask'), G.ask);
+document.title = G.to + ', чамд нэг тасалбар';
+
+// Дуу — товшилтын дараа л iframe үүсгэнэ
+function mountSong() {
+  const box = $('ytBox');
+  box.textContent = '';
+  const f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1';
+  f.allow = 'autoplay; encrypted-media';
+  f.title = 'Урилгын дуу';
+  box.appendChild(f);
+}
+$('play').addEventListener('click', mountSong);
+
+$('open').addEventListener('click', () => {
+  $('cover').hidden = true;
+  $('stage').hidden = false;
+  if (G.yt) { $('music').hidden = false; mountSong(); }
+  $('yes').focus();
+});
+
+// «Үгүй» тоглоом — үг солигдож жижгэрнэ, «Тийм» томорно
+const NO_TEXT = ['Итгэлтэй юу?', 'Дахин бодоорой', 'Тасалбар буцаагдахгүй 🎟', 'Сүүлийн суудал шүү', 'За за, ойлголоо…'];
+let noCount = 0;
+$('no').addEventListener('click', () => {
+  if (noCount >= NO_TEXT.length) { $('no').hidden = true; $('yes').focus(); return; }
+  $('no').textContent = NO_TEXT[noCount];
+  noCount++;
+  $('no').style.setProperty('--s', Math.max(0.5, 1 - noCount * 0.1));
+  $('yes').style.setProperty('--s', 1 + noCount * 0.1);
+});
+
+// Тасалбарын талбар бэхээр бичигдэнэ
+function ink(id, text) {
+  const el = $(id);
+  el.textContent = text;
+  el.classList.remove('ink'); void el.offsetWidth; el.classList.add('ink');
+}
+
+// Өдөр, цаг, газар
+const WD = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
+const TIMES = [12, 14, 17, 19, 20];
+const PLACES = ['Кино', 'Кофе', 'Оройн хоол', 'Алхах'];
+const SAY = { 'Кино': 'кино үзэхээр', 'Кофе': 'кофе уухаар', 'Оройн хоол': 'оройн хоол идэхээр', 'Алхах': 'алхахаар' };  /* мессежид орох хэлбэр */
+const pick = { day: null, time: null, place: null };
+
+function dayList() {
+  const now = new Date(), out = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+    if (i === 0 && !TIMES.some(h => h > now.getHours())) continue;   // өнөөдрийн цаг бүгд өнгөрсөн
+    const label = i === 0 ? 'Өнөөдөр' : i === 1 ? 'Маргааш' : WD[d.getDay()] + ' гараг';
+    out.push({ i, label, date: (d.getMonth() + 1) + '/' + d.getDate() });
+  }
+  return out;
+}
+
+function chip(parent, text, small, onPick) {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'chip';
+  b.setAttribute('aria-pressed', 'false');
+  b.textContent = text;
+  if (small) { const s = document.createElement('small'); s.textContent = small; b.appendChild(s); }
+  b.addEventListener('click', () => {
+    parent.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+    b.setAttribute('aria-pressed', 'true');
+    onPick();
+  });
+  parent.appendChild(b);
+  return b;
+}
+
+function buildTimes() {
+  const box = $('cTime'); box.textContent = '';
+  const nowH = new Date().getHours();
+  TIMES.forEach(h => {
+    const label = h + ':00';
+    const b = chip(box, label, '', () => { pick.time = label; ink('fTime', label); ready(); });
+    if (pick.day && pick.day.i === 0 && h <= nowH) b.disabled = true;
+    if (pick.time === label) {
+      if (b.disabled) { pick.time = null; $('fTime').textContent = '—:—'; }
+      else b.setAttribute('aria-pressed', 'true');
+    }
+  });
+}
+
+dayList().forEach(d => chip($('cDay'), d.label, d.date, () => { pick.day = d; ink('fDay', d.label); buildTimes(); ready(); }));
+buildTimes();
+PLACES.forEach(p => chip($('cPlace'), p, '', () => { pick.place = p; ink('fPlace', p); ready(); }));
+
+function ready() { $('tear').disabled = !(pick.day && pick.time && pick.place); }
+
+// «Тийм»
+$('yes').addEventListener('click', async () => {
+  $('answer').hidden = true;
+  $('stamp').classList.add('on');
+  await wait(700);
+  if (G.when) {
+    $('picker').hidden = false;
+    $('picker').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+  } else {
+    ink('fDay', 'Удахгүй'); ink('fTime', 'Хамтдаа'); ink('fPlace', 'Тохиролцоно');
+    tear('Тийм ээ! Болзъё 💕');
+  }
+});
+
+$('tear').addEventListener('click', () => {
+  tear('Тийм ээ! ' + pick.day.label + ' ' + pick.time + ' цагт ' + (SAY[pick.place] || pick.place) + ' болзъё 💕');
+});
+
+// Тасдах зураасаар урагдана
+async function tear(text) {
+  $('picker').hidden = true;
+  const sc = $('scissor'), stub = $('stub');
+  sc.style.top = stub.offsetTop + 'px';
+  sc.classList.add('go');
+  await wait(800);
+  sc.hidden = true;
+  stub.classList.add('torn');
+  await wait(500);
+  showReply(text);
+}
+
+// Хариу
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; }
+  catch (e) {
+    const a = document.createElement('textarea');
+    a.value = t; a.setAttribute('readonly', '');
+    a.style.position = 'fixed'; a.style.opacity = '0';
+    document.body.appendChild(a); a.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) {}
+    a.remove();
+    return ok;
+  }
+}
+
+function showReply(text) {
+  $('msg').textContent = text;
+  if (G.ph) { $('sms').href = 'sms:' + G.ph + '?&body=' + encodeURIComponent(text); $('sms').hidden = false; }
+  if (G.ms) $('msgr').hidden = false;
+  $('reply').hidden = false;
+  $('reply').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+  $('copy').onclick = async () => {
+    $('toast').textContent = (await copyText(text)) ? 'Хуулагдлаа 💕' : 'Хуулж чадсангүй — мессежийг гараар сонгоорой';
+  };
+  $('msgr').onclick = async () => {
+    const ok = await copyText(text);
+    $('toast').textContent = ok ? 'Хуулагдлаа — Messenger-т буулгаарай' : 'Мессежийг гараар хуулаад Messenger-т буулгаарай';
+    window.open('https://m.me/' + G.ms, '_blank', 'noopener');
+  };
+}
+</script>
+</body>
+</html>
