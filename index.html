@@ -60,16 +60,54 @@ body {
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
 :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; border-radius: 8px; }
 
-/* ── Карт ── */
+/* ── Арын хөвөх дэлбээ — зөвхөн transform, дарагддаггүй ── */
+.drift {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.drift-petal {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  width: var(--s);
+  height: calc(var(--s) * 1.3);
+  border-radius: 80% 0 80% 0;   /* дэлбээний хэлбэр */
+  background: linear-gradient(135deg, #F2A6B6, #E98DA2);
+  opacity: .45;
+  transform: translate3d(0, -12vh, 0);
+  animation: drift var(--d) linear var(--delay) infinite;
+  will-change: transform;
+}
+@keyframes drift {
+  from { transform: translate3d(0, -12vh, 0) rotate(0deg); }
+  to   { transform: translate3d(var(--sway), 115vh, 0) rotate(300deg); }
+}
+
+/* ── Карт ── (transform бүү өг — fixed элементүүд эвдэрнэ) */
 .card {
   position: relative;
+  z-index: 1;
   width: min(420px, 100%);
   padding: 30px 26px 26px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: 0 1px 2px rgba(44, 38, 34, .04), 0 18px 50px rgba(44, 38, 34, .09);
+  box-shadow: 0 1px 2px rgba(44, 38, 34, .04), 0 18px 50px rgba(44, 38, 34, .09),
+              0 30px 80px -30px rgba(217, 86, 111, .22);
   text-align: center;
+}
+/* Дээрээс тусах зөөлөн ягаан гэрэл */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(85% 45% at 50% 0%, rgba(242, 166, 182, .22), transparent 70%);
+  pointer-events: none;
 }
 
 .eyebrow {
@@ -129,8 +167,27 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   box-shadow: 0 10px 26px rgba(217, 86, 111, .3);
   transform: scale(calc(1 + var(--grow, 0) * .07));
   transition: transform .35s cubic-bezier(.22, 1, .36, 1), background .2s ease, font-size .35s ease;
+  position: relative;
 }
 .yes:hover { background: var(--rose-dk); }
+/* Зүрх цохилох бөгж — «туг-туг». Товчны өөрийн transform-д хүрэхгүй. */
+.yes::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 2px var(--rose);
+  opacity: 0;
+  pointer-events: none;
+  animation: beat 2.4s ease-out infinite;
+}
+@keyframes beat {
+  0%   { transform: scale(1);    opacity: .55; }
+  12%  { transform: scale(1.12); opacity: 0; }
+  20%  { transform: scale(1);    opacity: .5; }
+  34%  { transform: scale(1.18); opacity: 0; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
 
 .no {
   min-height: 46px;
@@ -258,10 +315,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 .when .picked-note { margin: 5px 0 0; font-size: 13px; color: var(--muted); }
 
+/* Хоёр хариу товч доошоо дараалж, бүтэн өргөнөөр */
 .when-actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 10px;
   margin-top: 15px;
 }
@@ -271,38 +329,82 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   border-radius: 999px;
   font-size: 14px;
 }
-.send {
+.when-actions .send {
+  min-height: 54px;
+  font-size: 16px;
   background: var(--rose);
   color: #fff;
   font-weight: 600;
   box-shadow: 0 8px 20px rgba(217, 86, 111, .26);
 }
-.send:hover { background: var(--rose-dk); }
+.when-actions .send:hover { background: var(--rose-dk); }
 .copy { border: 1px solid var(--line); color: var(--muted); }
 .copy:hover { border-color: #DFD2C6; }
+/* Хуулсны дараа гарах Messenger холбоос */
+.msgr-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--rose-dk);
+  text-decoration: none;
+}
+.msgr-link:hover { text-decoration: underline; }
 
-/* ── Дуу ── */
-.song { margin: 16px 0 4px; }
-.song-label { font-size: 13px; letter-spacing: .04em; color: var(--muted); margin-bottom: 8px; }
+/* ── Дуу — доор хөвөх самбар ── */
+.song {
+  position: fixed;
+  left: 50%;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 20;
+  width: min(320px, calc(100vw - 16px));
+  padding: 8px;
+  transform: translateX(-50%);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 14px 40px rgba(44, 38, 34, .16);
+}
+.song-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-left: 6px;
+}
+.song-label { font-size: 13px; letter-spacing: .04em; color: var(--muted); }
+.song-min {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--rose-dk);
+}
+.song-frame {
+  margin-top: 4px;
+  max-height: 220px;
+  overflow: hidden;
+  border-radius: 12px;
+  transition: max-height .3s ease, opacity .3s ease;
+}
 .song-frame iframe {
   display: block;
   width: 100%;
+  min-width: 280px;
+  min-height: 158px;
   aspect-ratio: 16 / 9;
   border: 0;
-  border-radius: 14px;
 }
-/* iframe-ийг эхэнд ачаалахгүй — энэ товчийг дарахад л үүснэ */
-.song-play {
-  width: 100%;
-  min-height: 52px;
-  border-radius: 999px;
-  background: var(--rose-dk);
-  color: #fff;
-  font-weight: 600;
-  font-size: 16px;
-  transition: background .2s ease;
-}
-.song-play:hover { background: #A33A4E; }
+.song-tip { margin: 6px 4px 2px; font-size: 12px; color: var(--muted); text-align: center; }
+/* Хураахад display:none БИШ — тэгвэл дуу зогсоно. Зөвхөн өндөр, тунгалаг. */
+.song.min .song-frame { max-height: 0; margin-top: 0; opacity: 0; }
+.song.min .song-tip { display: none; }
+/* Самбар «Дахин асуух» товчийг дарахгүйн тулд доод зай */
+body.has-song { padding-bottom: 290px; }
+body.has-song.song-small { padding-bottom: 96px; }
 
 /* Кредит */
 .credit {
@@ -328,14 +430,33 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 @keyframes float {
   to { transform: translateY(-110svh) rotate(var(--spin, 20deg)); opacity: 0; }
 }
+/* Карт z-index-тэй болсон тул зүрхнүүд картын ард орохгүйн тулд */
+.heart, .mini-heart { z-index: 30; }
+
+/* Цэцэг дэлгэрэхэд хөөрөх жижиг зүрх */
+.mini-heart {
+  position: fixed;
+  font-size: 14px;
+  color: var(--rose);
+  pointer-events: none;
+  animation: mini-rise 1.4s ease-out both;
+}
+@keyframes mini-rise {
+  from { transform: translate(-50%, 0) scale(.6); opacity: .9; }
+  to   { transform: translate(calc(-50% + var(--dx, 0px)), -70px) scale(1); opacity: 0; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .no { position: static !important; transform: none !important; }
+  .drift { display: none; }
 }
 </style>
 </head>
 <body>
+
+<!-- Арын хөвөх дэлбээ — JS-ээр 8 ширхэг үүснэ -->
+<div class="drift" id="drift" aria-hidden="true"></div>
 
 <main class="card" id="card">
   <span class="dodges" id="dodges" hidden aria-live="polite"></span>
@@ -365,11 +486,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
     <img class="reply-photo missing" id="replyPhoto" alt="" width="400" height="500">
     <div id="replyLines"></div>
 
-    <div class="song" id="song" hidden>
-      <p class="song-label" id="songLabel"></p>
-      <div class="song-frame" id="songFrame"></div>
-    </div>
-
     <!-- Өдөр, цаг сонгох. CONFIG.when.enabled = false бол бүхэлдээ нуугдана. -->
     <section class="when" id="when" hidden>
       <p class="when-q" id="dayQ"></p>
@@ -387,7 +503,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
       <div class="when-actions" id="whenActions" hidden>
         <button class="send" id="send" type="button"></button>
         <button class="copy" id="copy" type="button"></button>
-        <button class="copy" id="msgr" type="button" hidden></button>
+        <a class="msgr-link" id="msgr" target="_blank" rel="noopener" hidden></a>
       </div>
     </section>
 
@@ -395,6 +511,17 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
     <button class="again" id="again" type="button">Дахин асуух</button>
   </div>
 </main>
+
+<!-- Дууны хөвөх самбар. Картын гадна — хариу дэлгэцийн rise хөдөлгөөн
+     (transform) fixed байрлалыг эвдэхгүйн тулд. -->
+<aside class="song" id="song" hidden aria-label="Дуу">
+  <div class="song-head">
+    <p class="song-label" id="songLabel"></p>
+    <button class="song-min" id="songMin" type="button" aria-expanded="true" aria-controls="songFrame">— жижигрүүлэх</button>
+  </div>
+  <div class="song-frame" id="songFrame"></div>
+  <p class="song-tip">Дуу эхлээгүй бол тоглогч дээр нэг дараарай ▶</p>
+</aside>
 
 <footer class="credit">
   <a href="https://ghostshdee.github.io/" target="_blank" rel="noopener">Бүтээсэн: DOKAY.</a> · <a href="make.html">Өөрийнхөөрөө хийх →</a>
@@ -448,16 +575,15 @@ const CONFIG = {
   },
 
   /* ── Дуу ──
-     «Тийм» дарсны дараа «Дууг сонсох ▶» товч гарна. Түүнийг дарахад YouTube
-     тоглогч хуудсан дотор гарч, дуу эхэлнэ (эхэнд юу ч ачаалахгүй).
+     «Тийм» дармагц YouTube тоглогч доод талын хөвөх самбарт гарч, дуу эхэлнэ
+     (эхэнд юу ч ачаалахгүй). Самбарыг жижигрүүлж болно — дуу зогсохгүй.
      youtube — холбоосны id: youtu.be/<ЭНЭ ХЭСЭГ>. start — хэдэн секундээс.
-     iPhone дээр тоглуулах товчийг нэг дарах шаардлагатай (Apple хаадаг).
+     iPhone дээр тоглогч дээр нэг дарах шаардлагатай байж болно (Apple хаадаг).
      Хэрэггүй бол youtube: '' болгоно. */
   song: {
     youtube: 'rg0KzIXexL8',     /* OPOZIT — HURIM [LYRICS] */
     start: 0,
-    label: 'Чамд зориулсан дуу 🎵',
-    playLabel: 'Дууг сонсох ▶'
+    label: 'Чамд зориулсан дуу 🎵'
   },
 
   /* ── Өдөр, цаг сонгох ──
@@ -485,16 +611,17 @@ const CONFIG = {
 
     pickedNote: 'Тэмдэглэлээ. Надад мэдэгдэхэд л болно.',
 
-    /* Илгээх дугаар. Хоосон бол зөвхөн «Хуулах» товч гарна. */
+    /* Илгээх дугаар. Байвал «Мессеж илгээх» шууд SMS нээнэ. Хоосон бол утасны
+       хуваалцах цэс (Messenger, SMS…) гарна, тэр байхгүй бол SMS-ийг хаяггүй нээнэ. */
     phone: '',   /* жишээ — илгээгчийн дугаар, жишээ нь '99xxxxxx' */
 
-    /* Messenger нэр (m.me/<энэ>). Хоосон бол Messenger товч гарахгүй. */
+    /* Messenger нэр (m.me/<энэ>). Байвал хуулсны дараа «Messenger нээх →» холбоос гарна. */
     messenger: '',
-    messengerLabel: 'Messenger',
+    messengerLabel: 'Messenger нээх →',
 
-    sendLabel: 'Мессежээр илгээх',
-    copyLabel: 'Хуулах',
-    copiedLabel: 'Хууллаа ✓',
+    sendLabel: '💬 Мессеж илгээх',
+    copyLabel: '📋 Чатанд хуулах',
+    copiedLabel: 'Хуулагдлаа ✓ — чатандаа буулгаарай',
 
     /* {when} — «Лхагва гаригийн 19:00 цагт», {where} — «кино үзэхээр»,
        {date} — «9-р сарын 23» */
@@ -588,6 +715,38 @@ function bloomTo(value) {
 }
 bloomTo(0.18);
 
+/* ── Арын хөвөх 8 дэлбээ (.petal биш — тэр нь цэцгийнх) ── */
+const drift = document.getElementById('drift');
+for (let i = 0; i < 8; i++) {
+  const p = document.createElement('span');
+  p.className = 'drift-petal';
+  const d = 14 + Math.random() * 10;   /* 14–24 сек */
+  p.style.setProperty('--x', `${(i * 12.5 + Math.random() * 8).toFixed(1)}vw`);
+  p.style.setProperty('--s', `${Math.round(10 + Math.random() * 10)}px`);
+  p.style.setProperty('--d', `${d.toFixed(1)}s`);
+  p.style.setProperty('--delay', `${(-Math.random() * d).toFixed(1)}s`);   /* эхнээсээ тархсан */
+  p.style.setProperty('--sway', `${Math.round(Math.random() * 120 - 60)}px`);
+  drift.appendChild(p);
+}
+
+/* Цэцэг дэлгэрэхэд дээш хөөрөх жижиг зүрх (.heart биш) */
+function riseHearts(n) {
+  if (reduceMotion) return;
+  const r = bloom.getBoundingClientRect();
+  for (let i = 0; i < n; i++) {
+    const h = document.createElement('span');
+    h.className = 'mini-heart';
+    h.textContent = '♥';
+    h.setAttribute('aria-hidden', 'true');
+    h.style.left = `${r.left + r.width / 2 + (i - (n - 1) / 2) * 16}px`;
+    h.style.top = `${r.top + r.height * 0.3}px`;
+    h.style.setProperty('--dx', `${Math.round(Math.random() * 24 - 12)}px`);
+    h.style.animationDelay = `${i * 0.12}s`;
+    h.addEventListener('animationend', () => h.remove());
+    document.body.appendChild(h);
+  }
+}
+
 /* ── «Үгүй» зугтана ── */
 function dodge() {
   dodges++;
@@ -599,6 +758,7 @@ function dodge() {
   /* Тийм товч томорч, цэцэг дэлгэрнэ */
   card.style.setProperty('--grow', String(Math.min(dodges, 5)));
   bloomTo(0.18 + dodges * 0.16);
+  riseHearts(3);
 
   if (dodges >= CONFIG.dodgeLimit) {
     noBtn.classList.add('gone');
@@ -653,7 +813,7 @@ function hearts() {
   }
 }
 
-/* «Дууг сонсох ▶» дарахад л YouTube тоглогчийг үүсгэнэ. Дарсан нь хөтчийн
+/* «Тийм» дарахад YouTube тоглогчийг үүсгэнэ. Тэр товшилт нь хөтчийн
    хувьд хэрэглэгчийн үйлдэл тул дуу шууд эхлэх боломжтой. */
 function playSong() {
   const s = CONFIG.song;
@@ -686,18 +846,13 @@ function showReply() {
     img.onerror = () => img.classList.add('missing');   /* файл олдохгүй бол хоосон талбай үлдэхгүй */
   }
 
-  /* Тоглогч энд үүсэхгүй — зөвхөн «Дууг сонсох ▶» товч гарна. iframe-ийг
-     товч дарсны дараа playSong() үүсгэнэ. */
+  /* Дуу доод талын хөвөх самбарт шууд эхэлнэ */
   const s = CONFIG.song;
   if (s && s.youtube) {
-    const play = document.createElement('button');
-    play.type = 'button';
-    play.className = 'song-play';
-    play.textContent = s.playLabel;
-    play.addEventListener('click', playSong, { once: true });
     document.getElementById('songLabel').textContent = s.label;
-    document.getElementById('songFrame').replaceChildren(play);
+    playSong();
     document.getElementById('song').hidden = false;
+    document.body.classList.add('has-song');
   }
 
   document.getElementById('sign').textContent = r.signature;
@@ -779,6 +934,7 @@ function refreshPicked() {
   pickedEl.hidden = !text;
   pickedNote.hidden = !text;
   whenActions.hidden = !text;
+  msgrBtn.hidden = true;   /* сонголт өөрчлөгдвөл дахин хуулах хэрэгтэй */
   if (!text) return;
   pickedEl.textContent = text;
   pickedNote.textContent = CONFIG.when.pickedNote;
@@ -808,9 +964,8 @@ function buildWhen() {
   document.getElementById('timeQ').textContent = w.timeQuestion;
   copyBtn.textContent = w.copyLabel;
   sendBtn.textContent = w.sendLabel;
-  sendBtn.hidden = !w.phone;     /* дугаар байхгүй бол зөвхөн хуулна */
-  msgrBtn.textContent = w.messengerLabel;
-  msgrBtn.hidden = !w.messenger;
+  sendBtn.hidden = false;        /* дугааргүй ч хуваалцах цэсээр илгээнэ */
+  msgrBtn.hidden = true;         /* хуулсны дараа л гарна */
 
   /* Өнөөдөр сонгох цаг үлдээгүй бол маргаашаас эхэлнэ */
   const today = new Date();
@@ -888,34 +1043,54 @@ async function copyText(text) {
   return ok;
 }
 
+/* Хуулаад, Messenger нэр байвал «Messenger нээх →» холбоос гаргана.
+   Холбоос нь <a> тул хүн өөрөө дарна — iOS popup хаахгүй. */
 copyBtn.addEventListener('click', async () => {
+  const w = CONFIG.when;
   const text = message();
   const ok = await copyText(text);
-  copyBtn.textContent = ok ? CONFIG.when.copiedLabel : text;
+  copyBtn.textContent = ok ? w.copiedLabel : text;
+  if (w.messenger) {
+    msgrBtn.href = `https://m.me/${w.messenger}`;
+    msgrBtn.textContent = w.messengerLabel;
+    msgrBtn.hidden = false;
+  }
 });
 
-msgrBtn.addEventListener('click', async () => {
+/* Дугаар байвал шууд SMS. Үгүй бол утасны хуваалцах цэс, тэр байхгүй бол
+   хаяггүй SMS — хүлээн авагч хаягаа өөрөө сонгоно.
+   «?&body=» нь iOS, Android хоёуланд ажилладаг хэлбэр. */
+sendBtn.addEventListener('click', async () => {
   const w = CONFIG.when;
-  if (!w.messenger) return;
-  const copying = copyText(message());   /* товшилт дотор шууд эхэлнэ */
-  window.open(`https://m.me/${w.messenger}`, '_blank', 'noopener');   /* await-ээс өмнө — iOS popup хаахгүй */
-  const ok = await copying;
-  msgrBtn.textContent = ok ? 'Хуулагдлаа — Messenger-т буулгаарай' : w.messengerLabel;
-});
-
-sendBtn.addEventListener('click', () => {
-  const w = CONFIG.when;
-  if (!w.phone) return;
-  /* «?&body=» нь iOS, Android хоёуланд ажилладаг хэлбэр */
-  window.location.href = `sms:${w.phone}?&body=${encodeURIComponent(message())}`;
+  const text = message();
+  const body = encodeURIComponent(text);
+  if (w.phone) { location.href = `sms:${w.phone}?&body=${body}`; return; }
+  if (navigator.share) {
+    try { await navigator.share({ text }); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }   /* хүн өөрөө цуцалсан */
+  }
+  location.href = `sms:?&body=${body}`;
 });
 
 buildWhen();
 
+/* ── Дууны самбарыг жижигрүүлэх / дэлгэх. iframe үлдэнэ — дуу зогсохгүй. ── */
+const songBox = document.getElementById('song');
+const songMin = document.getElementById('songMin');
+function setSongSmall(small) {
+  songBox.classList.toggle('min', small);
+  document.body.classList.toggle('song-small', small);
+  songMin.setAttribute('aria-expanded', String(!small));
+  songMin.textContent = small ? '♪ дэлгэх' : '— жижигрүүлэх';
+}
+songMin.addEventListener('click', () => setSongSmall(!songBox.classList.contains('min')));
+
 document.getElementById('again').addEventListener('click', () => {
   card.classList.remove('answered');
   document.getElementById('songFrame').replaceChildren();   /* дууг зогсооно */
-  document.getElementById('song').hidden = true;
+  songBox.hidden = true;
+  setSongSmall(false);
+  document.body.classList.remove('has-song');
   dodges = 0;
   card.style.setProperty('--grow', '0');
   bloomTo(0.18);

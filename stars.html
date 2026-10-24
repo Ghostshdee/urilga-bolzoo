@@ -32,38 +32,64 @@
   button { font:inherit; cursor:pointer; }
   :focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
 
-  /* Тэнгэр — 3 давхарга box-shadow од, зөвхөн opacity хөдөлнө */
-  .sky { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
-  .layer { position:absolute; top:0; left:0; width:1px; height:1px; border-radius:50%; }
-  .l1 { animation:tw 4s ease-in-out infinite alternate; }
-  .l2 { animation:tw 6s ease-in-out -2s infinite alternate; }
-  .l3 { animation:tw 7s ease-in-out -4s infinite alternate; }
-  @keyframes tw { from { opacity:.35; } to { opacity:1; } }
+  /* Тэнгэр — од бүр өөрийн хэмнэлээр, зөвхөн opacity/transform */
+  .sky { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .milky {
+    position:absolute; left:-30%; top:-10%; width:160%; height:70%; opacity:.5; transform:rotate(-24deg);
+    background:radial-gradient(50% 22% at 50% 50%, rgba(170,160,255,.16), rgba(120,140,255,.06) 55%, transparent 75%),
+               radial-gradient(30% 10% at 40% 52%, rgba(255,230,200,.08), transparent 70%);
+    animation:drift 40s ease-in-out infinite alternate;
+  }
+  @keyframes drift { to { transform:rotate(-24deg) translateX(4%); opacity:.62; } }
+  .st {
+    position:absolute; width:2px; height:2px; border-radius:50%; background:#fff;
+    box-shadow:0 0 4px 1px rgba(255,255,255,.55); opacity:.3;
+    animation:tw var(--tw) ease-in-out var(--dl) infinite;
+  }
+  .st.b { width:3px; height:3px; box-shadow:0 0 6px 2px rgba(var(--glow),.5); }
+  @keyframes tw { 0%,100% { opacity:.2; transform:scale(.7); } 50% { opacity:1; transform:scale(1.15); } }
+  .halo {
+    position:absolute; top:calc(7svh - 28px); right:calc(9vw - 26px); width:110px; height:110px; border-radius:50%;
+    background:radial-gradient(circle, rgba(244,231,193,.28), rgba(244,231,193,.08) 45%, transparent 70%);
+    animation:glow 6s ease-in-out infinite alternate;
+  }
+  @keyframes glow { from { opacity:.6; transform:scale(.95); } to { opacity:1; transform:scale(1.08); } }
   .moon {
     position:absolute; top:7svh; right:9vw; width:44px; height:44px; border-radius:50%;
-    box-shadow:10px 6px 0 0 #F4E7C1; transform:rotate(-20deg); opacity:.9;
+    box-shadow:10px 6px 0 0 #F4E7C1; transform:rotate(-20deg); opacity:.95;
   }
   .shoot {
-    position:absolute; width:90px; height:2px; border-radius:2px;
-    background:linear-gradient(90deg, #fff, rgba(255,255,255,0));
-    animation:shoot .9s ease-out forwards;
+    position:absolute; width:var(--len); height:2px; border-radius:2px; transform-origin:right center;
+    background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,240,210,.85));
+    animation:shoot var(--dur) cubic-bezier(.3,.6,.4,1) forwards;
+  }
+  .shoot::after {
+    content:''; position:absolute; right:-2px; top:-1px; width:4px; height:4px; border-radius:50%;
+    background:#fff; box-shadow:0 0 8px 3px rgba(var(--glow),.8);
   }
   @keyframes shoot {
-    from { transform:rotate(-30deg) translateX(0); opacity:1; }
-    to { transform:rotate(-30deg) translateX(-260px); opacity:0; }
+    0% { transform:rotate(var(--a)) translateX(0) scaleX(.3); opacity:0; }
+    15% { opacity:1; }
+    100% { transform:rotate(var(--a)) translateX(-300px) scaleX(1); opacity:0; }
   }
+  main, footer { z-index:1; }
 
-  /* Дуу */
+  /* Дуу — доод хөвөх самбар; хураахад iframe үлдэнэ (display:none биш) */
   .music {
-    position:fixed; top:12px; left:12px; z-index:5; width:176px; padding:8px;
-    background:rgba(10,14,36,.85); border:1px solid rgba(255,255,255,.12); border-radius:14px; font-size:12px;
+    position:fixed; left:50%; bottom:calc(10px + env(safe-area-inset-bottom)); z-index:5; transform:translateX(-50%);
+    width:304px; padding:8px 12px 10px; font-size:12px; color:var(--dim);
+    background:rgba(10,14,36,.9); border:1px solid rgba(255,217,138,.28); border-radius:16px;
+    box-shadow:0 8px 30px rgba(0,0,0,.45), 0 0 18px rgba(var(--glow),.12);
   }
-  .music-h { display:block; color:var(--dim); margin:0 0 6px 2px; }
-  .music iframe { display:block; width:160px; height:90px; border:0; border-radius:8px; }
-  .music button {
-    width:100%; min-height:36px; margin-top:6px; border-radius:999px;
-    border:1px solid rgba(255,255,255,.25); background:transparent; color:var(--ink);
-  }
+  .music-bar { display:flex; align-items:center; justify-content:space-between; min-height:32px; }
+  .music-h { color:var(--gold); font-weight:600; }
+  #minBtn { min-height:32px; padding:0 10px; border-radius:999px; border:1px solid rgba(255,255,255,.2); background:transparent; color:var(--ink); font-size:12px; }
+  .music-body { overflow:hidden; max-height:220px; opacity:1; transition:max-height .35s, opacity .35s; }
+  .music iframe { display:block; width:280px; height:158px; border:0; border-radius:10px; margin-top:4px; }
+  .music-tip { margin-top:6px; }
+  .music.min .music-body { max-height:0; opacity:0; }
+  body.has-music main { padding-bottom:230px; }
+  body.has-music.min-music main { padding-bottom:70px; }
 
   main {
     flex:1; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -142,11 +168,12 @@
     padding:16px 18px; border:1px dashed rgba(255,217,138,.5); border-radius:16px;
   }
   .acts { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  #msLink { display:block; margin-top:4px; color:var(--gold); font-size:14px; }
 
   footer { text-align:center; padding:14px 16px calc(14px + env(safe-area-inset-bottom)); font-size:13px; color:var(--dim); position:relative; }
   footer a { color:var(--gold); font-weight:600; text-decoration:none; }
   .toast {
-    position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); z-index:6; transform:translateX(-50%);
+    position:fixed; left:50%; top:calc(16px + env(safe-area-inset-top)); z-index:6; transform:translateX(-50%);
     padding:10px 18px; border-radius:999px; background:#FFF3D1; color:#241803; font-size:15px;
     opacity:0; pointer-events:none; transition:opacity .3s; white-space:nowrap;
   }
@@ -159,13 +186,18 @@
 </head>
 <body>
 <div class="sky" aria-hidden="true">
-  <i class="layer l1"></i><i class="layer l2"></i><i class="layer l3"></i><span class="moon"></span>
+  <i class="milky"></i><span class="halo"></span><span class="moon"></span>
 </div>
 
 <aside id="music" class="music" hidden aria-label="Дуу">
-  <span class="music-h">♪ дуу</span>
-  <div id="frame"></div>
-  <button id="replay" type="button">▶ Дууг асаах</button>
+  <div class="music-bar">
+    <span class="music-h">♪ дуу</span>
+    <button id="minBtn" type="button" aria-expanded="true" aria-controls="musicBody">— жижигрүүлэх</button>
+  </div>
+  <div id="musicBody" class="music-body">
+    <div id="frame"></div>
+    <p class="music-tip">Дуу эхлээгүй бол тоглогч дээр нэг дараарай ▶</p>
+  </div>
 </aside>
 
 <main>
@@ -202,9 +234,9 @@
     <div id="reply" hidden>
       <p class="msg" id="msg"></p>
       <div class="acts">
-        <button id="copy" class="btn yes" type="button">Хуулах</button>
-        <a id="sms" class="btn ghost" hidden>SMS илгээх</a>
-        <a id="ms" class="btn ghost" hidden target="_blank" rel="noopener">Messenger</a>
+        <button id="send" class="btn yes" type="button"><span aria-hidden="true">💬</span>&nbsp;Мессеж илгээх</button>
+        <button id="copy" class="btn ghost" type="button"><span aria-hidden="true">📋</span>&nbsp;Чатанд хуулах</button>
+        <a id="msLink" hidden target="_blank" rel="noopener">Messenger нээх →</a>
       </div>
     </div>
   </section>
@@ -246,26 +278,38 @@
     when: g ? g.when : true
   };
 
-  // Тэнгэрийн од — нэг элемент дээр олон box-shadow
+  // Тэнгэр — 60–90 од, тус бүр 2–6 с хэмнэл, өөр саатал
   function sky() {
-    const w = Math.max(innerWidth, 400), h = Math.max(innerHeight, 700);
-    [['.l1', 40, 0], ['.l2', 28, .5], ['.l3', 12, 1]].forEach(([sel, n, spread]) => {
-      const a = [];
-      for (let i = 0; i < n; i++) {
-        a.push((Math.random() * w | 0) + 'px ' + (Math.random() * h | 0) + 'px 0 ' + spread + 'px rgba(255,255,255,' + (.5 + Math.random() * .5).toFixed(2) + ')');
-      }
-      $(sel).style.boxShadow = a.join(',');
-    });
+    const box = $('.sky'), n = 60 + (Math.random() * 31 | 0), frag = document.createDocumentFragment();
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('i');
+      s.className = Math.random() < .15 ? 'st b' : 'st';
+      s.style.left = (Math.random() * 100).toFixed(2) + '%';
+      s.style.top = (Math.random() * 100).toFixed(2) + '%';
+      s.style.setProperty('--tw', (2 + Math.random() * 4).toFixed(2) + 's');
+      s.style.setProperty('--dl', (-Math.random() * 6).toFixed(2) + 's');
+      frag.append(s);
+    }
+    box.append(frag);
   }
 
+  // Харвах од — ташуу, 0.8–1.2 с
   function shoot() {
     if (RM) return;
     const s = document.createElement('i');
     s.className = 'shoot';
-    s.style.top = (Math.random() * 40 | 0) + '%';
-    s.style.left = (40 + Math.random() * 60 | 0) + '%';
+    s.style.top = (5 + Math.random() * 40 | 0) + '%';
+    s.style.left = (35 + Math.random() * 60 | 0) + '%';
+    s.style.setProperty('--a', (-(20 + Math.random() * 20)).toFixed(0) + 'deg');
+    s.style.setProperty('--dur', (.8 + Math.random() * .4).toFixed(2) + 's');
+    s.style.setProperty('--len', (80 + Math.random() * 60 | 0) + 'px');
     $('.sky').append(s);
     s.addEventListener('animationend', () => s.remove());
+  }
+  // 5–9 секунд тутамд ганц од; таб нуугдсан үед харвахгүй
+  function meteorLoop() {
+    if (RM) return;
+    setTimeout(() => { if (!document.hidden) shoot(); meteorLoop(); }, 5000 + Math.random() * 4000);
   }
 
   function show(id) {
@@ -284,11 +328,12 @@
 
   // Дуу — товшилтын дараа л iframe үүсгэнэ
   function startMusic() {
-    if (!G.yt) return;
+    if (!G.yt || $('#frame iframe')) return;
     $('#music').hidden = false;
+    document.body.classList.add('has-music');
     const f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1';
-    f.allow = 'autoplay; encrypted-media';
+    f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1&rel=0';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture';
     f.title = 'Дуу';
     $('#frame').replaceChildren(f);
   }
@@ -413,8 +458,6 @@
     const first = r.hidden;
     r.hidden = false;
     $('#msg').textContent = msg();
-    if (G.ph) { $('#sms').hidden = false; $('#sms').href = 'sms:' + G.ph + '?&body=' + encodeURIComponent(msg()); }
-    if (G.ms) { $('#ms').hidden = false; $('#ms').href = 'https://m.me/' + G.ms; }
     if (first) r.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'nearest' });
   }
   function copy(t) {
@@ -435,13 +478,19 @@
 
   // Эхлэл
   sky();
+  meteorLoop();
   document.title = G.to + ', чамд зориулсан урилга';
   $('#toLine').textContent = G.to + ', чамд зориулсан урилга';
   $('#hint').textContent = G.yt ? 'Одыг товшоорой — дуу эхэлнэ' : 'Одыг товшоорой';
   $('#toName').textContent = G.to + ',';
   $('#sign').textContent = '— ' + G.from;
 
-  $('#replay').onclick = startMusic;
+  $('#minBtn').onclick = () => {
+    const m = $('#music'), min = m.classList.toggle('min');
+    document.body.classList.toggle('min-music', min);
+    $('#minBtn').textContent = min ? '+ томруулах' : '— жижигрүүлэх';
+    $('#minBtn').setAttribute('aria-expanded', String(!min));
+  };
 
   $('#open').onclick = async () => {
     startMusic();
@@ -480,9 +529,19 @@
     else { $('#planT').textContent = 'Хариугаа илгээгээрэй'; showReply(); }
   };
 
-  $('#copy').onclick = () => copy(msg()).then(ok => toast(ok ? 'Хуулагдлаа' : 'Хуулж чадсангүй — гараар сонгоорой'));
-  // Messenger бичвэр урьдчилан бөглөдөггүй — хуулаад, линк өөрөө нээгдэнэ
-  $('#ms').onclick = () => { copy(msg()); toast('Хуулагдлаа, буулгаарай'); };
+  // Хариу — утас байвал SMS, үгүй бол хуваалцах цонх, бүтэлгүйтвэл хоосон SMS
+  $('#send').onclick = () => {
+    const body = encodeURIComponent(msg());
+    if (G.ph) { location.href = 'sms:' + G.ph + '?&body=' + body; return; }
+    const sms = () => { location.href = 'sms:?&body=' + body; };
+    if (navigator.share) navigator.share({ text: msg() }).catch(e => { if (!e || e.name !== 'AbortError') sms(); });  /* өөрөө хаасан бол юу ч нээхгүй */
+    else sms();
+  };
+  $('#copy').onclick = () => copy(msg()).then(ok => {
+    if (!ok) { toast('Хуулж чадсангүй — гараар сонгоорой'); return; }
+    $('#copy').textContent = 'Хуулагдлаа ✓ — чатандаа буулгаарай';
+    if (G.ms) { $('#msLink').href = 'https://m.me/' + G.ms; $('#msLink').hidden = false; }
+  });
 </script>
 </body>
 </html>

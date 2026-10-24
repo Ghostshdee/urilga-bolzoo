@@ -16,18 +16,21 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Onest:wght@400;500;600&display=swap">
 <style>
 :root {
-  --paper: #F7F1EA;
-  --card:  #FFFDFB;
-  --ink:   #2C2622;
-  --muted: #7A6E66;
-  --line:  #EADFD4;
-  --rose:  #D9566F;
-  --gold:  #C9A24A;
+  --paper: #EFE4D8;
+  --card:  #FFFBF6;
+  --ink:   #3B2E28;
+  --muted: #8A776B;
+  --line:  #E6D6C6;
+  --rose:  #B86B8E;
+  --gold:  #B9A7F0;
+  --lilac: #C8B6FF;
+  --aqua:  #9EE6E0;
+  --peach: #FFC8A8;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body {
-  min-height: 100dvh; background: var(--paper); color: var(--ink);
+  min-height: 100dvh; background: radial-gradient(120% 80% at 50% 0%, #F7EEE4, var(--paper) 70%); color: var(--ink);
   font: 16px/1.5 Onest, system-ui, sans-serif;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: 24px 16px calc(24px + env(safe-area-inset-bottom)); overflow-x: hidden;
@@ -61,7 +64,28 @@ h1 { font-size: 34px; line-height: 1.15; margin: 0 0 24px; }
 .scratch-wrap { position: relative; border-radius: 14px; }
 canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 14px;
   touch-action: none; cursor: grab; transition: opacity .6s; }
-canvas.gone { opacity: 0; pointer-events: none; }
+canvas.gone { opacity: 0; transform: scale(1.06); pointer-events: none; transition: opacity .7s, transform .7s; }
+canvas.gone + .sheen { opacity: 0; transition: opacity .3s; }
+/* Голограм бүрхүүлийн гялбаа — зөвхөн transform */
+.sheen { position: absolute; inset: 0; border-radius: 14px; overflow: hidden; pointer-events: none; }
+.sheen::before { content: ""; position: absolute; top: -20%; bottom: -20%; left: -40%; width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: sheen 2.8s linear infinite; }
+@keyframes sheen { to { transform: translateX(500%); } }
+/* Дэвсгэрийн pastel толбо — fixed, хуруунд саад болохгүй */
+.bg { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
+.bg i { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(60px); opacity: .35;
+  animation: drift 18s ease-in-out infinite alternate; }
+.bg i:nth-child(1) { background: var(--lilac); left: -20vmax; top: -20vmax; }
+.bg i:nth-child(2) { background: var(--aqua); right: -25vmax; top: 30%; animation-delay: -6s; }
+.bg i:nth-child(3) { background: var(--peach); left: 10%; bottom: -30vmax; animation-delay: -12s; }
+@keyframes drift { to { transform: translate(6vmax, 4vmax) scale(1.1); } }
+/* Карт хөвөх + гэрлийн ойлт */
+#game .card { animation: float 6s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-6px); } }
+.card::after { content: ""; position: absolute; inset: -50% auto -50% -60%; width: 40%; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent);
+  transform: rotate(12deg) translateX(0); animation: glint 7s ease-in-out infinite; }
+@keyframes glint { 0%, 60% { transform: rotate(12deg) translateX(0); } 100% { transform: rotate(12deg) translateX(520%); } }
 .hint { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
 .linkish { background: none; border: 0; color: var(--muted); text-decoration: underline; font: inherit; font-size: 13px; cursor: pointer; padding: 8px; }
 .answers { display: flex; gap: 12px; justify-content: center; align-items: center; margin-top: 22px; min-height: 52px; flex-wrap: wrap; }
@@ -73,24 +97,34 @@ canvas.gone { opacity: 0; pointer-events: none; }
 .msg { background: var(--paper); border-radius: 14px; padding: 14px; margin: 20px 0 12px; font-size: 17px; }
 .row { display: flex; flex-direction: column; gap: 10px; }
 .toast { min-height: 22px; font-size: 14px; color: var(--rose); margin-top: 8px; }
-.music { position: fixed; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
-  background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 6px;
-  display: flex; align-items: center; gap: 6px; font-size: 13px; z-index: 5; }
-.music iframe { width: 1px; height: 1px; border: 0; opacity: 0; }
-.music button { border: 0; background: none; font: 500 13px Onest, sans-serif; color: var(--ink); cursor: pointer; padding: 6px 8px; }
+.link { display: inline-block; margin-top: 10px; font-size: 14px; color: var(--ink); font-weight: 600; }
+/* Хөвөх дууны самбар — 280×158 тоглогч; хураахдаа height:0 (iframe устахгүй, дуу зогсохгүй) */
+body.has-music { padding-bottom: calc(210px + env(safe-area-inset-bottom)); }
+.music { position: fixed; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 5; width: 296px;
+  background: rgba(255,251,246,.92); border: 1px solid var(--line); border-radius: 16px; padding: 8px;
+  box-shadow: 0 10px 30px rgba(59,46,40,.15); font-size: 13px; text-align: left; }
+.music .bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 4px 6px; }
+.music .player { height: 158px; overflow: hidden; border-radius: 10px; transition: height .3s; }
+.music iframe { width: 280px; height: 158px; border: 0; display: block; }
+.music .tip { margin: 6px 4px 0; color: var(--muted); font-size: 12px; }
+.music.min { width: auto; } .music.min .player { height: 0; } .music.min .tip { display: none; }
+.music button { border: 0; background: none; font: 500 13px Onest, sans-serif; color: var(--ink); cursor: pointer; padding: 8px; min-height: 36px; }
 footer { margin-top: 28px; font-size: 13px; color: var(--muted); }
 footer a { color: var(--ink); font-weight: 600; }
-.coin { position: fixed; top: -30px; width: 18px; height: 18px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #FFF2C2, var(--gold) 60%, #8E6B22);
-  pointer-events: none; animation: fall linear forwards; z-index: 10; }
-@keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+/* Оч ба конфетти — бүгд CSS, transform/opacity */
+.spark { position: fixed; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; z-index: 9; animation: spark .6s ease-out forwards; }
+@keyframes spark { to { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; } }
+.conf { position: fixed; top: -20px; width: 8px; height: 14px; border-radius: 2px; pointer-events: none; z-index: 10;
+  animation: fall 1.5s cubic-bezier(.3,.6,.6,1) forwards; }
+@keyframes fall { to { transform: translate(var(--dx), 110vh) rotate(720deg); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  .coin { display: none; }
+  .spark, .conf { display: none; }
 }
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
 <main>
   <section id="cover">
     <p class="eyebrow">Хусах карт</p>
@@ -105,8 +139,9 @@ footer a { color: var(--ink); font-weight: 600; }
         <p class="ask" id="ask"></p>
         <p class="sig" id="sig"></p>
         <canvas id="foil" aria-hidden="true"></canvas>
+        <div class="sheen" aria-hidden="true"></div>
       </div>
-      <p class="hint" id="hint">Алтан бүрхүүлийг хуруугаараа хусаарай ✦</p>
+      <p class="hint" id="hint">Үүнийг хусаарай ✨ — хуруугаараа</p>
       <button class="linkish" id="skipBtn" type="button">Хусахгүйгээр нээх</button>
       <div class="answers hidden" id="answers">
         <button class="btn" id="yesBtn" type="button">Тийм</button>
@@ -125,9 +160,9 @@ footer a { color: var(--ink); font-weight: 600; }
       </div>
       <p class="msg" id="msg" aria-live="polite"></p>
       <div class="row">
-        <button class="btn" id="copyBtn" type="button">Хуулах</button>
-        <a class="btn ghost hidden" id="smsBtn" href="#">SMS илгээх</a>
-        <button class="btn ghost hidden" id="msBtn" type="button">Messenger</button>
+        <button class="btn" id="sendBtn" type="button"><span aria-hidden="true">💬</span> Мессеж илгээх</button>
+        <button class="btn ghost" id="copyBtn" type="button"><span aria-hidden="true">📋</span> Чатанд хуулах</button>
+        <a class="link hidden" id="msLink" href="#" target="_blank" rel="noopener">Messenger нээх →</a>
       </div>
       <p class="toast" id="toast" role="status"></p>
     </div>
@@ -137,8 +172,9 @@ footer a { color: var(--ink); font-weight: 600; }
 </main>
 
 <div class="music hidden" id="music">
-  <span>♪ дуу</span>
-  <button type="button" id="playBtn">▶ Дууг асаах</button>
+  <div class="bar"><span>♪ дуу</span><button type="button" id="minBtn" aria-expanded="true">— жижигрүүлэх</button></div>
+  <div class="player" id="player"></div>
+  <p class="tip">Дуу эхлээгүй бол тоглогч дээр нэг дараарай ▶</p>
 </div>
 
 <script>
@@ -185,15 +221,17 @@ function startMusic() {
   if (!G.yt) return;
   const box = $('music');
   box.classList.remove('hidden');
-  const old = box.querySelector('iframe');
+  document.body.classList.add('has-music');
+  const old = $('player').querySelector('iframe');
   if (old) old.remove();
   const f = document.createElement('iframe');
-  f.allow = 'autoplay; encrypted-media';
+  f.allow = 'autoplay; encrypted-media; picture-in-picture';
   f.title = 'Дуу';
-  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1';
-  box.insertBefore(f, box.firstChild);
+  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1&rel=0';
+  $('player').appendChild(f);
 }
-$('playBtn').addEventListener('click', startMusic);
+$('minBtn').addEventListener('click', () => { const m = $('music').classList.toggle('min');
+  $('minBtn').textContent = m ? '♪ томруулах' : '— жижигрүүлэх'; $('minBtn').setAttribute('aria-expanded', String(!m)); });
 $('openBtn').addEventListener('click', () => {
   startMusic();
   $('cover').classList.add('hidden');
@@ -211,15 +249,13 @@ function setupFoil() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const w = r.width, h = r.height;
   const gr = ctx.createLinearGradient(0, 0, w, h);
-  gr.addColorStop(0, '#E9CD7E'); gr.addColorStop(.45, '#C9A24A');
-  gr.addColorStop(.55, '#F3E2A8'); gr.addColorStop(1, '#B08A35');
-  ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = gr; ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = 'rgba(255,255,255,.35)';
-  for (let i = 0; i < 70; i++) ctx.fillRect(Math.random() * w, Math.random() * h, 1.5, 1.5);
-  ctx.fillStyle = 'rgba(80,58,15,.75)';
-  ctx.font = '600 18px Onest, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('✦ Энд хус ✦', w / 2, h / 2);
+  // Голограм: lilac → aqua → peach + 140 гялтганах ширхэг
+  gr.addColorStop(0, '#C8B6FF'); gr.addColorStop(.35, '#9EE6E0'); gr.addColorStop(.7, '#FFC8A8'); gr.addColorStop(1, '#C8B6FF');
+  ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = gr; ctx.fillRect(0, 0, w, h);
+  for (let i = 0; i < 140; i++) { ctx.fillStyle = i % 3 ? 'rgba(255,255,255,.6)' : 'rgba(170,140,255,.5)';
+    const s = Math.random() * 1.8 + .6; ctx.fillRect(Math.random() * w, Math.random() * h, s, s); }
+  ctx.fillStyle = 'rgba(59,46,40,.72)'; ctx.font = '600 18px Onest, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Үүнийг хусаарай ✨', w / 2, h / 2);
   ctx.globalCompositeOperation = 'destination-out';
   ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 38;
 }
@@ -230,7 +266,15 @@ function scratch(p) {
   else { ctx.arc(p.x, p.y, 19, 0, Math.PI * 2); ctx.fill(); }
   last = p;
   if (++moves % 8 === 0) checkCleared();
+  if (moves % 3 === 0) sparks(p);
 }
+// Хурууны дор pastel оч — нэг зэрэг 24-өөс ихгүй
+const PAL = ['#C8B6FF', '#9EE6E0', '#FFC8A8', '#fff']; let live = 0;
+function sparks(p) { if (reduce || live > 24) return; const r = cv.getBoundingClientRect();
+  for (let i = 0; i < 2; i++) { const s = document.createElement('span'); s.className = 'spark'; live++;
+    s.style.left = (r.left + p.x) + 'px'; s.style.top = (r.top + p.y) + 'px'; s.style.background = PAL[i + moves % 2 * 2];
+    s.style.setProperty('--dx', (Math.random() * 40 - 20) + 'px'); s.style.setProperty('--dy', (Math.random() * -36 - 6) + 'px');
+    document.body.appendChild(s); setTimeout(() => { s.remove(); live--; }, 650); } }
 function checkCleared() {
   const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
   let clear = 0, total = 0;
@@ -246,6 +290,7 @@ function reveal() {
   if (revealed) return;
   revealed = true;
   cv.classList.add('gone');
+  confetti();
   $('hint').classList.add('hidden'); $('skipBtn').classList.add('hidden');
   $('answers').classList.remove('hidden');
   $('yesBtn').focus();
@@ -268,18 +313,11 @@ $('yesBtn').addEventListener('click', yes);
 
 // 3. Баяр + өдөр/цаг/газар
 const pick = { day: '', hour: '', place: '' };
-function coins() {
-  if (reduce) return;
-  for (let i = 0; i < 36; i++) {
-    const c = document.createElement('span');
-    c.className = 'coin';
-    c.style.left = Math.random() * 100 + 'vw';
-    c.style.animationDuration = (1.6 + Math.random() * 1.6) + 's';
-    c.style.animationDelay = Math.random() * .6 + 's';
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 4000);
-  }
-}
+// Pastel конфетти — 36 ширхэг, 1.5 секунд, бүгд CSS
+function confetti() { if (reduce) return; for (let i = 0; i < 36; i++) { const c = document.createElement('span');
+  c.className = 'conf'; c.style.left = Math.random() * 100 + 'vw'; c.style.background = PAL[i % 4 === 3 ? 0 : i % 3];
+  c.style.setProperty('--dx', (Math.random() * 80 - 40) + 'px'); c.style.animationDelay = Math.random() * .3 + 's';
+  document.body.appendChild(c); setTimeout(() => c.remove(), 2000); } }
 function chips(box, items, key) {
   box.textContent = '';
   items.forEach(label => {
@@ -307,7 +345,7 @@ function buildHours() {
   if (pick.hour) [...$('hours').children].forEach(b => { if (b.textContent === pick.hour) b.setAttribute('aria-pressed', 'true'); });
 }
 function yes() {
-  coins();
+  confetti();
   $('game').classList.add('hidden');
   $('plan').classList.remove('hidden');
   if (G.when) {
@@ -319,8 +357,7 @@ function yes() {
   } else {
     $('whenBox').classList.add('hidden');
   }
-  if (G.ph) $('smsBtn').classList.remove('hidden');
-  if (G.ms) $('msBtn').classList.remove('hidden');
+  if (G.ms) $('msLink').href = 'https://m.me/' + G.ms;
   updateMsg();
   window.scrollTo(0, 0);
 }
@@ -334,7 +371,6 @@ function message() {
 function updateMsg() {
   const m = message();
   $('msg').textContent = m;
-  if (G.ph) $('smsBtn').href = 'sms:' + G.ph + '?&body=' + encodeURIComponent(m);
 }
 function copyText(t) {
   if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t).catch(() => fallback(t));
@@ -348,11 +384,14 @@ function fallback(t) {
   a.remove();
 }
 function toast(t) { $('toast').textContent = t; setTimeout(() => { $('toast').textContent = ''; }, 3500); }
-$('copyBtn').addEventListener('click', () => copyText(message()).then(() => toast('Хуулагдлаа ✓')));
-$('msBtn').addEventListener('click', () => {
-  copyText(message()).then(() => toast('Хуулагдлаа, Messenger-т буулгаарай'));
-  window.open('https://m.me/' + G.ms, '_blank', 'noopener');
-});
+// Мессеж илгээх: утас байвал sms → үгүй бол share цонх → дэмжихгүй/алдаа бол sms
+function smsUrl(m) { return 'sms:' + (G.ph || '') + '?&body=' + encodeURIComponent(m); }
+$('sendBtn').addEventListener('click', () => { const m = message();
+  if (G.ph || !navigator.share) { location.href = smsUrl(m); return; }
+  navigator.share({ text: m }).catch(e => { if (e && e.name !== 'AbortError') location.href = smsUrl(m); }); });
+$('copyBtn').addEventListener('click', () => copyText(message()).then(() => {
+  $('copyBtn').textContent = 'Хуулагдлаа ✓ — чатандаа буулгаарай';
+  if (G.ms) $('msLink').classList.remove('hidden'); }));
 </script>
 </body>
 </html>

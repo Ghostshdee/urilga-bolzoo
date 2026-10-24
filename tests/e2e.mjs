@@ -4,7 +4,8 @@
    Chrome-ын зам өөр бол: CHROME_PATH=... node tests/e2e.mjs
 
    Шалгадаг: зугтаах, тоолуур, цэцэг дэлгэрэх, хариу дэлгэц, өдөр/цаг сонгох
-   (өнгөрсөн цаг сонгогдохгүй), мессеж, дахин асуух, гар, мобайл, хөдөлгөөн
+   (өнгөрсөн цаг сонгогдохгүй), мессеж, 2 хариу товч (хуваалцах, хуулах→Messenger),
+   дууны хөвөх самбар, арын дэлбээ, дахин асуух, гар, мобайл, хөдөлгөөн
    багасгасан горим, console цэвэр. Гарц: «PASS n / n».
    Зураг түр хавтаст үлдэнэ (репод биш). */
 import { spawn } from 'node:child_process';
@@ -54,6 +55,10 @@ try {
   check('1c 6 delbee, tsetseg jijig', await ev(w,'document.querySelectorAll(".petal").length') === 6 && Number(await ev(w,'getComputedStyle(document.getElementById("bloom")).getPropertyValue("--open")')) < 0.3);
   check('1d hariu delgets nuugdsan, zar tooloor alga', await ev(w,'getComputedStyle(document.getElementById("reply")).display') === 'none' && await ev(w,'document.getElementById("dodges").hidden'));
   check('1e tovch 44px+', await ev(w,'document.getElementById("yes").getBoundingClientRect().height >= 44 && document.getElementById("no").getBoundingClientRect().height >= 44'));
+  check('1f arin delbee 6-10, fixed, daragdahgüi', await ev(w,`(() => { const d = document.getElementById("drift");
+    const n = d.querySelectorAll(".drift-petal").length, cs = getComputedStyle(d);
+    return n >= 6 && n <= 10 && cs.position === 'fixed' && cs.pointerEvents === 'none'; })()`));
+  const pulseNormal = await ev(w,'getComputedStyle(document.getElementById("yes"), "::after").animationName');
   await shot(w, 'bolzoo-start-' + TAG + '.png');
 
   // 2. Зугтаах
@@ -94,15 +99,27 @@ try {
   check('4c zuraggüi bol hooson talbai üldehgüi', reply.photoHidden);
   check('4d0 hariu deed talaasaa haragdana (dood tal ruu üsrehgüi)', await ev(w,'window.scrollY === 0 && document.activeElement.id === "replyTitle"'));
   check('4d tsetseg buudaj garav', reply.hearts >= 10, String(reply.hearts));
-  check('4d1 YouTube ehendee achaalagdaagüi, "Duug sonsoh" tovch garsan', await ev(w,`(() => { const box = document.getElementById("song");
-    return !box.hidden && !box.querySelector("iframe") && !!box.querySelector(".song-play")
-      && box.querySelector(".song-play").getBoundingClientRect().height >= 44; })()`));
-  await ev(w,'document.querySelector("#song .song-play").click()'); await s(200);
-  check('4d2 tovch darahad YouTube toglogch huudas dotor, autoplay', await ev(w,`(() => { const box = document.getElementById("song");
+  check('4d1 "Duug sonsoh" tovchgüi, YouTube shuud, fixed samvar, autoplay', await ev(w,`(() => { const box = document.getElementById("song");
     const f = box.querySelector("iframe");
-    return !box.hidden && !!f && f.src.startsWith("https://www.youtube-nocookie.com/embed/" + CONFIG.song.youtube + "?")
-      && f.src.includes("autoplay=1") && f.src.includes("playsinline=1") && f.allow.includes("autoplay")
-      && f.getBoundingClientRect().height > 100; })()`));
+    return !box.hidden && !document.querySelector(".song-play") && getComputedStyle(box).position === 'fixed' && !!f
+      && f.src.startsWith("https://www.youtube-nocookie.com/embed/" + CONFIG.song.youtube + "?")
+      && f.src.includes("autoplay=1") && f.src.includes("playsinline=1") && f.src.includes("rel=0")
+      && f.allow.includes("autoplay"); })()`));
+  const frameSize = await ev(w,`(() => { const r = document.querySelector("#song iframe").getBoundingClientRect();
+    return { w: Math.round(r.width), h: Math.round(r.height) }; })()`);
+  check('4d2 toglogch 280x158+', frameSize.w >= 280 && frameSize.h >= 158, JSON.stringify(frameSize));
+  const mini = await ev(w,`(async () => { const box = document.getElementById("song"), btn = document.getElementById("songMin");
+    btn.click(); await new Promise(r => setTimeout(r, 450));
+    const f = box.querySelector("#songFrame iframe");
+    const res = { iframe: !!f && f.isConnected,
+      disp: f ? getComputedStyle(f).display + '/' + getComputedStyle(document.getElementById("songFrame")).display : 'none',
+      aria: btn.getAttribute("aria-expanded"), h: Math.round(box.getBoundingClientRect().height) };
+    btn.click(); await new Promise(r => setTimeout(r, 450));
+    res.back = btn.getAttribute("aria-expanded") === "true" && box.querySelector("iframe") === f
+      && f.getBoundingClientRect().height >= 158;
+    return res; })()`);
+  check('4d3 huraahad iframe üldene, display none bish, 90-ees nam, dahin delgene',
+    mini.iframe && !mini.disp.includes('none') && mini.aria === 'false' && mini.h < 90 && mini.back, JSON.stringify(mini));
   await shot(w, 'bolzoo-reply-' + TAG + '.png');
 
   // 4e-4k. Өдөр, цаг сонгох
@@ -114,12 +131,14 @@ try {
     sub: document.querySelector("#days .chip small").textContent,
     pickedHidden: document.getElementById("picked").hidden,
     actionsHidden: document.getElementById("whenActions").hidden,
-    sendHidden: document.getElementById("send").hidden })`);
+    sendHidden: document.getElementById("send").hidden,
+    sendText: document.getElementById("send").textContent })`);
   check('4e songoltiin heseg garav', whenInit.shown && whenInit.days === 7 && whenInit.times >= 1, JSON.stringify(whenInit));
   check('4f Önöödör/Margaashaas ehelne', ['Өнөөдөр', 'Маргааш'].includes(whenInit.first) && /сарын/.test(whenInit.sub), JSON.stringify(whenInit));
   check('4g songoogüi bol ür dün nuuc', whenInit.pickedHidden && whenInit.actionsHidden);
-  check('4h Illgeeh tovch zövhön dugaartai üed', whenInit.sendHidden === !(await ev(w,'CONFIG.when.phone')),
-    'phone=' + await ev(w,'CONFIG.when.phone') + ' hidden=' + whenInit.sendHidden);
+  check('4h Ilgeeh tovch dugaargüi üed ch haragdana', !whenInit.sendHidden
+    && whenInit.sendText === await ev(w,'CONFIG.when.sendLabel') && whenInit.sendText.includes('Мессеж илгээх'),
+    'phone=' + await ev(w,'CONFIG.when.phone') + ' hidden=' + whenInit.sendHidden + ' text=' + whenInit.sendText);
   if (await ev(w,'CONFIG.when.phone')) {
     check('4h2 sms holboos zöv bürdene', await ev(w,`(() => {
       const w2 = CONFIG.when;
@@ -141,13 +160,42 @@ try {
     note: document.getElementById("pickedNote").textContent,
     copy: document.getElementById("copy").textContent,
     msg: message(),
+    visible: [...document.getElementById("whenActions").children].filter(b => !b.hidden && b.getClientRects().length > 0).length,
     tall: document.getElementById("copy").getBoundingClientRect().height >= 44 })`);
   check('4j hoyuulang songohod ür dün garna', picked.shown && /\d{1,2}:\d{2} · Кино$/.test(picked.text) && /сарын/.test(picked.text), JSON.stringify(picked));
   check('4k medeejiin bichveg baigaliin', picked.msg.includes('19:00 цагт кино үзэхээр болзъё')
     && /гаригийн|Өнөөдөр|Маргааш/.test(picked.msg)
     && /\(\d{1,2}-р сарын \d{1,2}\)/.test(picked.msg)
     && !picked.msg.includes('{'), picked.msg);
-  check('4l tovch 44px+', picked.tall && picked.copy === 'Хуулах');
+  check('4l tovch 44px+, haragdah tovch yag 2', picked.tall && picked.copy === await ev(w,'CONFIG.when.copyLabel') && picked.visible === 2,
+    'copy=' + picked.copy + ' visible=' + picked.visible);
+
+  // 4l2. Дугааргүй «Мессеж илгээх» — хуваалцах цэс (share stub), sms: руу шилжихгүй
+  const shared = await ev(w,`(async () => {
+    const before = location.href; let got = null;
+    Object.defineProperty(navigator, 'share', { configurable: true, value: async (d) => { got = d; } });
+    document.getElementById("send").click();
+    await new Promise(r => setTimeout(r, 300));
+    delete navigator.share;
+    return { text: got && got.text, msg: message(), same: location.href === before }; })()`);
+  check('4l2 share({text}) = message(), sms ruu shiljeegüi', !!shared.msg && shared.text === shared.msg && shared.same, JSON.stringify(shared));
+
+  // 4l3. «Чатанд хуулах» — clipboard stub, дараа нь m.me холбоос гарна
+  const copied = await ev(w,`(async () => {
+    let got = null;
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async (t) => { got = t; } } });
+    CONFIG.when.messenger = 'dokay.test';
+    document.getElementById("copy").click();
+    await new Promise(r => setTimeout(r, 200));
+    const m = document.getElementById("msgr");
+    const res = { got, msg: message(), copy: document.getElementById("copy").textContent,
+      shown: !m.hidden && m.getClientRects().length > 0, href: m.href, h: Math.round(m.getBoundingClientRect().height) };
+    CONFIG.when.messenger = '';
+    delete navigator.clipboard;
+    return res; })()`);
+  check('4l3 huulsan = message(), copiedLabel, m.me holboos 44px+', copied.got === copied.msg
+    && copied.copy === await ev(w,'CONFIG.when.copiedLabel') && copied.shown
+    && copied.href === 'https://m.me/dokay.test' && copied.h >= 44, JSON.stringify(copied));
 
   // Нэг өдөр дахин сонгоход зөвхөн нэг нь тэмдэглэгдэнэ
   await ev(w,'document.querySelectorAll("#days .chip")[5].click()'); await s(150);
@@ -219,6 +267,9 @@ try {
     && (await ev(w,'document.getElementById("dodges").textContent')) === '1 удаа зугтлаа');
   await ev(w,'document.getElementById("yes").click()'); await s(300);
   check('9b reduce-motion: zürh buudahgüi', await ev(w,'document.querySelectorAll(".heart").length') === 0);
+  const pulseReduced = await ev(w,'getComputedStyle(document.getElementById("yes"), "::after").animationName');
+  check('9c reduce-motion: Тийм-iin pulse zogsono', pulseNormal === 'beat' && pulseReduced === 'none',
+    pulseNormal + ' → ' + pulseReduced);
 
   check('10 console tseverhen', errs.length === 0, errs.join(' | '));
   w.close();

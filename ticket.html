@@ -35,6 +35,35 @@ button{font:inherit;cursor:pointer}
 [hidden]{display:none!important}
 a{color:var(--gold)}
 .screen{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.screen,footer{position:relative;z-index:1}
+
+/* театр — арын давхарга, зөвхөн transform/opacity хөдөлнө */
+.theatre{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.curtain{position:absolute;top:0;bottom:0;width:52%;
+  background:repeating-linear-gradient(90deg,#5E0F18 0 6px,#9E1E2A 14px,#C8323C 20px,#9E1E2A 26px,#5E0F18 34px);
+  box-shadow:inset 0 -60px 80px rgba(0,0,0,.55);transition:transform 1.4s cubic-bezier(.6,0,.2,1)}
+.curtain.l{left:0;transform-origin:left}.curtain.r{right:0}
+.curtain::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.35),transparent 30%,transparent 70%,rgba(0,0,0,.35))}
+body.opened .curtain.l{transform:translateX(-90%)}   /* захад 10% үлдэнэ */
+body.opened .curtain.r{transform:translateX(90%)}
+.beam{position:absolute;left:50%;top:-5%;width:140%;height:90%;transform:translateX(-50%);
+  background:radial-gradient(60% 100% at 50% 0,rgba(255,236,200,.22),transparent 70%);
+  clip-path:polygon(44% 0,56% 0,85% 100%,15% 100%);opacity:0;transition:opacity 1.2s .6s}
+body.opened .beam{opacity:1}
+.beam i{position:absolute;width:3px;height:3px;border-radius:50%;background:#FFEFD0;opacity:0;animation:dust 9s linear infinite}
+.beam i:nth-child(1){left:46%;top:18%}
+.beam i:nth-child(2){left:52%;top:30%;animation-delay:1.1s}
+.beam i:nth-child(3){left:40%;top:46%;animation-delay:2.3s}
+.beam i:nth-child(4){left:58%;top:52%;animation-delay:3.4s}
+.beam i:nth-child(5){left:34%;top:68%;animation-delay:4.6s}
+.beam i:nth-child(6){left:63%;top:74%;animation-delay:5.7s}
+.beam i:nth-child(7){left:49%;top:62%;animation-delay:6.8s}
+.beam i:nth-child(8){left:55%;top:86%;animation-delay:7.9s}
+@keyframes dust{20%{opacity:.6}80%{opacity:.4}to{transform:translate(18px,-60px);opacity:0}}
+.seats{position:absolute;left:0;right:0;bottom:0;height:70px;opacity:.85;
+  background:radial-gradient(22px 26px at 50% 100%,#0B0507 98%,transparent) 0 100%/44px 34px repeat-x,
+             radial-gradient(22px 26px at 50% 100%,#120A0C 98%,transparent) 22px 70%/44px 34px repeat-x}
+
 .marquee{margin:0;font:600 13px/1 Oswald,sans-serif;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;text-align:center}
 
 /* товч */
@@ -44,19 +73,32 @@ a{color:var(--gold)}
 .btn-red:disabled{background:#5A3A3E;color:#C9B3B5;box-shadow:none;cursor:not-allowed}
 .btn-line{background:transparent;color:var(--ink);border:2px solid var(--line)}
 .btn-dark{background:transparent;color:var(--paper);border:2px solid #6B4A4F;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn-big{min-height:60px;font-size:19px}
+.msgr-link{align-self:center;padding:10px;font-weight:600;text-decoration:none}
 
 /* нүүр */
 .cover{margin-top:10vh;text-align:center}
 .cover h1{margin:0;font:600 34px/1.15 Oswald,sans-serif}
 .cover p{margin:0;color:#CDB9A8}
+.cover h1,.cover p{text-shadow:0 2px 12px rgba(0,0,0,.85)}
+.board{display:flex;flex-direction:column;gap:10px;padding:12px 18px;border:2px solid var(--gold);border-radius:10px;background:#0B0507;
+  box-shadow:0 0 0 4px #0B0507,0 0 26px rgba(217,164,65,.35),inset 0 0 18px rgba(217,164,65,.15)}
+.board .marquee{font-size:15px}
 .bulbs{display:flex;gap:12px;justify-content:center}
 .bulbs i{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:blink 1.6s infinite}
+.bulbs i:nth-child(2n+1){animation-delay:.4s}
 .bulbs i:nth-child(2n){animation-delay:.8s}
 @keyframes blink{50%{opacity:.3}}
 
 /* тасалбар */
 .ticket{width:100%;color:var(--ink);filter:drop-shadow(0 18px 30px rgba(0,0,0,.45));position:relative}
-.t-main,.t-stub{background:var(--paper);position:relative}
+.t-main,.t-stub{background:var(--paper);position:relative;
+  background-image:repeating-radial-gradient(circle at 30% 20%,rgba(120,90,60,.05) 0 1px,transparent 1px 3px)}
+/* шүдлэг ирмэг — дээд нь .ticket, доод нь урагдах .stub-wrap дээр (t-stub-ийн mask тайрахгүйн тулд) */
+.ticket::before,.stub-wrap::after{content:"";position:absolute;left:14px;right:14px;height:8px;pointer-events:none}
+.ticket::before{top:-6px;background:radial-gradient(circle 4px at 50% 0,#0000 98%,var(--paper)) 0 0/12px 8px repeat-x}
+.stub-wrap{position:relative;transition:transform 1s cubic-bezier(.3,.7,.2,1);transform-origin:12% 0}
+.stub-wrap::after{bottom:-6px;background:radial-gradient(circle 4px at 50% 100%,#0000 98%,var(--paper)) 0 0/12px 8px repeat-x}
 .t-main{
   border-radius:14px 14px 0 0; padding:18px 20px 22px;
   -webkit-mask:radial-gradient(circle 12px at 0 100%,#0000 98%,#000) left/51% 100% no-repeat,
@@ -70,10 +112,8 @@ a{color:var(--gold)}
                radial-gradient(circle 12px at 100% 0,#0000 98%,#000) right/51% 100% no-repeat;
           mask:radial-gradient(circle 12px at 0 0,#0000 98%,#000) left/51% 100% no-repeat,
                radial-gradient(circle 12px at 100% 0,#0000 98%,#000) right/51% 100% no-repeat;
-  transition:transform 1s cubic-bezier(.3,.7,.2,1);
-  transform-origin:12% 0;
 }
-.t-stub.torn{transform:translateY(34px) rotate(-5deg)}
+.stub-wrap.torn{transform:translateY(34px) rotate(-5deg)}
 .t-head{display:flex;justify-content:space-between;font:600 12px/1 Oswald,sans-serif;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
 .kicker{margin:16px 0 4px;font-size:13px;color:var(--muted)}
 .ask{margin:0;font:600 30px/1.15 Oswald,sans-serif;text-transform:uppercase;overflow-wrap:anywhere}
@@ -99,6 +139,7 @@ a{color:var(--gold)}
 @keyframes ink{from{opacity:0;transform:translateY(-6px) scale(1.15);filter:blur(2px)}}
 .barcode{height:30px;margin-top:14px;opacity:.75;
   background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 9px,var(--ink) 9px 12px,transparent 12px 14px)}
+.serial{margin:6px 0 0;font:500 12px/1 Oswald,sans-serif;letter-spacing:.3em;color:var(--muted);text-align:right}
 .scissor{position:absolute;left:-6px;font-size:20px;line-height:1;transform:translateY(-50%);opacity:0;z-index:2;pointer-events:none}
 .scissor.go{animation:cut .8s linear forwards}
 @keyframes cut{0%{opacity:1;left:-6px}100%{opacity:1;left:calc(100% - 14px)}}
@@ -118,9 +159,17 @@ legend{font-weight:600;margin-bottom:8px}
 .toast{min-height:22px;margin:0;text-align:center;color:var(--gold);font-size:14px}
 
 /* дуу */
-.music{display:flex;align-items:center;gap:10px;font-size:13px;color:#CDB9A8}
-.music iframe{width:96px;height:54px;border:0;border-radius:6px}
-.music button{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #6B4A4F;background:transparent;color:var(--paper);font-size:13px}
+.music{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;
+  width:300px;padding:8px 10px;border-radius:14px;background:rgba(27,15,18,.92);border:1px solid #6B4A4F;box-shadow:0 10px 30px rgba(0,0,0,.5);
+  font-size:13px;color:#CDB9A8}
+.m-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.m-bar button{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #6B4A4F;background:transparent;color:var(--paper);font-size:13px}
+.music iframe{width:280px;height:158px;border:0;border-radius:8px;display:block;transition:height .3s,opacity .3s}
+.music.mini iframe{height:1px;opacity:0}   /* display:none БИШ — дуу зогсохгүй */
+.music.mini .m-hint{display:none}
+.m-hint{margin:6px 0 0;font-size:12px;text-align:center}
+body.has-music{padding-bottom:calc(90px + 250px)}   /* хураагаагүй үед товч халхлахгүй */
+body.has-music.mini-on{padding-bottom:110px}
 
 footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:center}
 
@@ -131,10 +180,19 @@ footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:
 </head>
 <body>
 
+<div class="theatre" aria-hidden="true">
+  <div class="beam"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="curtain l"></div><div class="curtain r"></div>
+  <div class="seats"></div>
+</div>
+
 <!-- 1. Нүүр -->
 <section class="screen cover" id="cover">
-  <div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-  <p class="marquee">Өнөө орой · 1 үзвэр</p>
+  <div class="board">
+    <div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="marquee">Өнөө орой · 1 үзвэр</p>
+    <div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
   <h1 id="coverTitle">Сараа, чамд зориулсан урилга</h1>
   <p>Танд нэг тасалбар байна.</p>
   <button class="btn btn-red" id="open" type="button"><span aria-hidden="true">💌 </span>Нээх</button>
@@ -144,7 +202,7 @@ footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:
 <main class="screen" id="stage" hidden>
   <div class="ticket" id="ticket">
     <div class="t-main">
-      <div class="t-head"><span>Dokay кино</span><span>Танхим ♥</span></div>
+      <div class="t-head"><span>Dokay кино</span><span>НЭГ ХҮН · ХОЁУЛАА</span></div>
       <p class="kicker">Өнөөдрийн үзвэр</p>
       <h2 class="ask" id="ask"></h2>
       <dl class="credits">
@@ -158,7 +216,7 @@ footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:
       <div class="stamp" id="stamp" aria-hidden="true">Зөвшөөрөв</div>
     </div>
     <span class="scissor" id="scissor" aria-hidden="true">✂</span>
-    <div class="t-stub" id="stub" aria-live="polite">
+    <div class="stub-wrap" id="stub" aria-live="polite"><div class="t-stub">
       <div class="fields">
         <div class="f"><span>Өдөр</span><b id="fDay">— —</b></div>
         <div class="f"><span>Цаг</span><b id="fTime">—:—</b></div>
@@ -166,7 +224,8 @@ footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:
         <div class="f"><span>Суудал</span><b>2 хүн</b></div>
       </div>
       <div class="barcode" aria-hidden="true"></div>
-    </div>
+      <p class="serial" id="serial"></p>
+    </div></div>
   </div>
 
   <!-- 3. Өдөр, цаг, газар -->
@@ -183,18 +242,19 @@ footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:
     <p class="marquee">Хариугаа илгээгээрэй</p>
     <p class="msg" id="msg"></p>
     <div class="actions">
-      <button class="btn btn-red" id="copy" type="button">Хуулах</button>
-      <a class="btn btn-dark" id="sms" hidden>SMS илгээх</a>
-      <button class="btn btn-dark" id="msgr" type="button" hidden>Messenger</button>
+      <button class="btn btn-red btn-big" id="send" type="button"><span aria-hidden="true">💬 </span>Мессеж илгээх</button>
+      <button class="btn btn-dark" id="copy" type="button"><span aria-hidden="true">📋 </span>Чатанд хуулах</button>
+      <a class="msgr-link" id="msgr" target="_blank" rel="noopener" hidden>Messenger нээх →</a>
     </div>
     <p class="toast" id="toast" role="status" aria-live="polite"></p>
   </section>
-
-  <div class="music" id="music" hidden>
-    <span>♪ дуу</span><div id="ytBox"></div>
-    <button type="button" id="play">▶ Дууг асаах</button>
-  </div>
 </main>
+
+<div class="music" id="music" hidden>
+  <div class="m-bar"><span>♪ дуу</span><button type="button" id="mini">— жижигрүүлэх</button></div>
+  <div id="ytBox"></div>
+  <p class="m-hint">Дуу эхлээгүй бол тоглогч дээр нэг дараарай ▶</p>
+</div>
 
 <footer>Dokay-оор хийсэн · <a href="make.html">Өөрийнхөөрөө хийх →</a></footer>
 
@@ -245,22 +305,39 @@ $('fromName').textContent = G.from;
 renderAsk($('ask'), G.ask);
 document.title = G.to + ', чамд нэг тасалбар';
 
+// Серийн дугаар — нэг урилга үргэлж ижил дугаартай
+(function () {
+  let h = 0;
+  for (const c of G.to + G.from) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  $('serial').textContent = '№ 0' + String(h % 1000000).padStart(6, '0');
+})();
+
 // Дуу — товшилтын дараа л iframe үүсгэнэ
 function mountSong() {
   const box = $('ytBox');
   box.textContent = '';
   const f = document.createElement('iframe');
-  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1';
-  f.allow = 'autoplay; encrypted-media';
+  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1&rel=0';
+  f.allow = 'autoplay; encrypted-media; picture-in-picture';
   f.title = 'Урилгын дуу';
   box.appendChild(f);
 }
-$('play').addEventListener('click', mountSong);
 
-$('open').addEventListener('click', () => {
+// Дууны самбарыг хураах/дэлгэх — iframe устахгүй тул дуу үргэлжилнэ
+$('mini').addEventListener('click', () => {
+  const on = $('music').classList.toggle('mini');
+  document.body.classList.toggle('mini-on', on);
+  $('mini').textContent = on ? '＋ томруулах' : '— жижигрүүлэх';
+});
+
+$('open').addEventListener('click', async () => {
+  $('open').disabled = true;
+  // Дууг товшилтын дотор шууд эхлүүлнэ (autoplay зөвшөөрөл алдагдахгүй)
+  if (G.yt) { $('music').hidden = false; document.body.classList.add('has-music'); mountSong(); }
+  document.body.classList.add('opened');   // хөшиг нээгдэнэ
+  await wait(900);
   $('cover').hidden = true;
   $('stage').hidden = false;
-  if (G.yt) { $('music').hidden = false; mountSong(); }
   $('yes').focus();
 });
 
@@ -382,18 +459,26 @@ async function copyText(t) {
 }
 
 function showReply(text) {
+  const enc = encodeURIComponent(text);
   $('msg').textContent = text;
-  if (G.ph) { $('sms').href = 'sms:' + G.ph + '?&body=' + encodeURIComponent(text); $('sms').hidden = false; }
-  if (G.ms) $('msgr').hidden = false;
   $('reply').hidden = false;
   $('reply').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
-  $('copy').onclick = async () => {
-    $('toast').textContent = (await copyText(text)) ? 'Хуулагдлаа 💕' : 'Хуулж чадсангүй — мессежийг гараар сонгоорой';
+  // 1) Мессеж: утас байвал SMS, үгүй бол утасны хуваалцах цонх, тэр нь болохгүй бол хоосон SMS
+  $('send').onclick = async () => {
+    if (G.ph) { location.href = 'sms:' + G.ph + '?&body=' + enc; return; }
+    if (navigator.share) {
+      try { await navigator.share({ text }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    location.href = 'sms:?&body=' + enc;
   };
-  $('msgr').onclick = async () => {
-    const ok = await copyText(text);
-    $('toast').textContent = ok ? 'Хуулагдлаа — Messenger-т буулгаарай' : 'Мессежийг гараар хуулаад Messenger-т буулгаарай';
-    window.open('https://m.me/' + G.ms, '_blank', 'noopener');
+  // 2) Хуулах: дараа нь Messenger-ийн холбоос гарна
+  $('copy').onclick = async () => {
+    if (await copyText(text)) {
+      $('copy').textContent = 'Хуулагдлаа ✓ — чатандаа буулгаарай';
+      $('toast').textContent = '';
+    } else $('toast').textContent = 'Хуулж чадсангүй — мессежийг гараар сонгоорой';
+    if (G.ms) { $('msgr').href = 'https://m.me/' + G.ms; $('msgr').hidden = false; }
   };
 }
 </script>
