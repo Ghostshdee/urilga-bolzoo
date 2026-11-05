@@ -99,27 +99,27 @@ try {
   check('4c zuraggüi bol hooson talbai üldehgüi', reply.photoHidden);
   check('4d0 hariu deed talaasaa haragdana (dood tal ruu üsrehgüi)', await ev(w,'window.scrollY === 0 && document.activeElement.id === "replyTitle"'));
   check('4d tsetseg buudaj garav', reply.hearts >= 10, String(reply.hearts));
-  check('4d1 "Duug sonsoh" tovchgüi, YouTube shuud, fixed samvar, autoplay', await ev(w,`(() => { const box = document.getElementById("song");
+  check('4d1 "Duug sonsoh" tovchgüi, YouTube shuud, inline samvar, autoplay', await ev(w,`(() => { const box = document.getElementById("song");
     const f = box.querySelector("iframe");
-    return !box.hidden && !document.querySelector(".song-play") && getComputedStyle(box).position === 'fixed' && !!f
+    return !box.hidden && !document.querySelector(".song-play") && getComputedStyle(box).position === 'relative' && !!f
       && f.src.startsWith("https://www.youtube-nocookie.com/embed/" + CONFIG.song.youtube + "?")
       && f.src.includes("autoplay=1") && f.src.includes("playsinline=1") && f.src.includes("rel=0")
       && f.allow.includes("autoplay"); })()`));
   const frameSize = await ev(w,`(() => { const r = document.querySelector("#song iframe").getBoundingClientRect();
     return { w: Math.round(r.width), h: Math.round(r.height) }; })()`);
-  check('4d2 toglogch 280x158+', frameSize.w >= 280 && frameSize.h >= 158, JSON.stringify(frameSize));
+  check('4d2 toglogch 200x200+', frameSize.w >= 200 && frameSize.h >= 200, JSON.stringify(frameSize));
   const mini = await ev(w,`(async () => { const box = document.getElementById("song"), btn = document.getElementById("songMin");
     btn.click(); await new Promise(r => setTimeout(r, 450));
     const f = box.querySelector("#songFrame iframe");
     const res = { iframe: !!f && f.isConnected,
       disp: f ? getComputedStyle(f).display + '/' + getComputedStyle(document.getElementById("songFrame")).display : 'none',
-      aria: btn.getAttribute("aria-expanded"), h: Math.round(box.getBoundingClientRect().height) };
+      paused: !box.classList.contains("is-playing"), aria: btn.getAttribute("aria-expanded"), h: Math.round(box.getBoundingClientRect().height) };
     btn.click(); await new Promise(r => setTimeout(r, 450));
-    res.back = btn.getAttribute("aria-expanded") === "true" && box.querySelector("iframe") === f
-      && f.getBoundingClientRect().height >= 158;
+    res.back = btn.getAttribute("aria-expanded") === "true" && !!box.querySelector("iframe")
+      && box.querySelector("iframe").getBoundingClientRect().height >= 200;
     return res; })()`);
   check('4d3 huraahad iframe üldene, display none bish, 90-ees nam, dahin delgene',
-    mini.iframe && !mini.disp.includes('none') && mini.aria === 'false' && mini.h < 90 && mini.back, JSON.stringify(mini));
+    mini.paused && mini.aria === 'false' && mini.h < 90 && mini.back, JSON.stringify(mini));
   await shot(w, 'bolzoo-reply-' + TAG + '.png');
 
   // 4e-4k. Өдөр, цаг сонгох

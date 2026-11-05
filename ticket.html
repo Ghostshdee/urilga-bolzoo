@@ -177,7 +177,7 @@ footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
 </style>
-</head>
+<link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head>
 <body>
 
 <div class="theatre" aria-hidden="true">
@@ -259,6 +259,7 @@ footer{margin-top:auto;padding-top:36px;font-size:13px;color:#A8928A;text-align:
 <footer>Dokay-оор хийсэн · <a href="make.html">Өөрийнхөөрөө хийх →</a></footer>
 
 <script>
+const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' } };
 function readGift() {
   const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
   if (!m) return null;
@@ -314,15 +315,7 @@ document.title = G.to + ', чамд нэг тасалбар';
 })();
 
 // Дуу — товшилтын дараа л iframe үүсгэнэ
-function mountSong() {
-  const box = $('ytBox');
-  box.textContent = '';
-  const f = document.createElement('iframe');
-  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1&rel=0';
-  f.allow = 'autoplay; encrypted-media; picture-in-picture';
-  f.title = 'Урилгын дуу';
-  box.appendChild(f);
-}
+function mountSong() { /* ???? ?????? ?????????? ????????? ????????. */ }
 
 // Дууны самбарыг хураах/дэлгэх — iframe устахгүй тул дуу үргэлжилнэ
 $('mini').addEventListener('click', () => {
@@ -336,7 +329,7 @@ if (G.vid === false) { $('music').classList.add('mini'); document.body.classList
 $('open').addEventListener('click', async () => {
   $('open').disabled = true;
   // Дууг товшилтын дотор шууд эхлүүлнэ (autoplay зөвшөөрөл алдагдахгүй)
-  if (G.yt) { $('music').hidden = false; document.body.classList.add('has-music'); mountSong(); }
+  if (G.yt) { $('music').hidden = false;  mountSong(); }
   document.body.classList.add('opened');   // хөшиг нээгдэнэ
   await wait(900);
   $('cover').hidden = true;

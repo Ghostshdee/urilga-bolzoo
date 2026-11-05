@@ -122,7 +122,7 @@ footer a { color: var(--ink); font-weight: 600; }
   .spark, .conf { display: none; }
 }
 </style>
-</head>
+<link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head>
 <body>
 <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
 <main>
@@ -178,6 +178,7 @@ footer a { color: var(--ink); font-weight: 600; }
 </div>
 
 <script>
+const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' } };
 function readGift() {
   const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
   if (!m) return null;
@@ -218,19 +219,7 @@ G.ask.split('*').forEach((part, i) => {
 });
 
 // 1. Нээх — товшилт дууг эхлүүлнэ
-function startMusic() {
-  if (!G.yt) return;
-  const box = $('music');
-  box.classList.remove('hidden');
-  document.body.classList.add('has-music');
-  const old = $('player').querySelector('iframe');
-  if (old) old.remove();
-  const f = document.createElement('iframe');
-  f.allow = 'autoplay; encrypted-media; picture-in-picture';
-  f.title = 'Дуу';
-  f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1&rel=0';
-  $('player').appendChild(f);
-}
+function startMusic() { /* ???? ?????? ?????????? ????????? ????????. */ }
 $('minBtn').addEventListener('click', () => { const m = $('music').classList.toggle('min');
   $('minBtn').textContent = m ? '♪ томруулах' : '— жижигрүүлэх'; $('minBtn').setAttribute('aria-expanded', String(!m)); });
 // Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ — дуу тоглосоор

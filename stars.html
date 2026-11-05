@@ -183,7 +183,7 @@
     *, *::before, *::after { animation:none !important; transition:none !important; }
   }
 </style>
-</head>
+<link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head>
 <body>
 <div class="sky" aria-hidden="true">
   <i class="milky"></i><span class="halo"></span><span class="moon"></span>
@@ -246,6 +246,7 @@
 <p id="toast" class="toast" role="status" aria-live="polite"></p>
 
 <script>
+const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' } };
   function readGift() {
     const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
     if (!m) return null;
@@ -329,16 +330,7 @@
   }
 
   // Дуу — товшилтын дараа л iframe үүсгэнэ
-  function startMusic() {
-    if (!G.yt || $('#frame iframe')) return;
-    $('#music').hidden = false;
-    document.body.classList.add('has-music');
-    const f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/' + G.yt + '?autoplay=1&start=' + G.t + '&playsinline=1&rel=0';
-    f.allow = 'autoplay; encrypted-media; picture-in-picture';
-    f.title = 'Дуу';
-    $('#frame').replaceChildren(f);
-  }
+  function startMusic() { /* ???? ?????? ?????????? ????????? ????????. */ }
 
   // Асуултыг үсэг бүрээр — *үг* нь <em> (зөвхөн DOM, innerHTML үгүй)
   function buildAsk() {

@@ -31,7 +31,7 @@ label:first-child,.lbl:first-child{margin-top:0}
 .note{color:var(--muted);font-size:.85rem;margin-top:4px}
 input[type=text],input[type=tel],input[type=url],textarea{width:100%;font:inherit;color:inherit;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-height:48px}
 textarea{resize:vertical;min-height:72px}
-input:focus-visible,textarea:focus-visible,button:focus-visible,.style input:focus-visible+span{outline:3px solid var(--rose);outline-offset:2px}
+select:focus-visible,input:focus-visible,textarea:focus-visible,button:focus-visible,.style input:focus-visible+span{outline:3px solid var(--rose);outline-offset:2px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .styles{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
 .style{position:relative;cursor:pointer}
@@ -51,6 +51,7 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,.style input:foc
 footer{text-align:center;font-size:.85rem;color:var(--muted);margin-top:18px}
 footer a{color:inherit}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+select{font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:inherit;width:100%;margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -82,6 +83,10 @@ footer a{color:inherit}
           <svg viewBox="0 0 56 42" aria-hidden="true"><rect width="56" height="42" rx="8" fill="#141A33"/><g fill="#FFE9A8"><circle cx="12" cy="12" r="1.6"/><circle cx="40" cy="9" r="1.2"/><circle cx="30" cy="22" r="2.2"/><circle cx="18" cy="30" r="1.2"/><circle cx="46" cy="30" r="1.6"/></g></svg>Шөнийн од</span></label>
         <label class="style"><input type="radio" name="style" value="scratch.html"><span>
           <svg viewBox="0 0 56 42" aria-hidden="true"><rect x="4" y="6" width="48" height="30" rx="5" fill="#D8B45A"/><path d="M10 26c8-10 14 4 22-6s10 2 14-4" stroke="#FFFDFB" stroke-width="5" stroke-linecap="round" fill="none"/></svg>Хусах карт</span></label>
+<label class="style"><input type="radio" name="style" value="neon.html"><span>????</span></label>
+<label class="style"><input type="radio" name="style" value="cyber.html"><span>????????</span></label>
+<label class="style"><input type="radio" name="style" value="glow.html"><span>?????? ?????</span></label>
+<label class="style"><input type="radio" name="style" value="cafe.html"><span>????</span></label>
       </div>
     </div>
 
@@ -171,7 +176,7 @@ function linkFor(file, hash) {
   return (local ? new URL(file, location.href).href : BASE + file) + '#d=' + hash;
 }
 
-const fields = ['to', 'from', 'ask', 'yt', 'ph', 'ms'];
+const fields = ['to', 'from', 'ask', 'yt', 'ph', 'ms', 'dock'];
 function save() {
   try {
     const o = { style: document.querySelector('[name=style]:checked').value, when: $('when').checked, vid: $('vid').checked };
@@ -214,7 +219,7 @@ $('form').addEventListener('submit', (e) => {
   const from = clean($('from').value, 24); if (from) o.from = from;
   const ask = clean($('ask').value, 120); if (ask) o.ask = ask;
   if (y.id) { o.yt = y.id; if (y.t) o.t = y.t; }
-  if (!$('vid').checked) o.vid = 0;
+  o.dk = $('dock').value === 'corner' ? 'corner' : 'inline';
   if (ph) o.ph = ph;
   if (ms) o.ms = ms;
   o.when = $('when').checked ? 1 : 0;

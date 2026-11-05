@@ -275,7 +275,7 @@ footer a { color: var(--wax); font-weight: 600; text-decoration: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
-</head>
+<link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head>
 <body>
 <main>
   <section id="stage" aria-label="Дугтуй">
@@ -337,6 +337,7 @@ footer a { color: var(--wax); font-weight: 600; text-decoration: none; }
 <div class="hearts" id="hearts" aria-hidden="true"></div>
 
 <script>
+const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' } };
 function readGift() {
   const m = location.hash.match(/[#&]d=([A-Za-z0-9_-]{1,2000})/);
   if (!m) return null;
@@ -380,17 +381,7 @@ G.ask.split(/\*([^*]+)\*/).forEach((part, i) => {
 });
 
 /* ---------- Дуу: товшилтын дараа л iframe үүсгэнэ ---------- */
-function playSong() {
-  if (!G.yt) return;
-  $('music').hidden = false;
-  const player = $('player');
-  player.textContent = '';
-  const f = document.createElement('iframe');
-  f.src = `https://www.youtube-nocookie.com/embed/${G.yt}?autoplay=1&start=${G.t}&playsinline=1&rel=0`;
-  f.allow = 'autoplay; encrypted-media; picture-in-picture';
-  f.title = 'Дуу';
-  player.appendChild(f);
-}
+function playSong() { /* ???? ?????? ?????????? ????????? ????????. */ }
 $('musicMin').addEventListener('click', () => {
   const mini = $('music').classList.toggle('mini');
   $('musicMin').setAttribute('aria-expanded', String(!mini));

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b091b"><title>Цаасан мэргэ — чамд нэг зөгнөл</title><style>
+*{box-sizing:border-box} [hidden]{display:none!important}
+:root{--ink:#302b46;--muted:#655e76;--accent:#6544a3;--paper:#fffdf7;--line:#d9cfe5}
+body{margin:0;min-height:100vh;min-height:100svh;background:#eee8f4;color:var(--ink);font:16px/1.55 system-ui,sans-serif;padding:28px 18px 40px}
+main{width:100%;max-width:430px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.12em;margin-bottom:30px}
+.tag{border:1px solid var(--line);border-radius:30px;padding:6px 12px}h1,h2{font-family:Georgia,serif;font-weight:500;line-height:1.12;font-size:clamp(32px,8vw,46px);margin:14px 0 18px;overflow-wrap:anywhere}
+p{margin:12px 0}.muted,footer{color:var(--muted);font-size:14px}.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.panel{padding:26px 22px;background:var(--paper);border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 40px #302b4610;margin-top:22px}
+button,a.action{font:600 16px/1.3 system-ui,sans-serif;min-height:48px;padding:13px 18px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none;text-align:center;display:inline-block}
+button.primary{background:var(--accent);color:white;border-color:var(--accent)}button:disabled{opacity:.45;cursor:not-allowed}button[aria-pressed=true]{border-color:var(--accent);background:#e6ddf5;box-shadow:inset 0 0 0 1px var(--accent)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #c05b2d;outline-offset:4px}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1}.stack{display:grid;gap:10px}.status{min-height:25px;font-size:14px;color:var(--accent)}
+.message{white-space:pre-wrap;overflow-wrap:anywhere;padding:18px;background:#f0eaf6;border-radius:12px;user-select:text}footer{margin-top:28px;border-top:1px solid var(--line);padding-top:18px}label{display:flex;gap:10px;align-items:center;min-height:48px}input{width:22px;height:22px;accent-color:var(--accent)}
+section.reveal{animation:reveal .4s ease-out}@keyframes reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(min-width:900px){body{padding-top:48px}main{max-width:460px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.fortune{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:30px auto;width:min(100%,320px);transform:rotate(-5deg);transition:transform .4s}
+.fortune button{aspect-ratio:1;border-radius:5px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);background:linear-gradient(135deg,#f3bfd0 49%,#e9a6bd 50%);border:0;font-size:18px;box-shadow:inset 0 0 0 1px #302b4615}
+.fortune button:nth-child(2){background:linear-gradient(45deg,#c9b5ed 49%,#bca4e3 50%)}.fortune button:nth-child(3){background:linear-gradient(45deg,#b7d9ca 49%,#a4ccba 50%)}.fortune button:nth-child(4){background:linear-gradient(135deg,#f7d79c 49%,#edc685 50%)}
+.fortune button:focus-visible{clip-path:none;outline-offset:0;outline:4px solid #302b46}.fortune.folded{transform:rotate(5deg) scale(.94)}.fortune button[aria-pressed=true]{box-shadow:inset 0 0 0 4px #302b46}
+.prediction{font:italic 26px/1.4 Georgia,serif;border-left:3px solid #b599d9;padding-left:18px;margin:24px 0}.heart{font-size:64px;text-align:center;color:#b04771}
+
+/* Readable without the decorative light. */
+body{font-size:16px}header,.muted,footer,.eyebrow,.status,.tag,.themes button,.poster small,.poster .bottom{font-size:16px}main{position:relative;z-index:1}button{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ffcb70;outline-offset:4px}button{transition:transform .25s,opacity .25s}h1,h2{overflow-wrap:anywhere}.message{color:var(--ink)}
+body.sleeping *,body.sleeping *::before,body.sleeping *::after{animation-play-state:paused!important}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}#fx{display:none}}
+
+body{background:radial-gradient(ellipse at 50% 25%,#29134c,transparent 60%),#090b1a;--ink:#faf0ff;--muted:#cec1e0;--accent:#f3baff;--paper:#14132a;--line:#72558e}
+header{color:#e7baff}.panel{background:#14132a;border:1px solid #be7bdf;box-shadow:0 0 36px #bb44ff20}button.primary{background:#e6b3ff;color:#251136}.message{background:#27203c}
+h1{font-family:system-ui,sans-serif;font-weight:800;letter-spacing:-.05em}h1::after{content:'✧';display:block;color:#97f9ff;font-size:60px;text-shadow:0 0 24px #5be6ff}
+.fortune{perspective:700px;transform-style:preserve-3d;gap:0;transform:rotate(-8deg);width:min(100%,300px);filter:drop-shadow(0 0 12px #ce65ff70)}
+.fortune button{position:relative;clip-path:none;background:linear-gradient(135deg,#332047,#131225)!important;color:#ffd4f0;border:2px solid #ff8cda;border-radius:2px;transform-origin:100% 100%;transition:transform .65s cubic-bezier(.2,.7,.2,1);text-shadow:0 0 12px #ff91e3;box-shadow:inset 0 0 24px #f768ca20}
+.fortune button::before{content:'';position:absolute;inset:9px;border:1px solid currentColor;clip-path:polygon(0 0,100% 100%,0 100%)}
+.fortune button:nth-child(2){transform-origin:0 100%;border-color:#bca2ff;color:#ddcfff}.fortune button:nth-child(3){transform-origin:100% 0;border-color:#8df2e1;color:#bdfff1}.fortune button:nth-child(4){transform-origin:0 0;border-color:#ffe199;color:#fff1c2}
+.fortune.folded button:nth-child(odd){transform:rotateY(48deg) rotateX(-20deg)}.fortune.folded button:nth-child(even){transform:rotateY(-48deg) rotateX(20deg)}
+.fortune.opening button:nth-child(odd){transform:rotateY(-32deg) rotateX(22deg)}.fortune.opening button:nth-child(even){transform:rotateY(32deg) rotateX(-22deg)}
+#invite #question{color:#fff0fc;text-shadow:0 0 8px #ff8cda,0 0 28px #ed3bbf;animation:ignite 1s both}.heart{color:#ffa8e0;text-shadow:0 0 24px #fa5ad3}.prediction{color:#eee0ff}
+@keyframes ignite{0%,18%,26%{opacity:.35}12%,22%,40%,100%{opacity:1}}
+[tabindex="-1"]:focus{outline:none}</style><link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head>
+<body><main><header><span>ХОЁУЛАА · ЖИЖИГ УРИЛГА</span><span class="tag">01 / 03</span></header>
+<section id="game" data-screen><p class="eyebrow">Нугалаас бүрд нэг нууц</p><h1 id="greeting"></h1><p id="instruction" aria-live="polite">Эхлээд нэг өнгө сонгоорой.</p>
+<div class="fortune" id="fortune"><button data-color="Ягаан" aria-pressed="false">Ягаан</button><button data-color="Нил ягаан" aria-pressed="false">Нил ягаан</button><button data-color="Ногоон" aria-pressed="false">Ногоон</button><button data-color="Шар" aria-pressed="false">Шар</button></div>
+<div id="numbers" class="panel" hidden><p id="colorLabel"></p><p>Одоо нэг тоо сонго.</p><div class="row"><button data-number="1">1</button><button data-number="2">2</button><button data-number="3">3</button><button data-number="4">4</button></div></div></section>
+<section id="invite" class="panel reveal" data-screen hidden><p class="eyebrow">Цаасны хэлсэн үг</p><div class="heart" aria-hidden="true">♡</div><p id="prediction" class="prediction"></p><h2 id="question"></h2><p id="signature" class="muted"></p><div class="row"><button id="yes" class="primary">Тийм, болзъё</button><button id="no">Үгүй ээ</button></div><p class="muted">Мэргэ бол тоглоом. Хариу бол чинийх.</p><button id="again">Өөр мэргэ үзэх</button></section>
+<section id="reply" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний шийдвэр</p><h2>Хариу бэлэн боллоо</h2><p id="message" class="message"></p><div class="stack"><button id="copy" class="primary">Хариуг хуулах</button><button id="send">Хариугаа хуваалцах</button><button id="restart">Дахин эхлэх</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="muted">Хариугаа өөрөө илгээгээрэй. Энэ хуудас автоматаар мэдэгдэхгүй.</p></section><footer>Зөвхөн чамд зориулсан жижигхэн зориг.<br>Сүлжээгүй ч нээгдэнэ · Өгөгдөл хадгалахгүй</footer><noscript><p>Урилгыг тоглуулахын тулд хөтчийн скрипт ажиллуулах тохиргоог асаана уу.</p></noscript></main><script>
+const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' },to:'Сараа',from:'Батаа',phone:'',ask:'Надтай болзоонд явах уу?'};
+InvitationMusic.applyGift(CONFIG);
+let selectedColor=0;
+const predictions=['Хоёр аяга цай, дуусахгүй яриа чамайг хүлээж байна.','Ойрын үед чиний инээд нэг хүний өдрийг гоё болгоно.','Нэг жижиг алхалт урт дурсамж болж магадгүй.','Чамд нэг хүн хэлэх үгээ зориглон бэлджээ.'];
+function reset() {
+  $('greeting').textContent=CONFIG.to+', нэг мэргэ үзэх үү?';
+  $('numbers').hidden=true;$('fortune').classList.remove('folded');
+  document.querySelectorAll('[data-color]').forEach(button=>button.setAttribute('aria-pressed','false'));
+  $('instruction').textContent='Эхлээд нэг өнгө сонгоорой.';show('game');
+}
+document.querySelectorAll('[data-color]').forEach((button,index)=>button.onclick=()=>{
+  selectedColor=index;document.querySelectorAll('[data-color]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+  $('fortune').classList.add('folded');$('colorLabel').textContent=button.dataset.color+' өнгийг сонголоо.';
+  $('instruction').textContent='Өнгөө сонголоо. Доороос тоогоо сонгоорой.';$('numbers').hidden=false;
+});
+document.querySelectorAll('[data-number]').forEach(button=>button.onclick=()=>{
+  $('prediction').textContent=predictions[(selectedColor+Number(button.dataset.number)-1)%predictions.length];
+  $('question').textContent=CONFIG.ask;$('signature').textContent='— '+CONFIG.from;show('invite');
+});
+$('yes').onclick=()=>reply(CONFIG.from+' аа, тийм ээ! Хоёулаа болзъё. — '+CONFIG.to);
+$('no').onclick=()=>reply(CONFIG.from+' аа, урьсанд баярлалаа. Энэ удаа болзохгүй ээ. — '+CONFIG.to);
+$('again').onclick=reset;$('restart').onclick=reset;
+document.addEventListener('DOMContentLoaded',reset);
+
+
+function $(id) { return document.getElementById(id); }
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function show(id) {
+  document.querySelectorAll('[data-screen]').forEach(el => {el.hidden = el.id !== id;});
+  const heading = $(id).querySelector('h1,h2');
+  if (heading) {heading.tabIndex=-1; heading.focus();}
+}
+async function copyReply() {
+  const text=$('message').textContent;
+  let ok=false;
+  try {await navigator.clipboard.writeText(text);ok=true;} catch {
+    const field=document.createElement('textarea');field.value=text;
+    field.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.append(field);field.select();
+    try {ok=document.execCommand('copy');} catch {} field.remove();
+  }
+  $('status').textContent=ok?'Хуулагдлаа. Чатандаа буулгаад илгээгээрэй.':'Хуулж чадсангүй. Дээрх хариуг удаан дарж сонгоод хуулна уу.';
+}
+async function sendReply() {
+  const text=$('message').textContent;
+  if (/^\+?[0-9]{6,15}$/.test(CONFIG.phone)) {
+    location.href='sms:'+CONFIG.phone+'?&body='+encodeURIComponent(text);
+    $('status').textContent='Мессежийн цонхонд илгээхээ баталгаажуулаарай.';return;
+  }
+  if (navigator.share) {
+    try {await navigator.share({text});$('status').textContent='Хуваалцах цонх хаагдлаа. Илгээсэн эсэхээ чатнаасаа шалгаарай.';return;}
+    catch(error) {if(error.name==='AbortError')return;}
+  }
+  await copyReply();
+}
+function reply(text) {$('message').textContent=text;$('status').textContent='Одоогоор хариу илгээгдээгүй.';show('reply');}
+if ($('copy')) $('copy').onclick=copyReply;
+if ($('send')) $('send').onclick=sendReply;
+
+// One bounded canvas, only runs while there are live particles.
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+const effects=document.createElement('canvas');effects.id='fx';effects.setAttribute('aria-hidden','true');document.body.append(effects);
+const pen=effects.getContext('2d');let dots=[],frame=0,last=0;
+function resizeFX(){effects.width=innerWidth;effects.height=innerHeight;}
+resizeFX();window.addEventListener('resize',resizeFX);
+function paintFX(now){frame=0;if(document.hidden||motion.matches||!pen)return;
+ const dt=Math.min((now-last)/16.67||1,2);last=now;pen.clearRect(0,0,effects.width,effects.height);
+ dots=dots.filter(p=>p.life>0);for(const p of dots){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;pen.globalAlpha=Math.max(0,p.life/p.max);pen.fillStyle=p.color;
+ if(p.heart){pen.font=p.size+'px Georgia';pen.fillText('♥',p.x,p.y);}else{pen.beginPath();pen.arc(p.x,p.y,p.size,0,Math.PI*2);pen.fill();}}
+ pen.globalAlpha=1;if(dots.length)frame=requestAnimationFrame(paintFX);
+}
+function spark(x=innerWidth/2,y=innerHeight*.4,count=65,heart=false){if(motion.matches||document.hidden||!pen)return;
+ for(let i=0;i<count;i++){const life=35+Math.random()*35;dots.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.65)*8,life,max:life,size:heart?10+Math.random()*17:1+Math.random()*3,heart,color:['#ff9cdb','#b6a0ff','#89f8ff'][i%3]});}
+ dots=dots.slice(-140);if(!frame){last=performance.now();frame=requestAnimationFrame(paintFX);}}
+document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('sleeping',document.hidden);cancelAnimationFrame(frame);frame=0;
+ if(document.hidden){dots=[];if(pen)pen.clearRect(0,0,effects.width,effects.height);}});
+motion.addEventListener?.('change',()=>{dots=[];cancelAnimationFrame(frame);frame=0;if(pen)pen.clearRect(0,0,effects.width,effects.height);});
+// A single playful dodge; the next tap can always decline. Keyboard stays direct.
+let dodged=false;const noButton=$('no');
+noButton.addEventListener('pointerdown',event=>{if(motion.matches||dodged||event.pointerType==='')return;
+ dodged=true;event.preventDefault();noButton.dataset.skip='yes';noButton.style.transform='translateX(18px) scale(.88)';
+ setTimeout(()=>{noButton.style.transform='';},350);});
+const decline=noButton.onclick;noButton.onclick=event=>{if(noButton.dataset.skip){delete noButton.dataset.skip;return;}decline(event);};
+
+let opening=false;
+document.querySelectorAll('[data-number]').forEach(button=>{const reveal=button.onclick;button.onclick=()=>{
+ if(opening)return;opening=true;$('fortune').classList.add('opening');spark();
+ const finish=()=>{reveal();$('fortune').classList.remove('opening');opening=false;};
+ if(motion.matches)finish();else setTimeout(finish,700);
+};});
+</script></body></html>

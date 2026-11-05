@@ -452,7 +452,7 @@ body.has-song.song-small { padding-bottom: 96px; }
   .drift { display: none; }
 }
 </style>
-</head>
+<link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head>
 <body>
 
 <!-- Арын хөвөх дэлбээ — JS-ээр 8 ширхэг үүснэ -->
@@ -514,12 +514,12 @@ body.has-song.song-small { padding-bottom: 96px; }
 
 <!-- Дууны хөвөх самбар. Картын гадна — хариу дэлгэцийн rise хөдөлгөөн
      (transform) fixed байрлалыг эвдэхгүйн тулд. -->
-<aside class="song" id="song" hidden aria-label="Дуу">
+<aside class="song" id="legacySong" hidden aria-label="Дуу">
   <div class="song-head">
-    <p class="song-label" id="songLabel"></p>
-    <button class="song-min" id="songMin" type="button" aria-expanded="true" aria-controls="songFrame">— жижигрүүлэх</button>
+    <p class="song-label" id="legacySongLabel"></p>
+    <button class="song-min" id="legacySongMin" type="button" aria-expanded="true" aria-controls="legacySongFrame">— жижигрүүлэх</button>
   </div>
-  <div class="song-frame" id="songFrame"></div>
+  <div class="song-frame" id="legacySongFrame"></div>
   <p class="song-tip">Дуу эхлээгүй бол тоглогч дээр нэг дараарай ▶</p>
 </aside>
 
@@ -581,6 +581,7 @@ const CONFIG = {
      iPhone дээр тоглогч дээр нэг дарах шаардлагатай байж болно (Apple хаадаг).
      Хэрэггүй бол youtube: '' болгоно. */
   song: {
+    dock: 'inline',
     youtube: 'rg0KzIXexL8',     /* OPOZIT — HURIM [LYRICS] */
     start: 0,
     label: 'Чамд зориулсан дуу 🎵'
@@ -817,16 +818,7 @@ function hearts() {
 
 /* «Тийм» дарахад YouTube тоглогчийг үүсгэнэ. Тэр товшилт нь хөтчийн
    хувьд хэрэглэгчийн үйлдэл тул дуу шууд эхлэх боломжтой. */
-function playSong() {
-  const s = CONFIG.song;
-  const params = new URLSearchParams({ autoplay: '1', playsinline: '1', rel: '0', start: String(s.start || 0) });
-  const f = document.createElement('iframe');
-  f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(s.youtube)}?${params}`;
-  f.title = s.label;
-  f.allow = 'autoplay; encrypted-media; picture-in-picture';
-  f.allowFullscreen = true;
-  document.getElementById('songFrame').replaceChildren(f);
-}
+function playSong() { /* ???? ?????? ?????????? ????????? ????????. */ }
 
 function showReply() {
   const r = CONFIG.reply;
@@ -851,10 +843,10 @@ function showReply() {
   /* Дуу доод талын хөвөх самбарт шууд эхэлнэ */
   const s = CONFIG.song;
   if (s && s.youtube) {
-    document.getElementById('songLabel').textContent = s.label;
+    document.getElementById('legacySongLabel').textContent = s.label;
     playSong();
-    document.getElementById('song').hidden = false;
-    document.body.classList.add('has-song');
+    document.getElementById('legacySong').hidden = false;
+
   }
 
   document.getElementById('sign').textContent = r.signature;
@@ -1077,21 +1069,21 @@ sendBtn.addEventListener('click', async () => {
 buildWhen();
 
 /* ── Дууны самбарыг жижигрүүлэх / дэлгэх. iframe үлдэнэ — дуу зогсохгүй. ── */
-const songBox = document.getElementById('song');
-const songMin = document.getElementById('songMin');
+const songBox = document.getElementById('legacySong');
+const legacySongMin = document.getElementById('legacySongMin');
 function setSongSmall(small) {
   songBox.classList.toggle('min', small);
   document.body.classList.toggle('song-small', small);
-  songMin.setAttribute('aria-expanded', String(!small));
-  songMin.textContent = small ? '♪ дэлгэх' : '— жижигрүүлэх';
+  legacySongMin.setAttribute('aria-expanded', String(!small));
+  legacySongMin.textContent = small ? '♪ дэлгэх' : '— жижигрүүлэх';
 }
-songMin.addEventListener('click', () => setSongSmall(!songBox.classList.contains('min')));
+legacySongMin.addEventListener('click', () => setSongSmall(!songBox.classList.contains('min')));
 /* Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ */
-if (CONFIG.song.video === false) { setSongSmall(true); songMin.textContent = '▶ Дүрс харах'; }
+if (CONFIG.song.video === false) { setSongSmall(true); legacySongMin.textContent = '▶ Дүрс харах'; }
 
 document.getElementById('again').addEventListener('click', () => {
   card.classList.remove('answered');
-  document.getElementById('songFrame').replaceChildren();   /* дууг зогсооно */
+  document.getElementById('legacySongFrame').replaceChildren();   /* дууг зогсооно */
   songBox.hidden = true;
   setSongSmall(CONFIG.song.video === false);
   document.body.classList.remove('has-song');

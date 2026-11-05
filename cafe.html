@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#e9ede3"><title>Хоёр хүний жижиг кафе</title><style>
+:root{--bg:#e9ede3;--paper:#faf8ee;--ink:#253e32;--muted:#546354;--accent:#315d45;--on:#ffffff;--line:#cbd1bf}
+
+*{box-sizing:border-box}html{color-scheme:light}body{margin:0;min-height:100svh;padding:28px 18px 40px;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}main{width:min(100%,460px);margin:auto}header{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px;letter-spacing:.12em;margin-bottom:28px}h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(36px,9vw,52px);font-weight:400;line-height:1.12;margin:16px 0}h2{font-size:25px;line-height:1.3;font-weight:500}p{margin:12px 0}.muted{color:var(--muted);font-size:14px}.tag{text-transform:uppercase;font-size:12px;letter-spacing:.16em}.panel{padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 42px #0000000a}button,a.action{font:600 15px/1.4 system-ui,sans-serif;cursor:pointer;min-height:48px;padding:13px 18px;border:1px solid var(--line);border-radius:14px;background:transparent;color:inherit;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center}button.primary{background:var(--accent);color:var(--on);border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}.actions{display:grid;gap:10px;margin-top:22px}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1}button[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}:focus-visible{outline:3px solid var(--accent);outline-offset:4px}[hidden]{display:none!important}.status{min-height:24px;font-size:14px}.message{white-space:pre-wrap;overflow-wrap:anywhere;padding:16px;border:1px dashed var(--line);border-radius:12px;user-select:text}.rule{border:0;border-top:1px solid var(--line);margin:22px 0}footer{margin-top:28px;font-size:12px;color:var(--muted);text-align:center}.appear{animation:arrive .35s ease-out}@keyframes arrive{from{opacity:0;transform:translateY(8px)}}@media(min-width:800px){body{padding-top:54px}header{margin-bottom:40px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.menu{border-radius:100px 100px 20px 20px;padding-top:32px}.cup-art{display:block;width:210px;max-width:100%;margin:10px auto 18px}.choice{display:flex;align-items:center;justify-content:space-between;width:100%;margin:8px 0;text-align:left}.choice small{font-weight:400}.receipt{font-family:ui-monospace,monospace;background:#fffdf5;padding:22px;border-top:3px dashed var(--line)}.receipt p{display:flex;justify-content:space-between;gap:12px}.receipt strong{overflow-wrap:anywhere}.center{text-align:center}
+/* Readable without the decorative light. */
+body{font-size:16px}header,.muted,footer,.eyebrow,.status,.tag,.themes button,.poster small,.poster .bottom{font-size:16px}main{position:relative;z-index:1}button{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ffcb70;outline-offset:4px}button{transition:transform .25s,opacity .25s}h1,h2{overflow-wrap:anywhere}.message{color:var(--ink)}
+body.sleeping *,body.sleeping *::before,body.sleeping *::after{animation-play-state:paused!important}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}#fx{display:none}}
+
+body{background:radial-gradient(ellipse at 80% 0,#af6c3a55,transparent 45%),#211a16;--ink:#fff0dc;--muted:#dfc5a8;--accent:#f0c18a;--on:#382013;--paper:#39281e;--line:#98724f}
+header{color:#f6c58c}body::before{content:'';position:fixed;top:-90px;right:12%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,#ffd48e88,transparent 70%);pointer-events:none;animation:lamp 6s ease-in-out infinite alternate}@keyframes lamp{to{opacity:.65;transform:scale(1.2)}}
+.panel{box-shadow:0 24px 60px #0004}.menu{background:linear-gradient(140deg,#493321,#30231c);border-radius:130px 130px 24px 24px}.cup-art{width:240px;position:relative;z-index:1;transition:transform .3s}.choice{background:#38271e;font-size:16px}.choice small{font-size:16px}.choice[aria-pressed=true]{background:#f0c18a;color:#382013}.receipt{background:#fff1d7;color:#382719;transform:rotate(-2deg);box-shadow:0 20px 30px #0004}.message{background:#39281e}button{font-size:16px;background:#39281e}footer,.muted,.tag,.status,header{font-size:16px}
+.coffee-stage{position:relative;perspective:600px;max-width:280px;margin:auto}.steam{position:absolute;left:30%;top:-10px;width:16px;height:65px;border-left:3px solid #ffe7c6;border-radius:50%;opacity:.45;animation:steam 3s ease-out infinite;pointer-events:none}.steam.s2{left:48%;animation-delay:-1s}.steam.s3{left:62%;animation-delay:-2s}@keyframes steam{0%{opacity:0;transform:translateY(15px) scaleX(.7)}35%{opacity:.6}100%{opacity:0;transform:translate(12px,-40px) scaleX(1.4)}}
+.pour{position:absolute;left:46%;top:-8px;width:9px;height:85px;background:linear-gradient(90deg,#e7b478,#fff0c8,#a96b39);border-radius:6px;transform-origin:top;transform:scaleY(0);z-index:2;pointer-events:none}.pouring .pour{animation:pour 1s ease-in-out}.pouring .cup-art{animation:cup 1s ease-in-out}@keyframes pour{0%,100%{transform:scaleY(0);opacity:0}20%,70%{transform:scaleY(1);opacity:1}}@keyframes cup{50%{transform:rotate(-4deg) translateY(3px)}}
+[tabindex="-1"]:focus{outline:none}</style><link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head><body><main>
+<header><span>ХОЁУЛХНАА · ЖИЖИГ УРИЛГА</span><span aria-hidden="true">♡</span></header>
+<section id="menu" data-screen class="appear"><p class="tag">Өнөөдрийн онцгой санал</p><h1>Нэг аяга.<br>Хоёр хүний яриа.</h1><p class="muted"><span data-to></span>, ундаагаа чи сонго. Уулзах шалтаг надад бий.</p>
+<div class="panel menu"><div class="coffee-stage"><i class="steam" aria-hidden="true"></i><i class="steam s2" aria-hidden="true"></i><i class="steam s3" aria-hidden="true"></i><i class="pour" aria-hidden="true"></i><svg class="cup-art" viewBox="0 0 240 170" role="img" aria-label="Зүрхтэй аяга"><ellipse cx="117" cy="148" rx="90" ry="10" fill="#dce3d4"/><path d="M170 58h20c38 0 33 58-6 58h-14" fill="none" stroke="#315d45" stroke-width="10"/><path d="M43 51h133l-10 73q-4 22-52 22t-60-22Z" fill="#e3b68c" stroke="#315d45" stroke-width="3"/><ellipse cx="110" cy="51" rx="67" ry="15" fill="#6d4833" stroke="#315d45" stroke-width="3"/><path d="M97 41c-12-14-28 3 13 19 41-16 25-33 13-19q-13 10-26 0" fill="#faf1de"/><text id="cupLabel" x="110" y="105" text-anchor="middle" fill="#253e32" font-size="16">Сүүтэй кофе</text></svg></div>
+<p class="tag">Юу уух вэ?</p><div id="drinks" role="group" aria-label="Ундааны сонголт"></div><hr class="rule"><p id="orderNote" class="muted"></p><div class="actions"><button id="yes" class="primary">Тийм, захиалъя</button><button id="no">Өнөөдөр амжихгүй</button></div></div></section>
+<section id="accepted" data-screen hidden class="appear"><p class="tag">Захиалга авлаа</p><h2>Хамгийн гоё орц нь чи.</h2><div class="receipt"><p><span>Зочин</span><strong data-to></strong></p><p><span>Урьсан</span><strong data-from></strong></p><hr class="rule"><p><span id="chosen"></span><span>× 2</span></p><p><span>Ярих сэдэв</span><span>Дуусахгүй</span></p><hr class="rule"><p><strong>Нийт</strong><strong>Нэг гоё уулзалт</strong></p></div><p id="message" class="message"></p><div class="actions"><button id="copy" class="primary" type="button">Хариугаа хуулах</button><a id="sms" class="action" hidden>Мессеж бэлдэх</a></div><p class="muted">Хариу автоматаар илгээгдэхгүй. Хуулаад өөрөө явуулаарай.</p><div class="actions"><button id="back">Ундаагаа өөрчлөх</button></div></section>
+<section id="declined" data-screen hidden><h2>За, кофег чинь<br>өрөнд үлдээлээ ☺</h2><p>Өөр өдөр тухтайхан ярилцъя. Яарахгүй ээ.</p><button id="return">Цэс рүү буцах</button></section>
+<p id="status" class="status" role="status" aria-live="polite"></p>
+<footer>Чамд зориулсан жижигхэн зориг.<br>Нэр, сонголтыг энэ хуудас хадгалахгүй.</footer>
+<noscript><p>Урилгыг нээхийн тулд хөтчийн скрипт ажиллуулах тохиргоог асаана уу.</p></noscript>
+</main><script>
+// Жишээ нэр, асуулт, хариу авах дугаарыг энд солино.
+const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' }, to: 'Сараа', from: 'Батаа', phone: '', drinks: ['Сүүтэй кофе', 'Халуун шоколад', 'Нимбэгтэй цай'], ask: 'Надтай тухтай сууж, юм ярингаа нэг аяга уух уу?' };
+InvitationMusic.applyGift(CONFIG);
+
+const $ = id => document.getElementById(id);
+document.querySelectorAll('[data-to]').forEach(el => el.textContent = CONFIG.to);
+document.querySelectorAll('[data-from]').forEach(el => el.textContent = CONFIG.from);
+document.title = CONFIG.to + ', чамд нэг урилга';
+function show(id) {
+  document.querySelectorAll('[data-screen]').forEach(el => el.hidden = el.id !== id);
+  const heading = $(id).querySelector('h1,h2');
+  if (heading) { heading.tabIndex = -1; heading.focus(); }
+  $('status').textContent = '';
+}
+function setReply(text) {
+  $('message').textContent = text;
+  const phone = String(CONFIG.phone || '').replace(/[\s-]/g,'');
+  $('sms').hidden = !/^\+?[0-9]{6,15}$/.test(phone);
+  if (!$('sms').hidden) $('sms').href = 'sms:' + phone + '?&body=' + encodeURIComponent(text);
+}
+$('copy').onclick = async () => {
+  const text = $('message').textContent;
+  try { await navigator.clipboard.writeText(text); $('status').textContent = 'Хуулагдлаа. Чатандаа буулгаарай.'; return; } catch (_) {}
+  const area = document.createElement('textarea'); area.value = text; area.setAttribute('readonly','');
+  area.style.cssText = 'position:fixed;top:0;left:0;opacity:0'; document.body.append(area); area.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (_) {}
+  area.remove(); $('copy').focus();
+  $('status').textContent = ok ? 'Хуулагдлаа. Чатандаа буулгаарай.' : 'Хуулж чадсангүй. Дээрх зурвасыг удаан дарж эсвэл хулганаар сонгоод хуулна уу.';
+};
+let selected = CONFIG.drinks[0];
+function choose(drink) {
+  selected = drink; $('cupLabel').textContent = drink;
+  [...$('drinks').children].forEach(b => b.setAttribute('aria-pressed', String(b.dataset.drink === drink)));
+}
+CONFIG.drinks.forEach(drink => {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'choice'; b.dataset.drink = drink;
+  const label = document.createElement('span'); label.textContent = drink;
+  const price = document.createElement('small'); price.textContent = 'Миний даалт'; b.append(label, price);
+  b.onclick = () => choose(drink); $('drinks').append(b);
+});
+choose(selected); $('orderNote').textContent = CONFIG.ask;
+$('yes').onclick = () => { $('chosen').textContent = selected; setReply(CONFIG.from + ', тийм ээ! ' + selected.toLowerCase() + ' уунгаа болзъё. Өдөр, цагаа тохиръё. — ' + CONFIG.to); show('accepted'); };
+$('no').onclick = () => show('declined');
+$('back').onclick = $('return').onclick = () => show('menu');
+
+
+// One bounded canvas, only runs while there are live particles.
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+const effects=document.createElement('canvas');effects.id='fx';effects.setAttribute('aria-hidden','true');document.body.append(effects);
+const pen=effects.getContext('2d');let dots=[],frame=0,last=0;
+function resizeFX(){effects.width=innerWidth;effects.height=innerHeight;}
+resizeFX();window.addEventListener('resize',resizeFX);
+function paintFX(now){frame=0;if(document.hidden||motion.matches||!pen)return;
+ const dt=Math.min((now-last)/16.67||1,2);last=now;pen.clearRect(0,0,effects.width,effects.height);
+ dots=dots.filter(p=>p.life>0);for(const p of dots){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;pen.globalAlpha=Math.max(0,p.life/p.max);pen.fillStyle=p.color;
+ if(p.heart){pen.font=p.size+'px Georgia';pen.fillText('♥',p.x,p.y);}else{pen.beginPath();pen.arc(p.x,p.y,p.size,0,Math.PI*2);pen.fill();}}
+ pen.globalAlpha=1;if(dots.length)frame=requestAnimationFrame(paintFX);
+}
+function spark(x=innerWidth/2,y=innerHeight*.4,count=65,heart=false){if(motion.matches||document.hidden||!pen)return;
+ for(let i=0;i<count;i++){const life=35+Math.random()*35;dots.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.65)*8,life,max:life,size:heart?10+Math.random()*17:1+Math.random()*3,heart,color:['#ff9cdb','#b6a0ff','#89f8ff'][i%3]});}
+ dots=dots.slice(-140);if(!frame){last=performance.now();frame=requestAnimationFrame(paintFX);}}
+document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('sleeping',document.hidden);cancelAnimationFrame(frame);frame=0;
+ if(document.hidden){dots=[];if(pen)pen.clearRect(0,0,effects.width,effects.height);}});
+motion.addEventListener?.('change',()=>{dots=[];cancelAnimationFrame(frame);frame=0;if(pen)pen.clearRect(0,0,effects.width,effects.height);});
+// A single playful dodge; the next tap can always decline. Keyboard stays direct.
+let dodged=false;const noButton=$('no');
+noButton.addEventListener('pointerdown',event=>{if(motion.matches||dodged||event.pointerType==='')return;
+ dodged=true;event.preventDefault();noButton.dataset.skip='yes';noButton.style.transform='translateX(18px) scale(.88)';
+ setTimeout(()=>{noButton.style.transform='';},350);});
+const decline=noButton.onclick;noButton.onclick=event=>{if(noButton.dataset.skip){delete noButton.dataset.skip;return;}decline(event);};
+
+const stage=document.querySelector('.coffee-stage');
+const chooseDrink=choose;choose=function(drink){chooseDrink(drink);stage.classList.remove('pouring');void stage.offsetWidth;stage.classList.add('pouring');};
+document.addEventListener('pointermove',event=>{if(motion.matches||document.hidden)return;
+ const x=Math.max(-1,Math.min(1,(event.clientX-innerWidth/2)/(innerWidth/2)));const y=Math.max(-1,Math.min(1,(event.clientY-innerHeight/2)/(innerHeight/2)));
+ stage.style.transform='rotateY('+(x*5)+'deg) rotateX('+(-y*3)+'deg)';},{passive:true});
+</script></body></html>

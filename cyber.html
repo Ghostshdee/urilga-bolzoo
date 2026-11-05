@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b091b"><title>Хоёулангийн болзоо — гурван жижиг сонголт</title><style>
+*{box-sizing:border-box} [hidden]{display:none!important}
+:root{--ink:#302b46;--muted:#655e76;--accent:#6544a3;--paper:#fffdf7;--line:#d9cfe5}
+body{margin:0;min-height:100vh;min-height:100svh;background:#eee8f4;color:var(--ink);font:16px/1.55 system-ui,sans-serif;padding:28px 18px 40px}
+main{width:100%;max-width:430px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.12em;margin-bottom:30px}
+.tag{border:1px solid var(--line);border-radius:30px;padding:6px 12px}h1,h2{font-family:Georgia,serif;font-weight:500;line-height:1.12;font-size:clamp(32px,8vw,46px);margin:14px 0 18px;overflow-wrap:anywhere}
+p{margin:12px 0}.muted,footer{color:var(--muted);font-size:14px}.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.panel{padding:26px 22px;background:var(--paper);border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 40px #302b4610;margin-top:22px}
+button,a.action{font:600 16px/1.3 system-ui,sans-serif;min-height:48px;padding:13px 18px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none;text-align:center;display:inline-block}
+button.primary{background:var(--accent);color:white;border-color:var(--accent)}button:disabled{opacity:.45;cursor:not-allowed}button[aria-pressed=true]{border-color:var(--accent);background:#e6ddf5;box-shadow:inset 0 0 0 1px var(--accent)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #c05b2d;outline-offset:4px}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1}.stack{display:grid;gap:10px}.status{min-height:25px;font-size:14px;color:var(--accent)}
+.message{white-space:pre-wrap;overflow-wrap:anywhere;padding:18px;background:#f0eaf6;border-radius:12px;user-select:text}footer{margin-top:28px;border-top:1px solid var(--line);padding-top:18px}label{display:flex;gap:10px;align-items:center;min-height:48px}input{width:22px;height:22px;accent-color:var(--accent)}
+section.reveal{animation:reveal .4s ease-out}@keyframes reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(min-width:900px){body{padding-top:48px}main{max-width:460px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+body{background:#e8eee6;--accent:#365c4b;--line:#c7d3c4;--paper:#fcfbef}.message{background:#e6eee2}.progress{height:5px;background:#cbd7c6;border-radius:5px;overflow:hidden;margin:20px 0}.progress span{display:block;height:100%;width:33.333%;background:var(--accent);transition:width .3s}.option{text-align:left;display:flex;gap:16px;align-items:center}.option span{font-size:26px}.option[aria-pressed=true]{background:#dfebd9}.result-art{display:flex;justify-content:center;gap:10px;font-size:60px;margin:20px 0}.result-art span:nth-child(2){transform:rotate(12deg)}
+
+/* Readable without the decorative light. */
+body{font-size:16px}header,.muted,footer,.eyebrow,.status,.tag,.themes button,.poster small,.poster .bottom{font-size:16px}main{position:relative;z-index:1}button{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ffcb70;outline-offset:4px}button{transition:transform .25s,opacity .25s}h1,h2{overflow-wrap:anywhere}.message{color:var(--ink)}
+body.sleeping *,body.sleeping *::before,body.sleeping *::after{animation-play-state:paused!important}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}#fx{display:none}}
+
+body{background:linear-gradient(#07121b 1px,transparent 1px),linear-gradient(90deg,#07121b 1px,transparent 1px),#040a12;background-size:42px 42px;--ink:#e9fcff;--muted:#a7c4d2;--accent:#93faff;--paper:#081722;--line:#2c6d7b;font-family:ui-monospace,Consolas,monospace}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(transparent 0 3px,#0002 3px 4px);z-index:4}
+h1,h2{font-family:inherit;font-weight:800;text-transform:uppercase;letter-spacing:-.04em}header{color:#94f6ff}.panel{border-radius:0;border:1px solid #50c7d3;box-shadow:8px 8px 0 #ee55c42a,inset 0 0 32px #12d8ff0a;position:relative}.panel::before{content:'+';position:absolute;right:8px;top:0;color:#ff9fe1}
+button{border-radius:0;background:#091c29}.option[aria-pressed=true]{background:#153b48;color:#fff;box-shadow:inset 4px 0 #90fbff}button.primary{background:#9bf9ff;color:#05232b}.message{background:#122938}.eyebrow{color:#9bf9ff}
+.progress{height:6px;background:#203447}.progress span{background:#99fbff;transform-origin:left;width:100%!important;transform:scaleX(var(--progress,.33));transition:transform .3s}
+.glitch{animation:glitch .35s steps(2)}@keyframes glitch{0%{transform:translateX(-7px);opacity:.4}30%{transform:translateX(7px)}65%{transform:translateX(-3px);opacity:.8}100%{transform:none;opacity:1}}
+#matching{padding:36px 24px;border:1px solid #ff89d8;background:#081722;margin-top:28px;overflow:hidden}.matchbar{height:14px;border:1px solid #90fbff;margin:28px 0}.matchbar i{display:block;height:100%;background:#8cf4ff;transform-origin:left;animation:match 1.8s linear both}.data{white-space:nowrap;color:#aacbdb;animation:stream 2s linear infinite}
+@keyframes match{from{transform:scaleX(0)}to{transform:scaleX(1)}}@keyframes stream{to{transform:translateX(-60%)}}
+#result h2{color:#fff;text-shadow:3px 0 #a20d67,-2px 0 #176d8c}.result-art{color:#a5fbff}
+[tabindex="-1"]:focus{outline:none}</style><link rel="stylesheet" href="assets/music.css"><script src="assets/music.js"></script></head>
+<body><main><header><span>ХОЁУЛАА · ЖИЖИГ УРИЛГА</span><span class="tag">02 / 03</span></header>
+<section id="quiz" data-screen><p class="eyebrow" id="intro"></p><h1>Болзоогоо<br>хамт бүтээе.</h1><p class="muted">Зөв, буруу хариулт байхгүй. Чиний дуртайг л мэдмээр байна.</p><div class="progress" aria-hidden="true"><span id="bar"></span></div><div class="panel"><p class="eyebrow" id="step" role="status"></p><h2 id="question"></h2><div class="stack" id="options" role="group" aria-labelledby="question"></div><p class="status" id="hint">Нэгийг сонгоорой.</p><div class="row"><button id="back">Буцах</button><button id="next" class="primary" disabled>Үргэлжлүүлэх</button></div></div></section>
+<section id="result" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний сонголтоор</p><div class="result-art" aria-hidden="true"><span>☕</span><span>♡</span></div><h2 id="resultTitle"></h2><p id="plan"></p><p id="invitation"></p><div class="stack"><button id="yes" class="primary">Тийм, энэ болзоонд явъя</button><button id="edit">Сонголтоо өөрчлөх</button><button id="no">Энэ удаа өнжье</button></div></section>
+<section id="reply" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний шийдвэр</p><h2>Хариу бэлэн боллоо</h2><p id="message" class="message"></p><div class="stack"><button id="copy" class="primary">Хариуг хуулах</button><button id="send">Хариугаа хуваалцах</button><button id="restart">Дахин эхлэх</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="muted">Хариугаа өөрөө илгээгээрэй. Энэ хуудас автоматаар мэдэгдэхгүй.</p></section><footer>Зөвхөн чамд зориулсан жижигхэн зориг.<br>Сүлжээгүй ч нээгдэнэ · Өгөгдөл хадгалахгүй</footer><noscript><p>Урилгыг тоглуулахын тулд хөтчийн скрипт ажиллуулах тохиргоог асаана уу.</p></noscript></main><script>
+const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' },to:'Сараа',from:'Батаа',phone:''};
+InvitationMusic.applyGift(CONFIG);
+const questions=[
+ {title:'Хаана тухлах вэ?',options:[['☀','Гадаа салхилъя'],['⌂','Дотор тухалъя']]},
+ {title:'Юугаар дайлуулах вэ?',options:[['☕','Халуун цай'],['♡','Амттан']]},
+ {title:'Ямар хэмнэлтэй байх вэ?',options:[['❧','Тайван ярилцъя'],['✦','Жаахан тоглоё']]}
+];
+let step=0;let answers=[null,null,null];let plan='';
+function render() {
+  $('intro').textContent=CONFIG.to+' + '+CONFIG.from;
+  $('step').textContent=(step+1)+' / 3 · Жижиг сонголт';$('question').textContent=questions[step].title;
+  $('bar').style.width=((step+1)/3*100)+'%';$('options').replaceChildren();
+  questions[step].options.forEach((option,index)=>{
+    const button=document.createElement('button');button.className='option';button.type='button';
+    const icon=document.createElement('span');icon.textContent=option[0];icon.setAttribute('aria-hidden','true');button.append(icon,option[1]);
+    button.setAttribute('aria-pressed',String(answers[step]===index));
+    button.onclick=()=>{answers[step]=index;document.querySelectorAll('.option').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));$('next').disabled=false;$('hint').textContent='Гоё сонголт. Үргэлжлүүлье.';};
+    $('options').append(button);
+  });
+  $('back').disabled=step===0;$('next').disabled=answers[step]===null;
+  $('next').textContent=step===2?'Болзоогоо харах':'Үргэлжлүүлэх';
+  $('hint').textContent=answers[step]===null?'Нэгийг сонгоорой.':'Сонголтыг чинь санаж байна.';
+}
+function buildPlan() {
+  const venue=answers[0]===0?'Цэцэрлэгт хүрээлэнгээр алхаж':'Тухтай газар суугаад';
+  const treat=answers[1]===0?'халуун цай уунгаа':'амттан хувааж идэнгээ';
+  const activity=answers[2]===0?'яаралгүй ярилцъя.':'бие биедээ хөгжилтэй асуулт тавья.';
+  return venue+' '+treat+' '+activity;
+}
+$('back').onclick=()=>{if(step>0){step--;render();$('question').tabIndex=-1;$('question').focus();}};
+$('next').onclick=()=>{
+  if(answers[step]===null)return;
+  if(step<2){step++;render();$('question').tabIndex=-1;$('question').focus();return;}
+  plan=buildPlan();$('plan').textContent=plan;$('resultTitle').textContent=answers[2]===0?'Яарахгүй, хоёулхнаа.':'Инээдтэй нэг уулзалт.';
+  $('invitation').textContent=CONFIG.to+', надтай ийм болзоонд явах уу? — '+CONFIG.from;show('result');
+};
+$('edit').onclick=()=>{show('quiz');render();};
+$('yes').onclick=()=>reply(CONFIG.from+' аа, тийм ээ! '+plan+' Өдөр, цагаа хамт тохиръё. — '+CONFIG.to);
+$('no').onclick=()=>reply(CONFIG.from+' аа, урьсанд баярлалаа. Энэ удаа өнжье. — '+CONFIG.to);
+$('restart').onclick=()=>{answers=[null,null,null];step=0;render();show('quiz');};
+document.addEventListener('DOMContentLoaded',render);
+
+
+function $(id) { return document.getElementById(id); }
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function show(id) {
+  document.querySelectorAll('[data-screen]').forEach(el => {el.hidden = el.id !== id;});
+  const heading = $(id).querySelector('h1,h2');
+  if (heading) {heading.tabIndex=-1; heading.focus();}
+}
+async function copyReply() {
+  const text=$('message').textContent;
+  let ok=false;
+  try {await navigator.clipboard.writeText(text);ok=true;} catch {
+    const field=document.createElement('textarea');field.value=text;
+    field.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.append(field);field.select();
+    try {ok=document.execCommand('copy');} catch {} field.remove();
+  }
+  $('status').textContent=ok?'Хуулагдлаа. Чатандаа буулгаад илгээгээрэй.':'Хуулж чадсангүй. Дээрх хариуг удаан дарж сонгоод хуулна уу.';
+}
+async function sendReply() {
+  const text=$('message').textContent;
+  if (/^\+?[0-9]{6,15}$/.test(CONFIG.phone)) {
+    location.href='sms:'+CONFIG.phone+'?&body='+encodeURIComponent(text);
+    $('status').textContent='Мессежийн цонхонд илгээхээ баталгаажуулаарай.';return;
+  }
+  if (navigator.share) {
+    try {await navigator.share({text});$('status').textContent='Хуваалцах цонх хаагдлаа. Илгээсэн эсэхээ чатнаасаа шалгаарай.';return;}
+    catch(error) {if(error.name==='AbortError')return;}
+  }
+  await copyReply();
+}
+function reply(text) {$('message').textContent=text;$('status').textContent='Одоогоор хариу илгээгдээгүй.';show('reply');}
+if ($('copy')) $('copy').onclick=copyReply;
+if ($('send')) $('send').onclick=sendReply;
+
+// One bounded canvas, only runs while there are live particles.
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+const effects=document.createElement('canvas');effects.id='fx';effects.setAttribute('aria-hidden','true');document.body.append(effects);
+const pen=effects.getContext('2d');let dots=[],frame=0,last=0;
+function resizeFX(){effects.width=innerWidth;effects.height=innerHeight;}
+resizeFX();window.addEventListener('resize',resizeFX);
+function paintFX(now){frame=0;if(document.hidden||motion.matches||!pen)return;
+ const dt=Math.min((now-last)/16.67||1,2);last=now;pen.clearRect(0,0,effects.width,effects.height);
+ dots=dots.filter(p=>p.life>0);for(const p of dots){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;pen.globalAlpha=Math.max(0,p.life/p.max);pen.fillStyle=p.color;
+ if(p.heart){pen.font=p.size+'px Georgia';pen.fillText('♥',p.x,p.y);}else{pen.beginPath();pen.arc(p.x,p.y,p.size,0,Math.PI*2);pen.fill();}}
+ pen.globalAlpha=1;if(dots.length)frame=requestAnimationFrame(paintFX);
+}
+function spark(x=innerWidth/2,y=innerHeight*.4,count=65,heart=false){if(motion.matches||document.hidden||!pen)return;
+ for(let i=0;i<count;i++){const life=35+Math.random()*35;dots.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.65)*8,life,max:life,size:heart?10+Math.random()*17:1+Math.random()*3,heart,color:['#ff9cdb','#b6a0ff','#89f8ff'][i%3]});}
+ dots=dots.slice(-140);if(!frame){last=performance.now();frame=requestAnimationFrame(paintFX);}}
+document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('sleeping',document.hidden);cancelAnimationFrame(frame);frame=0;
+ if(document.hidden){dots=[];if(pen)pen.clearRect(0,0,effects.width,effects.height);}});
+motion.addEventListener?.('change',()=>{dots=[];cancelAnimationFrame(frame);frame=0;if(pen)pen.clearRect(0,0,effects.width,effects.height);});
+// A single playful dodge; the next tap can always decline. Keyboard stays direct.
+let dodged=false;const noButton=$('no');
+noButton.addEventListener('pointerdown',event=>{if(motion.matches||dodged||event.pointerType==='')return;
+ dodged=true;event.preventDefault();noButton.dataset.skip='yes';noButton.style.transform='translateX(18px) scale(.88)';
+ setTimeout(()=>{noButton.style.transform='';},350);});
+const decline=noButton.onclick;noButton.onclick=event=>{if(noButton.dataset.skip){delete noButton.dataset.skip;return;}decline(event);};
+
+const matching=document.createElement('section');matching.id='matching';matching.hidden=true;matching.setAttribute('data-screen','');
+matching.innerHTML='<h2 tabindex="-1">Тохируулж байна…</h2><p role="status">Чиний сонголтоор болзоо бүтээж байна.</p><div class="matchbar" aria-hidden="true"><i></i></div><p class="data" aria-hidden="true">0101 ✦ 1100 / ХОЁУЛАА / 0011 ✦ 1010 / ХОЁУЛАА / 0101 ✦ 1100</p>';
+document.querySelector('main').append(matching);
+let typing=0,matchingBusy=false;
+const originalRender=render;render=function(){originalRender();$('bar').style.setProperty('--progress',(step+1)/3);
+ $('options').classList.remove('glitch');void $('options').offsetWidth;$('options').classList.add('glitch');
+ clearTimeout(typing);const title=questions[step].title;let index=0;
+ function type(){if(document.hidden){$('question').textContent=title;return;}$('question').textContent=title.slice(0,++index);if(index<title.length)typing=setTimeout(type,24);}
+ if(!motion.matches)type();
+};
+const advance=$('next').onclick;$('next').onclick=()=>{if(matchingBusy)return;
+ if(step!==2||answers[step]===null){advance();return;}
+ matchingBusy=true;clearTimeout(typing);show('matching');
+ const finish=()=>{advance();$('resultTitle').textContent='ТОХИРОЛ ОЛДЛОО';$('result').classList.add('glitch');matchingBusy=false;};
+ if(motion.matches)finish();else setTimeout(finish,1900);
+};
+$('no').textContent='Үгүй, энэ удаа өнжье';
+</script></body></html>
