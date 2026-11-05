@@ -219,7 +219,7 @@ G.ask.split('*').forEach((part, i) => {
 });
 
 // 1. Нээх — товшилт дууг эхлүүлнэ
-function startMusic() { /* ???? ?????? ?????????? ????????? ????????. */ }
+function startMusic() { /* Дууг assets/music.js удирдана — энд хоосон үлдээв. */ }
 $('minBtn').addEventListener('click', () => { const m = $('music').classList.toggle('min');
   $('minBtn').textContent = m ? '♪ томруулах' : '— жижигрүүлэх'; $('minBtn').setAttribute('aria-expanded', String(!m)); });
 // Бүтээгч «дүрсийг харуулахгүй» гэсэн бол хураасан эхэлнэ — дуу тоглосоор
@@ -337,6 +337,7 @@ function buildHours() {
   if (pick.hour) [...$('hours').children].forEach(b => { if (b.textContent === pick.hour) b.setAttribute('aria-pressed', 'true'); });
 }
 function yes() {
+  InvitationMusic.start?.();
   confetti();
   $('game').classList.add('hidden');
   $('plan').classList.remove('hidden');
@@ -376,11 +377,8 @@ function fallback(t) {
   a.remove();
 }
 function toast(t) { $('toast').textContent = t; setTimeout(() => { $('toast').textContent = ''; }, 3500); }
-// Мессеж илгээх: утас байвал sms → үгүй бол share цонх → дэмжихгүй/алдаа бол sms
-function smsUrl(m) { return 'sms:' + (G.ph || '') + '?&body=' + encodeURIComponent(m); }
-$('sendBtn').addEventListener('click', () => { const m = message();
-  if (G.ph || !navigator.share) { location.href = smsUrl(m); return; }
-  navigator.share({ text: m }).catch(e => { if (e && e.name !== 'AbortError') location.href = smsUrl(m); }); });
+// Мессеж илгээх: утас байвал sms → үгүй бол share цонх → дэмжихгүй/алдаа бол хуулах
+$('sendBtn').addEventListener('click', () => InvitationMusic.sendReply(message(), G.ph, G.ms, $('sendBtn')));
 $('copyBtn').addEventListener('click', () => copyText(message()).then(() => {
   $('copyBtn').textContent = 'Хуулагдлаа ✓ — чатандаа буулгаарай';
   if (G.ms) $('msLink').classList.remove('hidden'); }));

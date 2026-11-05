@@ -330,7 +330,7 @@ const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' } };
   }
 
   // Дуу — товшилтын дараа л iframe үүсгэнэ
-  function startMusic() { /* ???? ?????? ?????????? ????????? ????????. */ }
+  function startMusic() { /* Дууг assets/music.js удирдана — энд хоосон үлдээв. */ }
 
   // Асуултыг үсэг бүрээр — *үг* нь <em> (зөвхөн DOM, innerHTML үгүй)
   function buildAsk() {
@@ -516,6 +516,7 @@ const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' } };
   };
 
   $('#yes').onclick = async () => {
+    InvitationMusic.start?.();
     show('yay');
     drawHeart();
     for (let i = 0; i < 6; i++) setTimeout(shoot, i * 180);
@@ -525,14 +526,8 @@ const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' } };
     else { $('#planT').textContent = 'Хариугаа илгээгээрэй'; showReply(); }
   };
 
-  // Хариу — утас байвал SMS, үгүй бол хуваалцах цонх, бүтэлгүйтвэл хоосон SMS
-  $('#send').onclick = () => {
-    const body = encodeURIComponent(msg());
-    if (G.ph) { location.href = 'sms:' + G.ph + '?&body=' + body; return; }
-    const sms = () => { location.href = 'sms:?&body=' + body; };
-    if (navigator.share) navigator.share({ text: msg() }).catch(e => { if (!e || e.name !== 'AbortError') sms(); });  /* өөрөө хаасан бол юу ч нээхгүй */
-    else sms();
-  };
+  // Хариу — утас байвал SMS, үгүй бол хуваалцах цонх, боломжгүй бол хуулах
+  $('#send').onclick = () => InvitationMusic.sendReply(msg(), G.ph, G.ms, $('#send'));
   $('#copy').onclick = () => copy(msg()).then(ok => {
     if (!ok) { toast('Хуулж чадсангүй — гараар сонгоорой'); return; }
     $('#copy').textContent = 'Хуулагдлаа ✓ — чатандаа буулгаарай';

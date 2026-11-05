@@ -37,7 +37,7 @@ h1{font-size:clamp(42px,11vw,58px)}.panel{background:#21162fdd;box-shadow:0 0 35
 <section id="card" data-screen hidden><p class="eyebrow">Энэ агшныг хадгалъя</p><h1 tabindex="-1">Тийм гэлээ!</h1><p class="muted">Хүсвэл өөртөө хадгал. Нийтлэх эсэхээ хоёулаа шийдээрэй.</p>
 <div class="poster" id="poster" role="img" aria-label="Тийм гэлээ гэсэн нэргүй босоо дурсгалын карт"><small>ХОЁУЛАА · НЭГ САЙХАН ЭХЛЭЛ</small><div><div class="symbol" aria-hidden="true">♡</div><h2>Тийм<br>гэлээ!</h2><p id="names">Хоёр хүн.<br>Нэг гоё болзоо.</p></div><div class="bottom">Үргэлжлэл нь биднийх.</div></div>
 <div class="panel"><label><input id="includeNames" type="checkbox">Карт дээр нэрсийг харуулах</label><p class="muted">Утас, газар, цаг карт дээр орохгүй.</p><div class="row themes" role="group" aria-label="Картын өнгө"><button data-theme="0" aria-pressed="true">Сарнай</button><button data-theme="1" aria-pressed="false">Шөнийн хөх</button><button data-theme="2" aria-pressed="false">Цаасан шар</button></div><div class="stack" style="margin-top:18px"><button id="download" class="primary">Босоо зургийг татах</button><button id="cardRestart">Эхнээс нь үзэх</button></div><p id="exportStatus" class="status" role="status" aria-live="polite"></p></div></section>
-<section id="reply" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний шийдвэр</p><h2>Хариу бэлэн боллоо</h2><p id="message" class="message"></p><div class="stack"><button id="copy" class="primary">Хариуг хуулах</button><button id="send">Хариугаа хуваалцах</button><button id="restart">Дахин эхлэх</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="muted">Хариугаа өөрөө илгээгээрэй. Энэ хуудас автоматаар мэдэгдэхгүй.</p></section><footer>Зөвхөн чамд зориулсан жижигхэн зориг.<br>Сүлжээгүй ч нээгдэнэ · Өгөгдөл хадгалахгүй</footer><noscript><p>Урилгыг тоглуулахын тулд хөтчийн скрипт ажиллуулах тохиргоог асаана уу.</p></noscript></main><script>
+<section id="reply" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний шийдвэр</p><h2>Хариу бэлэн боллоо</h2><p id="message" class="message"></p><div class="stack"><button id="copy" class="primary">Хариуг хуулах</button><button id="send">💬 Мессеж илгээх</button><button id="restart">Дахин эхлэх</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="muted">Хариугаа өөрөө илгээгээрэй. Энэ хуудас автоматаар мэдэгдэхгүй.</p></section><footer>Зөвхөн чамд зориулсан жижигхэн зориг.<br>Сүлжээгүй ч нээгдэнэ · Өгөгдөл хадгалахгүй</footer><noscript><p>Урилгыг тоглуулахын тулд хөтчийн скрипт ажиллуулах тохиргоог асаана уу.</p></noscript></main><script>
 const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' },to:'Сараа',from:'Батаа',phone:'',ask:'Надтай болзоонд явах уу?'};
 InvitationMusic.applyGift(CONFIG);
 const palettes=[['#762f45','#fff2de'],['#243f50','#fce9ba'],['#f9eacb','#71344b']];
@@ -105,18 +105,8 @@ async function copyReply() {
   }
   $('status').textContent=ok?'Хуулагдлаа. Чатандаа буулгаад илгээгээрэй.':'Хуулж чадсангүй. Дээрх хариуг удаан дарж сонгоод хуулна уу.';
 }
-async function sendReply() {
-  const text=$('message').textContent;
-  if (/^\+?[0-9]{6,15}$/.test(CONFIG.phone)) {
-    location.href='sms:'+CONFIG.phone+'?&body='+encodeURIComponent(text);
-    $('status').textContent='Мессежийн цонхонд илгээхээ баталгаажуулаарай.';return;
-  }
-  if (navigator.share) {
-    try {await navigator.share({text});$('status').textContent='Хуваалцах цонх хаагдлаа. Илгээсэн эсэхээ чатнаасаа шалгаарай.';return;}
-    catch(error) {if(error.name==='AbortError')return;}
-  }
-  await copyReply();
-}
+function sendReply() { return InvitationMusic.sendReply($('message').textContent, CONFIG.phone, CONFIG.messenger, $('send')); }
+
 function reply(text) {$('message').textContent=text;$('status').textContent='Одоогоор хариу илгээгдээгүй.';show('reply');}
 if ($('copy')) $('copy').onclick=copyReply;
 if ($('send')) $('send').onclick=sendReply;
@@ -147,5 +137,5 @@ noButton.addEventListener('pointerdown',event=>{if(motion.matches||dodged||event
 const decline=noButton.onclick;noButton.onclick=event=>{if(noButton.dataset.skip){delete noButton.dataset.skip;return;}decline(event);};
 
 let trailTime=0;document.addEventListener('pointermove',event=>{if(performance.now()-trailTime<40)return;trailTime=performance.now();spark(event.clientX,event.clientY,3);},{passive:true});
-const accept=$('yes').onclick;$('yes').onclick=()=>{accept();spark(innerWidth/2,innerHeight*.45,110,true);};
+const accept=$('yes').onclick;$('yes').onclick=()=>{InvitationMusic.start?.(); accept();spark(innerWidth/2,innerHeight*.45,110,true);};
 </script></body></html>

@@ -20,7 +20,7 @@ header{color:#f6c58c}body::before{content:'';position:fixed;top:-90px;right:12%;
 <section id="menu" data-screen class="appear"><p class="tag">Өнөөдрийн онцгой санал</p><h1>Нэг аяга.<br>Хоёр хүний яриа.</h1><p class="muted"><span data-to></span>, ундаагаа чи сонго. Уулзах шалтаг надад бий.</p>
 <div class="panel menu"><div class="coffee-stage"><i class="steam" aria-hidden="true"></i><i class="steam s2" aria-hidden="true"></i><i class="steam s3" aria-hidden="true"></i><i class="pour" aria-hidden="true"></i><svg class="cup-art" viewBox="0 0 240 170" role="img" aria-label="Зүрхтэй аяга"><ellipse cx="117" cy="148" rx="90" ry="10" fill="#dce3d4"/><path d="M170 58h20c38 0 33 58-6 58h-14" fill="none" stroke="#315d45" stroke-width="10"/><path d="M43 51h133l-10 73q-4 22-52 22t-60-22Z" fill="#e3b68c" stroke="#315d45" stroke-width="3"/><ellipse cx="110" cy="51" rx="67" ry="15" fill="#6d4833" stroke="#315d45" stroke-width="3"/><path d="M97 41c-12-14-28 3 13 19 41-16 25-33 13-19q-13 10-26 0" fill="#faf1de"/><text id="cupLabel" x="110" y="105" text-anchor="middle" fill="#253e32" font-size="16">Сүүтэй кофе</text></svg></div>
 <p class="tag">Юу уух вэ?</p><div id="drinks" role="group" aria-label="Ундааны сонголт"></div><hr class="rule"><p id="orderNote" class="muted"></p><div class="actions"><button id="yes" class="primary">Тийм, захиалъя</button><button id="no">Өнөөдөр амжихгүй</button></div></div></section>
-<section id="accepted" data-screen hidden class="appear"><p class="tag">Захиалга авлаа</p><h2>Хамгийн гоё орц нь чи.</h2><div class="receipt"><p><span>Зочин</span><strong data-to></strong></p><p><span>Урьсан</span><strong data-from></strong></p><hr class="rule"><p><span id="chosen"></span><span>× 2</span></p><p><span>Ярих сэдэв</span><span>Дуусахгүй</span></p><hr class="rule"><p><strong>Нийт</strong><strong>Нэг гоё уулзалт</strong></p></div><p id="message" class="message"></p><div class="actions"><button id="copy" class="primary" type="button">Хариугаа хуулах</button><a id="sms" class="action" hidden>Мессеж бэлдэх</a></div><p class="muted">Хариу автоматаар илгээгдэхгүй. Хуулаад өөрөө явуулаарай.</p><div class="actions"><button id="back">Ундаагаа өөрчлөх</button></div></section>
+<section id="accepted" data-screen hidden class="appear"><p class="tag">Захиалга авлаа</p><h2>Хамгийн гоё орц нь чи.</h2><div class="receipt"><p><span>Зочин</span><strong data-to></strong></p><p><span>Урьсан</span><strong data-from></strong></p><hr class="rule"><p><span id="chosen"></span><span>× 2</span></p><p><span>Ярих сэдэв</span><span>Дуусахгүй</span></p><hr class="rule"><p><strong>Нийт</strong><strong>Нэг гоё уулзалт</strong></p></div><p id="message" class="message"></p><div class="actions"><button id="copy" class="primary" type="button">Хариугаа хуулах</button><button id="send" class="action" type="button">💬 Мессеж илгээх</button></div><p class="muted">Хариу автоматаар илгээгдэхгүй. Хуулаад өөрөө явуулаарай.</p><div class="actions"><button id="back">Уух зүйлээ өөрчлөх</button></div></section>
 <section id="declined" data-screen hidden><h2>За, кофег чинь<br>өрөнд үлдээлээ ☺</h2><p>Өөр өдөр тухтайхан ярилцъя. Яарахгүй ээ.</p><button id="return">Цэс рүү буцах</button></section>
 <p id="status" class="status" role="status" aria-live="polite"></p>
 <footer>Чамд зориулсан жижигхэн зориг.<br>Нэр, сонголтыг энэ хуудас хадгалахгүй.</footer>
@@ -42,10 +42,9 @@ function show(id) {
 }
 function setReply(text) {
   $('message').textContent = text;
-  const phone = String(CONFIG.phone || '').replace(/[\s-]/g,'');
-  $('sms').hidden = !/^\+?[0-9]{6,15}$/.test(phone);
-  if (!$('sms').hidden) $('sms').href = 'sms:' + phone + '?&body=' + encodeURIComponent(text);
+
 }
+$('send').onclick = () => InvitationMusic.sendReply($('message').textContent, CONFIG.phone, CONFIG.messenger, $('send'));
 $('copy').onclick = async () => {
   const text = $('message').textContent;
   try { await navigator.clipboard.writeText(text); $('status').textContent = 'Хуулагдлаа. Чатандаа буулгаарай.'; return; } catch (_) {}
@@ -64,11 +63,11 @@ function choose(drink) {
 CONFIG.drinks.forEach(drink => {
   const b = document.createElement('button'); b.type = 'button'; b.className = 'choice'; b.dataset.drink = drink;
   const label = document.createElement('span'); label.textContent = drink;
-  const price = document.createElement('small'); price.textContent = 'Миний даалт'; b.append(label, price);
+  const price = document.createElement('small'); price.textContent = 'Би даая'; b.append(label, price);
   b.onclick = () => choose(drink); $('drinks').append(b);
 });
 choose(selected); $('orderNote').textContent = CONFIG.ask;
-$('yes').onclick = () => { $('chosen').textContent = selected; setReply(CONFIG.from + ', тийм ээ! ' + selected.toLowerCase() + ' уунгаа болзъё. Өдөр, цагаа тохиръё. — ' + CONFIG.to); show('accepted'); };
+$('yes').onclick = () => { InvitationMusic.start?.();  $('chosen').textContent = selected; setReply(CONFIG.from + ', тийм ээ! ' + selected.toLowerCase() + ' уунгаа болзъё. Өдөр, цагаа тохиръё. — ' + CONFIG.to); show('accepted'); };
 $('no').onclick = () => show('declined');
 $('back').onclick = $('return').onclick = () => show('menu');
 

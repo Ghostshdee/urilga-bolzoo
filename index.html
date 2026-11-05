@@ -818,9 +818,10 @@ function hearts() {
 
 /* «Тийм» дарахад YouTube тоглогчийг үүсгэнэ. Тэр товшилт нь хөтчийн
    хувьд хэрэглэгчийн үйлдэл тул дуу шууд эхлэх боломжтой. */
-function playSong() { /* ???? ?????? ?????????? ????????? ????????. */ }
+function playSong() { /* Дууг assets/music.js удирдана — энд хоосон үлдээв. */ }
 
 function showReply() {
+  InvitationMusic.start?.();
   const r = CONFIG.reply;
   document.getElementById('replyTitle').textContent = r.title;
 
@@ -1054,17 +1055,7 @@ copyBtn.addEventListener('click', async () => {
 /* Дугаар байвал шууд SMS. Үгүй бол утасны хуваалцах цэс, тэр байхгүй бол
    хаяггүй SMS — хүлээн авагч хаягаа өөрөө сонгоно.
    «?&body=» нь iOS, Android хоёуланд ажилладаг хэлбэр. */
-sendBtn.addEventListener('click', async () => {
-  const w = CONFIG.when;
-  const text = message();
-  const body = encodeURIComponent(text);
-  if (w.phone) { location.href = `sms:${w.phone}?&body=${body}`; return; }
-  if (navigator.share) {
-    try { await navigator.share({ text }); return; }
-    catch (e) { if (e && e.name === 'AbortError') return; }   /* хүн өөрөө цуцалсан */
-  }
-  location.href = `sms:?&body=${body}`;
-});
+sendBtn.addEventListener('click', () => InvitationMusic.sendReply(message(), CONFIG.when.phone, CONFIG.when.messenger, sendBtn));
 
 buildWhen();
 

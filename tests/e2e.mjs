@@ -99,12 +99,20 @@ try {
   check('4c zuraggüi bol hooson talbai üldehgüi', reply.photoHidden);
   check('4d0 hariu deed talaasaa haragdana (dood tal ruu üsrehgüi)', await ev(w,'window.scrollY === 0 && document.activeElement.id === "replyTitle"'));
   check('4d tsetseg buudaj garav', reply.hearts >= 10, String(reply.hearts));
-  check('4d1 "Duug sonsoh" tovchgüi, YouTube shuud, inline samvar, autoplay', await ev(w,`(() => { const box = document.getElementById("song");
+  check('4d1 тоглуулагч шууд үүснэ, дахин тоглуулах товч доор байрлана', await ev(w,`(() => { const box = document.getElementById("song");
     const f = box.querySelector("iframe");
-    return !box.hidden && !document.querySelector(".song-play") && getComputedStyle(box).position === 'relative' && !!f
+    return !box.hidden && !!document.getElementById("songPlay") && document.getElementById("songFrame").nextElementSibling.id === "songPlay" && getComputedStyle(box).position === 'relative' && !!f
       && f.src.startsWith("https://www.youtube-nocookie.com/embed/" + CONFIG.song.youtube + "?")
-      && f.src.includes("autoplay=1") && f.src.includes("playsinline=1") && f.src.includes("rel=0")
+      && f.src.includes("controls=1") && f.src.includes("autoplay=1") && f.src.includes("playsinline=1") && f.src.includes("rel=0")
       && f.allow.includes("autoplay"); })()`));
+  await s(2100);
+  check('4d1b дуу хаагдсан бол сонсох товч тоглуулагчийн доор гарна', await ev(w,`(() => {
+    const box = document.getElementById('song'), play = document.getElementById('songPlay');
+    const frame = document.querySelector('#song iframe');
+    return box.classList.contains('is-playing') || (!play.hidden && play.textContent === '▶ Дууг сонсох'
+      && play.getBoundingClientRect().top >= frame.getBoundingClientRect().bottom
+      && play.getBoundingClientRect().height >= 44);
+  })()`));
   const frameSize = await ev(w,`(() => { const r = document.querySelector("#song iframe").getBoundingClientRect();
     return { w: Math.round(r.width), h: Math.round(r.height) }; })()`);
   check('4d2 toglogch 200x200+', frameSize.w >= 200 && frameSize.h >= 200, JSON.stringify(frameSize));

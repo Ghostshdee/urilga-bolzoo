@@ -381,7 +381,7 @@ G.ask.split(/\*([^*]+)\*/).forEach((part, i) => {
 });
 
 /* ---------- Дуу: товшилтын дараа л iframe үүсгэнэ ---------- */
-function playSong() { /* ???? ?????? ?????????? ????????? ????????. */ }
+function playSong() { /* Дууг assets/music.js удирдана — энд хоосон үлдээв. */ }
 $('musicMin').addEventListener('click', () => {
   const mini = $('music').classList.toggle('mini');
   $('musicMin').setAttribute('aria-expanded', String(!mini));
@@ -458,6 +458,7 @@ function hearts() {
 }
 
 $('yes').addEventListener('click', () => {
+  InvitationMusic.start?.();
   $('askBlock').hidden = true;
   $('after').hidden = false;
   hearts();
@@ -554,12 +555,7 @@ async function copyText(t) {
   } catch (e) { return false; }
 }
 
-$('send').addEventListener('click', async () => {
-  const body = encodeURIComponent(message);
-  if (G.ph) { location.href = `sms:${G.ph}?&body=${body}`; return; }
-  if (navigator.share) { try { await navigator.share({ text: message }); return; } catch (e) { if (e && e.name === 'AbortError') return; /* өөрөө хаасан бол юу ч нээхгүй */ } }
-  location.href = `sms:?&body=${body}`;
-});
+$('send').addEventListener('click', () => InvitationMusic.sendReply(message, G.ph, G.ms, $('send')));
 $('copy').addEventListener('click', async () => {
   const ok = await copyText(message);
   $('copy').textContent = ok ? 'Хуулагдлаа ✓ — чатандаа буулгаарай' : 'Хуулж чадсангүй — гараар сонгоорой';

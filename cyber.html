@@ -36,7 +36,7 @@ button{border-radius:0;background:#091c29}.option[aria-pressed=true]{background:
 <body><main><header><span>ХОЁУЛАА · ЖИЖИГ УРИЛГА</span><span class="tag">02 / 03</span></header>
 <section id="quiz" data-screen><p class="eyebrow" id="intro"></p><h1>Болзоогоо<br>хамт бүтээе.</h1><p class="muted">Зөв, буруу хариулт байхгүй. Чиний дуртайг л мэдмээр байна.</p><div class="progress" aria-hidden="true"><span id="bar"></span></div><div class="panel"><p class="eyebrow" id="step" role="status"></p><h2 id="question"></h2><div class="stack" id="options" role="group" aria-labelledby="question"></div><p class="status" id="hint">Нэгийг сонгоорой.</p><div class="row"><button id="back">Буцах</button><button id="next" class="primary" disabled>Үргэлжлүүлэх</button></div></div></section>
 <section id="result" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний сонголтоор</p><div class="result-art" aria-hidden="true"><span>☕</span><span>♡</span></div><h2 id="resultTitle"></h2><p id="plan"></p><p id="invitation"></p><div class="stack"><button id="yes" class="primary">Тийм, энэ болзоонд явъя</button><button id="edit">Сонголтоо өөрчлөх</button><button id="no">Энэ удаа өнжье</button></div></section>
-<section id="reply" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний шийдвэр</p><h2>Хариу бэлэн боллоо</h2><p id="message" class="message"></p><div class="stack"><button id="copy" class="primary">Хариуг хуулах</button><button id="send">Хариугаа хуваалцах</button><button id="restart">Дахин эхлэх</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="muted">Хариугаа өөрөө илгээгээрэй. Энэ хуудас автоматаар мэдэгдэхгүй.</p></section><footer>Зөвхөн чамд зориулсан жижигхэн зориг.<br>Сүлжээгүй ч нээгдэнэ · Өгөгдөл хадгалахгүй</footer><noscript><p>Урилгыг тоглуулахын тулд хөтчийн скрипт ажиллуулах тохиргоог асаана уу.</p></noscript></main><script>
+<section id="reply" class="panel reveal" data-screen hidden><p class="eyebrow">Чиний шийдвэр</p><h2>Хариу бэлэн боллоо</h2><p id="message" class="message"></p><div class="stack"><button id="copy" class="primary">Хариуг хуулах</button><button id="send">💬 Мессеж илгээх</button><button id="restart">Дахин эхлэх</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="muted">Хариугаа өөрөө илгээгээрэй. Энэ хуудас автоматаар мэдэгдэхгүй.</p></section><footer>Зөвхөн чамд зориулсан жижигхэн зориг.<br>Сүлжээгүй ч нээгдэнэ · Өгөгдөл хадгалахгүй</footer><noscript><p>Урилгыг тоглуулахын тулд хөтчийн скрипт ажиллуулах тохиргоог асаана уу.</p></noscript></main><script>
 const CONFIG = { song: { youtube: 'rg0KzIXexL8', start: 0, dock: 'inline' },to:'Сараа',from:'Батаа',phone:''};
 InvitationMusic.applyGift(CONFIG);
 const questions=[
@@ -74,7 +74,7 @@ $('next').onclick=()=>{
   $('invitation').textContent=CONFIG.to+', надтай ийм болзоонд явах уу? — '+CONFIG.from;show('result');
 };
 $('edit').onclick=()=>{show('quiz');render();};
-$('yes').onclick=()=>reply(CONFIG.from+' аа, тийм ээ! '+plan+' Өдөр, цагаа хамт тохиръё. — '+CONFIG.to);
+$('yes').onclick=()=>{ InvitationMusic.start?.(); reply(CONFIG.from+' аа, тийм ээ! '+plan+' Өдөр, цагаа хамт тохиръё. — '+CONFIG.to); };
 $('no').onclick=()=>reply(CONFIG.from+' аа, урьсанд баярлалаа. Энэ удаа өнжье. — '+CONFIG.to);
 $('restart').onclick=()=>{answers=[null,null,null];step=0;render();show('quiz');};
 document.addEventListener('DOMContentLoaded',render);
@@ -97,18 +97,8 @@ async function copyReply() {
   }
   $('status').textContent=ok?'Хуулагдлаа. Чатандаа буулгаад илгээгээрэй.':'Хуулж чадсангүй. Дээрх хариуг удаан дарж сонгоод хуулна уу.';
 }
-async function sendReply() {
-  const text=$('message').textContent;
-  if (/^\+?[0-9]{6,15}$/.test(CONFIG.phone)) {
-    location.href='sms:'+CONFIG.phone+'?&body='+encodeURIComponent(text);
-    $('status').textContent='Мессежийн цонхонд илгээхээ баталгаажуулаарай.';return;
-  }
-  if (navigator.share) {
-    try {await navigator.share({text});$('status').textContent='Хуваалцах цонх хаагдлаа. Илгээсэн эсэхээ чатнаасаа шалгаарай.';return;}
-    catch(error) {if(error.name==='AbortError')return;}
-  }
-  await copyReply();
-}
+function sendReply() { return InvitationMusic.sendReply($('message').textContent, CONFIG.phone, CONFIG.messenger, $('send')); }
+
 function reply(text) {$('message').textContent=text;$('status').textContent='Одоогоор хариу илгээгдээгүй.';show('reply');}
 if ($('copy')) $('copy').onclick=copyReply;
 if ($('send')) $('send').onclick=sendReply;

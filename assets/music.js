@@ -18,6 +18,30 @@
   const gift = readGift();
   window.InvitationMusic = {
     readGift,
+    async sendReply(text, phone, messenger, button) {
+      if (/^\+?[0-9]{6,15}$/.test(phone || '')) {
+        location.href = 'sms:' + phone + '?&body=' + encodeURIComponent(text); return;
+      }
+      if (navigator.share) {
+        try { await navigator.share({ text }); return; }
+        catch (error) { if (error && error.name === 'AbortError') return; }
+      }
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch (_) {
+        const field = document.createElement('textarea'); field.value = text;
+        field.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        document.body.append(field); field.select();
+        try { ok = document.execCommand('copy'); } catch (_) {}
+        field.remove();
+      }
+      button.textContent = ok ? 'Хуулагдлаа ✓ — чатандаа буулгаарай' : 'Хуулж чадсангүй — хариугаа гараар сонгоорой';
+      if (ok && /^[A-Za-z0-9.]{1,50}$/.test(messenger || '')) {
+        let link = button.parentElement.querySelector('.reply-messenger');
+        if (!link) { link = document.createElement('a'); link.className = 'reply-messenger'; button.parentElement.append(link); }
+        link.href = 'https://m.me/' + messenger; link.textContent = 'Messenger нээх →';
+        link.style.cssText = 'display:inline-flex;align-items:center;min-height:44px;padding:12px;color:inherit';
+      }
+    },
     applyGift(config) {
       if (!gift) return;
       for (const key of ['to', 'from', 'ask']) if (gift[key]) config[key] = gift[key];
@@ -41,16 +65,25 @@
     box.hidden = true;
     box.setAttribute('aria-label', 'Манай дуу');
     const captions = { index: 'Бидний цомог', envelope: 'Захидлын дурсамж', scratch: 'Чамд зориулсан бэлэг', stars: 'Оддын дуран', ticket: 'Хамтдаа үзэх кино', neon: '♪ МАНАЙ ДУУ', cyber: 'AUDIO_STREAM', glow: 'Бидний дурсамж', cafe: 'Хоёр хүний радио' };
-    box.innerHTML = '<div class="music-controls"><button id="songMin" type="button" aria-expanded="true" aria-controls="songArt" aria-label="Дууг хураах">−</button><button id="songToggle" type="button" aria-label="Дууг түр зогсоох">❚❚</button></div><div id="songArt" class="music-art"><div class="music-decoration" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><p class="music-caption"></p><div id="songFrame"></div><p class="music-note" role="status">Дуу эхлээгүй бол ▶ дарна уу</p></div>';
+    box.innerHTML = '<div class="music-controls"><button id="songMin" type="button" aria-expanded="true" aria-controls="songArt" aria-label="Дууг хураах">−</button><button id="songToggle" type="button" aria-label="Дууг түр зогсоох">❚❚</button></div><div id="songArt" class="music-art"><div class="music-decoration" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><p class="music-caption"></p><div id="songFrame"></div><button id="songPlay" type="button" hidden>▶ Дууг сонсох</button><p class="music-note" role="status">Дуу эхлээгүй бол ▶ дарна уу</p></div>';
     box.querySelector('.music-caption').textContent = captions[style] || 'Манай дуу';
     (song.dock === 'corner' ? document.body : host).append(box);
     const frameHost = box.querySelector('#songFrame');
     const art = box.querySelector('#songArt');
     const min = box.querySelector('#songMin');
     const toggle = box.querySelector('#songToggle');
+    const retry = box.querySelector('#songPlay');
+    let retryTimer;
+    function checkPlayback() {
+      clearTimeout(retryTimer);
+      retryTimer = setTimeout(() => {
+        retry.hidden = collapsed || box.hidden || !!(player && typeof player.getPlayerState === 'function' && player.getPlayerState() === 1);
+      }, 2000);
+    }
     let frame, player, started = false, playing = false, collapsed = false, pending = false;
     function state(value) {
       playing = value;
+      if (value) { clearTimeout(retryTimer); retry.hidden = true; }
       box.classList.toggle('is-playing', value);
       toggle.textContent = value ? '❚❚' : '▶';
       toggle.setAttribute('aria-label', value ? 'Дууг түр зогсоох' : 'Дууг тоглуулах');
@@ -84,14 +117,13 @@
       started = true;
       box.hidden = false;
       if (song.dock === 'corner') document.body.classList.add('music-reserved');
-      if (song.video === false) { collapse(true); return; }
       createFrame();
     }
     function createFrame() {
-      if (frame) { command(true); return; }
+      if (frame) { command(true); checkPlayback(); return; }
       pending = true;
       frame = document.createElement('iframe');
-      const params = new URLSearchParams({ autoplay: '1', enablejsapi: '1', playsinline: '1', rel: '0', controls: '0', start: String(Number.isInteger(song.start) && song.start >= 0 && song.start <= 36000 ? song.start : 0) });
+      const params = new URLSearchParams({ autoplay: '1', enablejsapi: '1', playsinline: '1', rel: '0', controls: '1', start: String(Number.isInteger(song.start) && song.start >= 0 && song.start <= 36000 ? song.start : 0) });
       if (/^https?:$/.test(location.protocol)) params.set('origin', location.origin);
       frame.src = 'https://www.youtube-nocookie.com/embed/' + song.youtube + '?' + params;
       frame.title = 'Манай дуу — YouTube';
@@ -103,9 +135,16 @@
         const script = document.createElement('script'); script.src = 'https://www.youtube.com/iframe_api'; document.head.append(script);
       }
       attachPlayer();
+      checkPlayback();
     }
+    window.InvitationMusic.start = start;
+    retry.addEventListener('click', () => {
+      if (player && typeof player.playVideo === 'function') { pending = true; player.playVideo(); checkPlayback(); }
+      else { frameHost.replaceChildren(); frame = null; player = null; createFrame(); }
+    });
     function collapse(value) {
       collapsed = value;
+      if (value) { clearTimeout(retryTimer); retry.hidden = true; }
       command(!value);
       /* API ачаалаагүй үед тоглогчийг устгаж, далд дуугарахаас сэргийлнэ. */
       if (value && (!player || typeof player.pauseVideo !== 'function')) {
@@ -120,6 +159,7 @@
       if (!value) createFrame();
     }
     function stop() {
+      clearTimeout(retryTimer); retry.hidden = true;
       pending = false;
       if (player && player.destroy) player.destroy();
       frameHost.replaceChildren(); frame = null; player = null;
@@ -134,10 +174,6 @@
     document.addEventListener('click', event => {
       const button = event.target.closest('button');
       if (!button) return;
-      if (['yes', 'yesBtn'].includes(button.id)) {
-        /* Хариуны дэлгэц солигдсоны дараа дууг байрлуулна. */
-        start();
-      }
       if (['again', 'restart', 'cardRestart', 'back', 'return', 'no'].includes(button.id)) stop();
     });
     /* Дэлгэц солигдож тоглогч нуугдвал дууг зогсооно. */

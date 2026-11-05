@@ -54,3 +54,8 @@ body.music-reserved.music-collapsed { padding-bottom:88px !important; }
 @keyframes music-eq { to { transform:scaleY(.25); } }
 @keyframes music-float { to { transform:translateY(-6px); } }
 @media (prefers-reduced-motion:reduce) { .inv-music *, .inv-music *::before, .inv-music *::after { animation:none !important; transition:none !important; } }
+
+/* Тоглуулагчийн доорх дахин тоглуулах товч. */
+.inv-music #songPlay { width:200px; height:auto; min-height:52px; margin-top:14px; padding:12px 8px; border-radius:12px; background:#a52e53; color:#fff; border:2px solid #fff; font:bold 17px/1.3 system-ui; animation:music-retry 1.6s ease-in-out infinite; }
+@keyframes music-retry { 50% { box-shadow:0 0 0 5px #a52e5333; } }
+@media (prefers-reduced-motion:reduce) { .inv-music #songPlay { animation:none; } }

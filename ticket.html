@@ -315,7 +315,7 @@ document.title = G.to + ', чамд нэг тасалбар';
 })();
 
 // Дуу — товшилтын дараа л iframe үүсгэнэ
-function mountSong() { /* ???? ?????? ?????????? ????????? ????????. */ }
+function mountSong() { /* Дууг assets/music.js удирдана — энд хоосон үлдээв. */ }
 
 // Дууны самбарыг хураах/дэлгэх — iframe устахгүй тул дуу үргэлжилнэ
 $('mini').addEventListener('click', () => {
@@ -410,6 +410,7 @@ function ready() { $('tear').disabled = !(pick.day && pick.time && pick.place); 
 
 // «Тийм»
 $('yes').addEventListener('click', async () => {
+  InvitationMusic.start?.();
   $('answer').hidden = true;
   $('stamp').classList.add('on');
   await wait(700);
@@ -459,15 +460,8 @@ function showReply(text) {
   $('msg').textContent = text;
   $('reply').hidden = false;
   $('reply').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
-  // 1) Мессеж: утас байвал SMS, үгүй бол утасны хуваалцах цонх, тэр нь болохгүй бол хоосон SMS
-  $('send').onclick = async () => {
-    if (G.ph) { location.href = 'sms:' + G.ph + '?&body=' + enc; return; }
-    if (navigator.share) {
-      try { await navigator.share({ text }); return; }
-      catch (e) { if (e && e.name === 'AbortError') return; }
-    }
-    location.href = 'sms:?&body=' + enc;
-  };
+  // 1) Мессеж: утас байвал SMS, үгүй бол утасны хуваалцах цонх, тэр нь болохгүй бол хуулах
+  $('send').onclick = () => InvitationMusic.sendReply(text, G.ph, G.ms, $('send'));
   // 2) Хуулах: дараа нь Messenger-ийн холбоос гарна
   $('copy').onclick = async () => {
     if (await copyText(text)) {
