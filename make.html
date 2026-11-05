@@ -51,6 +51,11 @@ select:focus-visible,input:focus-visible,textarea:focus-visible,button:focus-vis
 footer{text-align:center;font-size:.85rem;color:var(--muted);margin-top:18px}
 footer a{color:inherit}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.guide summary{font-weight:600;cursor:pointer;min-height:44px;display:flex;align-items:center}
+.guide ol{padding-left:22px;margin:8px 0 10px}
+.guide li{margin-bottom:8px}
+.vlink{display:inline-block;margin-top:10px;color:var(--rose-dk);font-weight:600}
+.vlink[hidden]{display:none}
 select{font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:inherit;width:100%;margin-bottom:12px}
 </style>
 </head>
@@ -58,6 +63,19 @@ select{font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px
 <main>
   <h1>Болзооны <em>урилга</em> хийх</h1>
   <p class="lead">Нэр, асуулт, дуугаа бөглөөд нэг линк гарга. Түүнийгээ хайртай хүндээ илгээ.</p>
+
+  <details class="box guide" open>
+    <summary>Яаж хийх вэ? — 5 алхам</summary>
+    <ol>
+      <li><b>Нэрээ бич.</b> «Хэнд» — урих хүнийхээ нэр. «Хэнээс» — өөрийн нэр (хоосон орхивол «Нууц хүн 🤫» гэж гарна).</li>
+      <li><b>Хэв маягаа сонго.</b> Доорх жижиг зургуудаас аль нэг дээр нь дар.</li>
+      <li><b>Дуу нэмэх бол</b> (заавал биш): YouTube апп-аар дуугаа нээ → <b>Хуваалцах</b> (Share) → <b>Линк хуулах</b> (Copy link) → «Дуу» гэсэн нүдэнд удаан дараад <b>Буулгах</b> (Paste). «Дуу олдлоо ✓» гэж гарвал болсон.</li>
+      <li><b>Хариугаа хаанаас авах вэ?</b> Утасны дугаар, эсвэл Messenger нэрээ бич. Хоёулаа заавал биш.</li>
+      <li><b>«Линк гаргах»</b> дар → <b>«Урьдчилж үзэх»</b>-ээр шалга → <b>«Хуулах»</b> дараад Messenger-ээр илгээ.</li>
+    </ol>
+    <p class="note">Дуу өөрөө эхлэхгүй бол санаа зоволтгүй — утас дууг хаадаг. Нээсэн хүн «▶ Дууг сонсох» товч дарна.</p>
+    <a class="vlink" id="guideVideo" href="#" target="_blank" rel="noopener" hidden>▶ Видео зааврыг YouTube-ээс үзэх</a>
+  </details>
 
   <form id="form" novalidate>
     <div class="box">
@@ -99,6 +117,11 @@ select{font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px
       <input type="url" id="yt" inputmode="url" placeholder="https://youtu.be/…  эсвэл  …watch?v=…&t=1m30s" autocomplete="off">
       <p class="note" id="ytNote" aria-live="polite">Хэдэн секундээс эхлэхийг линкийн <b>t=</b> хэсгээс уншина.</p>
       <label class="check"><input type="checkbox" id="vid" checked> Дууны бичлэгийг (дүрсийг) харуулах</label>
+      <label for="dock">Дууны тоглуулагч хаана байх</label>
+      <select id="dock">
+        <option value="inline" selected>Картын дотор</option>
+        <option value="corner">Дэлгэцийн буланд</option>
+      </select>
 
       <div class="row">
         <div><label for="ph">Хариу авах утас (заавал биш)</label><input type="tel" id="ph" inputmode="tel" placeholder="99112233" autocomplete="off"></div>
@@ -131,6 +154,8 @@ select{font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px
 <script>
 const BASE = 'https://ghostshdee.github.io/urilga-bolzoo/';
 const SAVE_KEY = 'bolzoo-make-v1';
+/* Видео заавар — YouTube линкээ энд тавина. Хоосон бол товч харагдахгүй. */
+const GUIDE_VIDEO = '';
 const $ = (id) => document.getElementById(id);
 const clean = (v, n) => v.replace(/[<>"'`&]/g, '').trim().slice(0, n);
 
@@ -256,6 +281,7 @@ $('share').addEventListener('click', () => {
   navigator.share({ title: 'Жижиг асуулт 💌', text: 'Чамд жижиг асуулт байна', url: $('link').textContent }).catch(() => {});
 });
 
+if (GUIDE_VIDEO) { $('guideVideo').href = GUIDE_VIDEO; $('guideVideo').hidden = false; }
 restore();
 </script>
 </body>
